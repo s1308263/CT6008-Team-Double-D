@@ -1,0 +1,126 @@
+{
+    "version": 1,
+    "name": "Inputs_Ship",
+    "maps": [
+        {
+            "name": "Player",
+            "id": "3d528d70-bf9a-41b9-ae6b-897f986d8523",
+            "actions": [
+                {
+                    "name": "Move",
+                    "type": "Value",
+                    "id": "22eee2ba-1f30-4fdb-bdef-896868377c48",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Fire_Auto",
+                    "type": "Button",
+                    "id": "721bda40-b07d-43dc-8ce5-705d5a098762",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Fire_Charge",
+                    "type": "Button",
+                    "id": "8c8a82b3-1efb-4747-a985-8b8cd430c081",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Fire_Alt",
+                    "type": "Button",
+                    "id": "c5a43368-eaf8-470c-b253-eafbc7fb3fd5",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Land",
+                    "type": "Button",
+                    "id": "bb4e2027-0ce6-4f2f-9621-ac2d93736895",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "36612363-24a2-4003-b1e5-2d6f29cf3642",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9031b17f-5b10-4c30-af93-71f354acd025",
+                    "path": "<Gamepad>/dpad",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a21395db-6123-4dab-94f4-2a328656bf63",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "Hold(duration=1.401298E-45)",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Fire_Auto",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1b726269-86c7-44d5-bea0-d5de0be7ef93",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "Hold",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Fire_Charge",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "65df272e-acd4-4dcc-af62-0c33a8666789",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Fire_Alt",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "71473115-1e46-4f10-99ed-23f202b38b1d",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Land",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
