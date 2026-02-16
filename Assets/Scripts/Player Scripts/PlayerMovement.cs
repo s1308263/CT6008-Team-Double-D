@@ -2,14 +2,18 @@ using System.Collections;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
+using UnityEngine.UIElements.InputSystem;
 
 public class PlayerMovement : MonoBehaviour {
 
-    [Header("Shooting Properties:")]
-    [SerializeField] private GameObject bulletPrefab;
+    [Header("Auto Shooting Properties:")]
     [SerializeField] private Transform bulletSpawn;
-    [SerializeField] private float bulletFireRate;
-    [SerializeField] private float bulletDeath;
+    [SerializeField] private float autoFireRate;
+    [SerializeField] private float fireLength;
+    [SerializeField] private ParticleSystem bulletParticle;
+    [SerializeField] private ParticleSystem bulletImpactParticle;
+    [SerializeField] private TrailRenderer bulletTrail;
 
     [Header("Landing_Mode Settings:")]
     [SerializeField] private float lM_MoveForce;
@@ -30,10 +34,11 @@ public class PlayerMovement : MonoBehaviour {
     private float dM_currentRotX;
     private float dM_currentRotY;
 
-    bool canShoot = true, leftPressed, rightPressed, dF_Mode;
+    bool canShoot = true, leftPressed, rightPressed, dF_Mode, autoShoot;
 
     void Awake() {
         rb = GetComponent<Rigidbody>();
+        rb.maxLinearVelocity = 3;
     }
 
     void Start() {
@@ -43,39 +48,48 @@ public class PlayerMovement : MonoBehaviour {
 
         // Update is called once per frame
         void Update() {
-
+        //Landing mode movement
         if (dF_Mode == false) {
-            Debug.Log("moveInput = " + moveInput);
+            //Debug.Log("moveInput = " + moveInput);
             rb.AddForce(moveInput.x * lM_MoveForce, moveInput.y * lM_MoveForce, 0);
 
             if (leftPressed == true || rightPressed == true) {
-                StartCoroutine(RotShip());
+                StartCoroutine(LM_RotShip());
             }
         }
-        else if(dF_Mode == true)
-        {
+        //Dogfight mode movement
+        else if(dF_Mode == true) {
+            //set handling and acceleration
             float movementHorizontal = Input.GetAxis("Horizontal") * dM_Handling;
             float movementVertical = Input.GetAxis("Vertical") * dM_Acceleration * 2;
 
+            //Add force as thrust
             rb.AddForce(transform.right * movementVertical, ForceMode.Acceleration);
 
             bool invertXRot = false;
             bool invertYRot = (dM_currentRotX < -180f);
 
+            //Set rotation of ship
             dM_currentRotX = (dM_currentRotX + (invertXRot ? -movementHorizontal : movementHorizontal)) % 360f;
             dM_currentRotY = (dM_currentRotY + (invertYRot ? -movementHorizontal : movementHorizontal)) % 360f;
 
             Quaternion rotX = Quaternion.AngleAxis(dM_currentRotX, Vector3.right);
-            Quaternion rotY = Quaternion.AngleAxis(dM_currentRotY, Vector3.forward);
+            Quaternion rotY = Quaternion.AngleAxis(dM_currentRotY, Vector3.up);
 
+            //apply rotation
             Quaternion rotation = rotX * rotY;
             transform.rotation = rotation;
         }
+
+        if(autoShoot == true) {
+            StartCoroutine(AutoFire());
+        }
+        else { StopCoroutine(AutoFire()); }
     }
 
     //Move inputs
-    private void OnMove(InputValue value) {
-        moveInput = value.Get<Vector2>();
+    public void OnMove(InputAction.CallbackContext context) {
+        moveInput = context.ReadValue<Vector2>();
         //rotate player in moving direction
         if (dF_Mode == false) {
             rb.useGravity = false;
@@ -100,49 +114,75 @@ public class PlayerMovement : MonoBehaviour {
             rb.useGravity = true;
             rb.maxLinearVelocity = dM_MaxVelocity;
             rb.linearDamping = dM_Damping;
-            //lM_MoveForce = 10;
             Debug.Log("DF_MODE SETTINGS SET");
         }
     }
 
     //fire main gun (auto)
-    //void OnFire_Auto(InputValue value) {
-    //    if (value.isPressed && canShoot == true) {
-    //        StartCoroutine(AutoFire());
-    //        canShoot = false;
-    //    }
-    //    else if (canShoot == false) {
-    //        StopCoroutine(AutoFire());
-    //        canShoot = true;
-    //    }
-    //}
-
-    void OnChangeMode(InputValue value) {
-        if (value.isPressed && dF_Mode == false) {
-            Debug.Log("Mode Changed to DOGFIGHTING");
-            dF_Mode = true;
-            Debug.Log("DOGFIGHT MODE = true");
+    public void OnFire_Auto(InputAction.CallbackContext context) {
+        if (context.performed == true) {
+            autoShoot = true;
         }
-
         else {
-            Debug.Log("Mode Changed to LANDING");
-            dF_Mode = false;
-            Debug.Log("DOGFIGHT MODE = false");
+            autoShoot = false;
         }
     }
 
-    //Main weapon auto-fire
-    //IEnumerator AutoFire() {
-        //if (canShoot == true) {
-        //    var bullet = Instantiate(bulletPrefab, bulletSpawn.position, bulletSpawn.rotation);
-        //    //Destroy(bullet, bulletDeath);
-        //    yield return new WaitForSeconds(bulletFireRate);
-        //    StartCoroutine(AutoFire());
-        //}
-    //    yield return null;
-    //}
+    public void OnChangeMode(InputAction.CallbackContext context) {
+        switch (context.performed) {
+            case true:
+                dF_Mode = true;
+                break;
+            case false:
+                dF_Mode = false;
+                break;
+        }
+    }
 
-    IEnumerator RotShip() {
+    IEnumerator AutoFire() {
+        RaycastHit hit;
+        if (Physics.Raycast(bulletSpawn.position, bulletSpawn.right, out hit, fireLength)) {
+            Debug.Log("Raycast hit something!");
+            Debug.DrawRay(bulletSpawn.position, bulletSpawn.right * fireLength, Color.green, 1);
+            TrailRenderer trail = Instantiate(bulletTrail, bulletSpawn.position, Quaternion.identity);
+            StartCoroutine(BulletTrail(trail, hit));
+            yield return new WaitForSeconds(autoFireRate);
+        }
+        else {
+            Debug.DrawRay(bulletSpawn.position, bulletSpawn.right * fireLength, Color.red, 1);
+            TrailRenderer trailRend = Instantiate(bulletTrail, bulletSpawn.position, Quaternion.identity);
+            float time = 0;
+            Vector3 startPos = trailRend.transform.position;
+            Vector3 endPos =  startPos + (bulletSpawn.right * fireLength);
+
+            while (time < 1)
+            {
+                trailRend.transform.position = Vector3.Lerp(startPos, endPos, time);
+                time += Time.deltaTime / trailRend.time;
+                yield return null;
+            }
+            trailRend.transform.position = endPos;
+            Destroy(trailRend.gameObject, trailRend.time);
+            yield return new WaitForSeconds(autoFireRate);
+        }
+    }
+
+    IEnumerator BulletTrail(TrailRenderer Trail, RaycastHit Hit) {
+
+        float time = 0;
+        Vector3 startPos = Trail.transform.position;
+
+        while (time < 1) {
+            Trail.transform.position = Vector3.Lerp(startPos, Hit.point, time);
+            time += Time.deltaTime / Trail.time;
+            yield return null;
+        }
+        Trail.transform.position = Hit.point;
+        Instantiate(bulletImpactParticle, Hit.point, Quaternion.LookRotation(Hit.normal));
+        Destroy(Trail.gameObject, Trail.time);
+    }
+
+    IEnumerator LM_RotShip() {
         switch (leftPressed, rightPressed) {
             case (true, false):
             canShoot = false;
