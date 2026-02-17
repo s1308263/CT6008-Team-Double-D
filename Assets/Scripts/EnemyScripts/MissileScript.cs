@@ -14,7 +14,7 @@ public class MissileScript : MonoBehaviour
     }
     void FixedUpdate()
     {
-        StartCoroutine(LookAt());
+        StartCoroutine(Follow());
         StartCoroutine(KillMissile());
         transform.LookAt(player.transform.position);
     }
