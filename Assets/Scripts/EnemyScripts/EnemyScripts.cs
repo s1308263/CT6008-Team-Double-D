@@ -6,7 +6,7 @@ using UnityEngine;
 public class EnemyScripts : MonoBehaviour
 {
     [SerializeField] GameObject player;
-    [SerializeField] float strength, cd, maxSpeed, rotationSpeed;
+    public float strength, cd, maxSpeed, rotationSpeed;
     [SerializeField] Collider range;
     [SerializeField] GameObject missile;
     [SerializeField] Transform rail;
@@ -51,7 +51,7 @@ public class EnemyScripts : MonoBehaviour
     }
     IEnumerator LookAt(){
         Quaternion LookRotation = Quaternion.LookRotation(player.transform.position - transform.position);
-        float time = 0;
+        float time = 0; 
         while (time < 1)
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, LookRotation, time);
@@ -62,5 +62,9 @@ public class EnemyScripts : MonoBehaviour
     public void FireMissile()
     {
         GameObject newMissile = Instantiate(missile, rail.transform.position, Quaternion.identity);
+    }
+    public void Fire()
+    {
+
     }
 }
