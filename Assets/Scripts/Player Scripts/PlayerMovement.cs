@@ -26,6 +26,10 @@ public class PlayerMovement : MonoBehaviour {
     [SerializeField] private float dM_Handling;
     [SerializeField] private float dM_MaxVelocity;
     [SerializeField] private float dM_Damping;
+    [SerializeField] private float dM_RotSpeed;
+    [SerializeField] private float dM_Mass;
+    [SerializeField] private float dM_XRotMultiplier;
+    [SerializeField] private float dM_YRotMultiplier;
 
     private Rigidbody rb;
 
@@ -34,7 +38,7 @@ public class PlayerMovement : MonoBehaviour {
     private float dM_currentRotX;
     private float dM_currentRotY;
 
-    bool canShoot = true, leftPressed, rightPressed, dF_Mode, autoShoot;
+    bool canShoot = true, leftPressed, rightPressed, dF_Mode, autoShoot, isShootingAuto;
 
     void Awake() {
         rb = GetComponent<Rigidbody>();
@@ -52,13 +56,12 @@ public class PlayerMovement : MonoBehaviour {
         if (dF_Mode == false) {
             //Debug.Log("moveInput = " + moveInput);
             rb.AddForce(moveInput.x * lM_MoveForce, moveInput.y * lM_MoveForce, 0);
-
             if (leftPressed == true || rightPressed == true) {
                 StartCoroutine(LM_RotShip());
             }
         }
         //Dogfight mode movement
-        else if(dF_Mode == true) {
+        else if (dF_Mode == true) {
             //set handling and acceleration
             float movementHorizontal = Input.GetAxis("Horizontal") * dM_Handling;
             float movementVertical = Input.GetAxis("Vertical") * dM_Acceleration * 2;
@@ -79,9 +82,12 @@ public class PlayerMovement : MonoBehaviour {
             //apply rotation
             Quaternion rotation = rotX * rotY;
             transform.rotation = rotation;
-        }
 
-        if(autoShoot == true) {
+            if(transform.rotation.z <= 170 || transform.rotation.z >= -170) {
+                StartCoroutine(DF_RotShip());
+            }
+        }
+        if (autoShoot == true && isShootingAuto == false) {
             StartCoroutine(AutoFire());
         }
         else { StopCoroutine(AutoFire()); }
@@ -92,6 +98,7 @@ public class PlayerMovement : MonoBehaviour {
         moveInput = context.ReadValue<Vector2>();
         //rotate player in moving direction
         if (dF_Mode == false) {
+            rb.mass = 1;
             rb.useGravity = false;
             if (moveInput.x <= -0.85f) {
                 rightPressed = false;
@@ -111,6 +118,7 @@ public class PlayerMovement : MonoBehaviour {
         else if (dF_Mode == true)
         {
             Debug.Log("IN DF_MODE");
+            rb.mass = dM_Mass;
             rb.useGravity = true;
             rb.maxLinearVelocity = dM_MaxVelocity;
             rb.linearDamping = dM_Damping;
@@ -137,34 +145,38 @@ public class PlayerMovement : MonoBehaviour {
                 dF_Mode = false;
                 break;
         }
+        
     }
 
     IEnumerator AutoFire() {
+        isShootingAuto = true;
         RaycastHit hit;
         if (Physics.Raycast(bulletSpawn.position, bulletSpawn.right, out hit, fireLength)) {
             Debug.Log("Raycast hit something!");
             Debug.DrawRay(bulletSpawn.position, bulletSpawn.right * fireLength, Color.green, 1);
             TrailRenderer trail = Instantiate(bulletTrail, bulletSpawn.position, Quaternion.identity);
             StartCoroutine(BulletTrail(trail, hit));
-            yield return new WaitForSeconds(autoFireRate);
+
+
+            //ADD ENEMY DAMAGE CALC HERE
         }
         else {
             Debug.DrawRay(bulletSpawn.position, bulletSpawn.right * fireLength, Color.red, 1);
             TrailRenderer trailRend = Instantiate(bulletTrail, bulletSpawn.position, Quaternion.identity);
             float time = 0;
             Vector3 startPos = trailRend.transform.position;
-            Vector3 endPos =  startPos + (bulletSpawn.right * fireLength);
+            Vector3 endPos = startPos + (bulletSpawn.right * fireLength);
 
-            while (time < 1)
-            {
+            while (time < 1) {
                 trailRend.transform.position = Vector3.Lerp(startPos, endPos, time);
                 time += Time.deltaTime / trailRend.time;
                 yield return null;
             }
             trailRend.transform.position = endPos;
             Destroy(trailRend.gameObject, trailRend.time);
-            yield return new WaitForSeconds(autoFireRate);
         }
+        yield return new WaitForSeconds(autoFireRate);
+        isShootingAuto = false;
     }
 
     IEnumerator BulletTrail(TrailRenderer Trail, RaycastHit Hit) {
@@ -197,5 +209,10 @@ public class PlayerMovement : MonoBehaviour {
             canShoot = true;
             break;
         }
+    }
+
+    IEnumerator DF_RotShip() {
+        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 180, 0), lM_RotSpeed * Time.deltaTime);
+        yield return new WaitForSeconds(dM_RotSpeed);
     }
 }
