@@ -38,7 +38,7 @@ public class PlayerMovement : MonoBehaviour {
     private float dM_currentRotX;
     private float dM_currentRotY;
 
-    bool canShoot = true, leftPressed, rightPressed, dF_Mode, autoShoot, isShootingAuto;
+    bool canShoot = true, leftPressed, rightPressed, dF_Mode, autoShoot, isShootingAuto, modeChangePress = false;
 
     void Awake() {
         rb = GetComponent<Rigidbody>();
@@ -139,11 +139,15 @@ public class PlayerMovement : MonoBehaviour {
     public void OnChangeMode(InputAction.CallbackContext context) {
         switch (context.performed) {
             case true:
-                dF_Mode = true;
-                break;
-            case false:
-                dF_Mode = false;
-                break;
+                if (modeChangePress == true) {
+                    dF_Mode = true;
+                    modeChangePress = false;
+                }
+                else {
+                    dF_Mode = false;
+                    modeChangePress = true;
+                }
+                    break;
         }
         
     }
@@ -157,8 +161,9 @@ public class PlayerMovement : MonoBehaviour {
             TrailRenderer trail = Instantiate(bulletTrail, bulletSpawn.position, Quaternion.identity);
             StartCoroutine(BulletTrail(trail, hit));
 
+            //ADD ENEMY DAMAGE CALC HERE/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-            //ADD ENEMY DAMAGE CALC HERE
+            yield return new WaitForSeconds(autoFireRate * hit.distance / fireLength);
         }
         else {
             Debug.DrawRay(bulletSpawn.position, bulletSpawn.right * fireLength, Color.red, 1);
