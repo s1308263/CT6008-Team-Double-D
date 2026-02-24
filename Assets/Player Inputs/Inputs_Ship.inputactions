@@ -174,6 +174,17 @@
                 },
                 {
                     "name": "",
+                    "id": "288e0adb-ad46-4483-8e0b-578fb6d08a93",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Fire_Charge",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "65df272e-acd4-4dcc-af62-0c33a8666789",
                     "path": "<Gamepad>/buttonEast",
                     "interactions": "",

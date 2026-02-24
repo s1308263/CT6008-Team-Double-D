@@ -15,21 +15,29 @@ public class PlayerMovement : MonoBehaviour {
     [SerializeField] private ParticleSystem bulletImpactParticle;
     [SerializeField] private TrailRenderer bulletTrail;
 
+    [Header("Charge Shot Properties:")]
+    [SerializeField] private GameObject chargeShotPrefab_big;
+    [SerializeField] private GameObject chargeShotPrefab_mid;
+    [SerializeField] private GameObject chargeShotPrefab_small;
+    [SerializeField] private float chargeTimer;
+    [SerializeField] private float maxChargeTime;
+    [SerializeField] private float bigShotSpeed;
+    [SerializeField] private float midShotSpeed;
+    [SerializeField] private float smallShotSpeed;
+
     [Header("Landing_Mode Settings:")]
     [SerializeField] private float lM_MoveForce;
     [SerializeField] private float lM_MaxVelocity;
     [SerializeField] private float lM_Damping;
     [SerializeField] private float lM_RotSpeed;
 
-    [Header("DF_Mode Settings:")]
+    [Header("Dogfight_Mode Settings:")]
     [SerializeField] private float dM_Acceleration;
     [SerializeField] private float dM_Handling;
     [SerializeField] private float dM_MaxVelocity;
     [SerializeField] private float dM_Damping;
     [SerializeField] private float dM_RotSpeed;
     [SerializeField] private float dM_Mass;
-    [SerializeField] private float dM_XRotMultiplier;
-    [SerializeField] private float dM_YRotMultiplier;
 
     private Rigidbody rb;
 
@@ -38,7 +46,7 @@ public class PlayerMovement : MonoBehaviour {
     private float dM_currentRotX;
     private float dM_currentRotY;
 
-    bool canShoot = true, leftPressed, rightPressed, dF_Mode, autoShoot, isShootingAuto;
+    bool canShoot = true, leftPressed, rightPressed, dF_Mode, autoShoot, isShootingAuto, startChargeTimer, canShootFullCharge, canShootMidCharge, canShootSmallCharge;
 
     void Awake() {
         rb = GetComponent<Rigidbody>();
@@ -50,10 +58,12 @@ public class PlayerMovement : MonoBehaviour {
         dM_currentRotY = 0.0f;
     }
 
-        // Update is called once per frame
-        void Update() {
+    // Update is called once per frame
+    void Update()
+    {
         //Landing mode movement
-        if (dF_Mode == false) {
+        if (dF_Mode == false)
+        {
             //Debug.Log("moveInput = " + moveInput);
             rb.AddForce(moveInput.x * lM_MoveForce, moveInput.y * lM_MoveForce, 0);
             if (leftPressed == true || rightPressed == true) {
@@ -61,7 +71,8 @@ public class PlayerMovement : MonoBehaviour {
             }
         }
         //Dogfight mode movement
-        else if (dF_Mode == true) {
+        else if (dF_Mode == true)
+        {
             //set handling and acceleration
             float movementHorizontal = Input.GetAxis("Horizontal") * dM_Handling;
             float movementVertical = Input.GetAxis("Vertical") * dM_Acceleration * 2;
@@ -82,15 +93,37 @@ public class PlayerMovement : MonoBehaviour {
             //apply rotation
             Quaternion rotation = rotX * rotY;
             transform.rotation = rotation;
-
-            if(transform.rotation.z <= 170 || transform.rotation.z >= -170) {
-                StartCoroutine(DF_RotShip());
-            }
         }
-        if (autoShoot == true && isShootingAuto == false) {
+        if (autoShoot == true && isShootingAuto == false)
+        {
             StartCoroutine(AutoFire());
         }
         else { StopCoroutine(AutoFire()); }
+
+        if (startChargeTimer == true)
+        {
+            chargeTimer += 1 * Time.deltaTime;
+            Debug.Log("chargeTimer begun");
+            if (chargeTimer >= maxChargeTime)
+            {
+                Debug.Log("timer at max");
+                canShootMidCharge = false;
+                chargeTimer = maxChargeTime;
+                canShootFullCharge = true;
+            }
+            else if (chargeTimer == maxChargeTime / 2)
+            {
+                Debug.Log("Can Shoot MID");
+                canShootSmallCharge = false;
+                canShootMidCharge = true;
+            }
+
+            else if (chargeTimer <= maxChargeTime / 2)
+            {
+                Debug.Log("Can Shoot SMALL");
+                canShootSmallCharge = true;
+            }
+        }
     }
 
     //Move inputs
@@ -136,6 +169,46 @@ public class PlayerMovement : MonoBehaviour {
         }
     }
 
+    public void OnFire_Charge(InputAction.CallbackContext context) {
+        if (context.performed == true) {
+            startChargeTimer = true;
+        }
+
+        else {
+            if (canShootFullCharge == true && canShootMidCharge == false && canShootSmallCharge == false)
+            {
+                var newBigChargeshot = Instantiate(chargeShotPrefab_big, bulletSpawn);
+                Debug.Log("Charge shot");
+                newBigChargeshot.transform.SetParent(null);
+                newBigChargeshot.transform.localScale = new Vector3(1, 1, 1);
+                newBigChargeshot.transform.GetComponent<ChargeShotScript>().speed = bigShotSpeed;
+                canShootFullCharge = false;
+            }
+
+            else if (canShootFullCharge == false && canShootMidCharge == true && canShootSmallCharge == false)
+            {
+                var newMidChargeshot = Instantiate(chargeShotPrefab_mid, bulletSpawn);
+                Debug.Log("Charge shot");
+                newMidChargeshot.transform.SetParent(null);
+                newMidChargeshot.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                newMidChargeshot.transform.GetComponent<ChargeShotScript>().speed = midShotSpeed;
+                canShootMidCharge = false;
+            }
+
+            else if (canShootFullCharge == false && canShootMidCharge == false && canShootSmallCharge == true)
+            {
+                var newSmallChargeshot = Instantiate(chargeShotPrefab_mid, bulletSpawn);
+                Debug.Log("Charge shot");
+                newSmallChargeshot.transform.SetParent(null);
+                newSmallChargeshot.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
+                newSmallChargeshot.transform.GetComponent<ChargeShotScript>().speed = midShotSpeed;
+                canShootSmallCharge = false;
+            }
+            startChargeTimer = false;
+            chargeTimer = 0;
+        }
+    }
+
     public void OnChangeMode(InputAction.CallbackContext context) {
         switch (context.performed) {
             case true:
@@ -145,7 +218,6 @@ public class PlayerMovement : MonoBehaviour {
                 dF_Mode = false;
                 break;
         }
-        
     }
 
     IEnumerator AutoFire() {
@@ -211,8 +283,8 @@ public class PlayerMovement : MonoBehaviour {
         }
     }
 
-    IEnumerator DF_RotShip() {
-        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 180, 0), lM_RotSpeed * Time.deltaTime);
-        yield return new WaitForSeconds(dM_RotSpeed);
-    }
+    //IEnumerator DF_RotShip() {
+    //    transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 180, 0), lM_RotSpeed * Time.deltaTime);
+    //    yield return new WaitForSeconds(dM_RotSpeed);
+    //}
 }
