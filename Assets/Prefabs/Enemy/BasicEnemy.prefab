@@ -108,37 +108,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!1 &5257533209847306853
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 134334203724736398}
-  m_Layer: 0
-  m_Name: Rail
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &134334203724736398
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5257533209847306853}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.017999887, y: -0.6107693, z: 0.7395}
-  m_LocalScale: {x: 1, y: 1.5384616, z: 0.5}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3894491627326070205}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5506471576176809156
 GameObject:
   m_ObjectHideFlags: 0
@@ -300,7 +269,6 @@ Transform:
   m_Children:
   - {fileID: 4281744938967405730}
   - {fileID: 9222161836579401268}
-  - {fileID: 134334203724736398}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6504027875193012002
@@ -390,13 +358,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  strength: 10
-  cd: 1
-  maxSpeed: 5
-  rotationSpeed: 3
-  range: {fileID: 8212020554783063965}
   missile: {fileID: 7466608243923696252, guid: 331122ffe65a66f4fb6267fcf53fb0c5, type: 3}
-  rail: {fileID: 134334203724736398}
+  bullet: {fileID: 0}
 --- !u!54 &2091538409540906553
 Rigidbody:
   m_ObjectHideFlags: 0

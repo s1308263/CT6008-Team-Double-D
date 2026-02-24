@@ -36,7 +36,7 @@ public class MissileScript : MonoBehaviour
     }
     IEnumerator KillMissile()
     {
-        yield return new WaitForSeconds(7);
+        yield return new WaitForSeconds(3);
         Destroy(gameObject);
     }
     IEnumerator LookAt()
@@ -47,7 +47,7 @@ public class MissileScript : MonoBehaviour
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, LookRotation, time);
             rb.AddForce(transform.forward * thrust, ForceMode.Impulse);
-            time += Time.deltaTime * 1.5f;
+            time += Time.deltaTime * 2f;
             yield return null;
         }
     }

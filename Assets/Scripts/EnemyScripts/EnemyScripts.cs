@@ -5,11 +5,12 @@ using UnityEngine;
 
 public class EnemyScripts : MonoBehaviour
 {
-    [SerializeField] GameObject player;
-    [SerializeField] float strength, cd, maxSpeed, rotationSpeed;
-    [SerializeField] Collider range;
-    [SerializeField] GameObject missile;
-    [SerializeField] Transform rail;
+    GameObject player;
+    float dashPower = 5, 
+        dashCD = 1, 
+        maxSpeed = 5, 
+        rotationSpeed = 3;
+    [SerializeField] GameObject missile, bullet;
 
     Rigidbody rb;
     bool canMove = true;
@@ -19,7 +20,14 @@ public class EnemyScripts : MonoBehaviour
         rb.maxLinearVelocity = maxSpeed;
         MissileLock lockScript = GetComponent<MissileLock>();
     }
-    void FixedUpdate()
+    void Awake()
+    {
+        player = GameObject.FindWithTag("Player");
+        rb = GetComponent<Rigidbody>();
+        rb.maxLinearVelocity = maxSpeed;
+        MissileLock lockScript = GetComponent<MissileLock>();
+    }
+        void FixedUpdate()
     {
         //Enemy Movement (Follow Player)
         //transform.position = Vector3.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime);
@@ -39,13 +47,13 @@ public class EnemyScripts : MonoBehaviour
         }
     }
     void burst(){
-        rb.AddForce(transform.forward * strength, ForceMode.Impulse);
+        rb.AddForce(transform.forward * dashPower, ForceMode.Impulse);
     }
     IEnumerator Burst(){
         {
             burst();
             canMove = false;
-            yield return new WaitForSeconds(cd);
+            yield return new WaitForSeconds(dashCD);
             canMove = true;
         }
     }
@@ -61,6 +69,13 @@ public class EnemyScripts : MonoBehaviour
     }
     public void FireMissile()
     {
-        GameObject newMissile = Instantiate(missile, rail.transform.position, Quaternion.identity);
+        Vector3 railPos = transform.position + transform.forward*1.5f;
+        GameObject newMissile = Instantiate(missile, railPos, Quaternion.identity);
+    }
+
+    public void Fire()
+    {
+        Vector3 railPos = transform.position + transform.forward *1.5f;
+        GameObject newBullet = Instantiate(bullet, railPos, Quaternion.identity);
     }
 }

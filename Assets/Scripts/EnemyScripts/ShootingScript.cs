@@ -1,9 +1,9 @@
 using UnityEngine;
 
-public class MissileLock : MonoBehaviour
+public class ShootingScript : MonoBehaviour
 {
-    [SerializeField] float lockTime;
     [SerializeField] EnemyScripts enemyScript;
+    float reload;
 
     private void Awake()
     {
@@ -13,14 +13,12 @@ public class MissileLock : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            lockTime += Time.deltaTime;
-            if (lockTime >= 5)
+            reload += Time.deltaTime;
+            if (reload >= 0.2)
             {
-                enemyScript.FireMissile();
-                lockTime = 0;
+                enemyScript.Fire();
+                reload = 0;
             }
         }
-
     }
-
 }
