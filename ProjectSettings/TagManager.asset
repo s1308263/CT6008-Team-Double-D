@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 3
   tags:
   - Enemy
+  - ChargeShot_Big
+  - ChargeShot_Mid
+  - Chargeshot_Small
   layers:
   - Default
   - TransparentFX
