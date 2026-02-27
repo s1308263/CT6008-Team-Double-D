@@ -2,7 +2,9 @@ using UnityEngine;
 
 public class ChargeShotScript : MonoBehaviour {
 
-    public float speed, maxSpeed;
+    [SerializeField] private float maxSpeed, life, maxLife, triggerDelay, maxDelay;
+
+    public float speed;
 
     GameObject localEnemy;
     Rigidbody rb;
@@ -18,11 +20,23 @@ public class ChargeShotScript : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         rb.AddForce(transform.forward * speed, ForceMode.Acceleration);
+        life += 1 * Time.deltaTime;
+        triggerDelay += 1 * Time.deltaTime;
+        if (triggerDelay >= maxDelay) {
+            transform.GetChild(0).transform.gameObject.SetActive(true);
+            triggerDelay = maxDelay;
+        }
         if (transform.GetChild(0).GetComponent<ChargeShotTriggerScript>().firstEnemy != null) {
             localEnemy = transform.GetChild(0).GetComponent<ChargeShotTriggerScript>().firstEnemy;
             if (localEnemy != null) {
                 transform.LookAt(localEnemy.transform.position);
             }
+        }
+        if(life >= maxLife) {
+            TrailRenderer tr;
+            tr = GetComponent<TrailRenderer>();
+            tr.enabled = false;
+            Destroy(gameObject);
         }
     }
 
@@ -32,9 +46,11 @@ public class ChargeShotScript : MonoBehaviour {
 
             //DAMAGE CALC HERE//////////////////////////////////////////////////////////////////////////////////////////
         }
-        TrailRenderer tr;
-        tr = GetComponent<TrailRenderer>();
-        tr.enabled = false;
-        Destroy(gameObject);
+        if (collision.gameObject.tag != "Player") {
+            TrailRenderer tr;
+            tr = GetComponent<TrailRenderer>();
+            tr.enabled = false;
+            Destroy(gameObject);
+        }
     }
 }

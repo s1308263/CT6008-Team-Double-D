@@ -46,7 +46,7 @@ public class PlayerMovement : MonoBehaviour {
     private float dM_currentRotX;
     private float dM_currentRotY;
 
-    bool canShoot = true, leftPressed, rightPressed, dF_Mode, autoShoot, isShootingAuto, startChargeTimer, canShootFullCharge, canShootMidCharge, canShootSmallCharge;
+    bool canShoot = true, leftPressed, rightPressed, dF_Mode, isThrusting, autoShoot, isShootingAuto, startChargeTimer, canShootFullCharge, canShootMidCharge, canShootSmallCharge;
 
     void Awake() {
         rb = GetComponent<Rigidbody>();
@@ -77,11 +77,13 @@ public class PlayerMovement : MonoBehaviour {
             float movementHorizontal = Input.GetAxis("Horizontal") * dM_Handling;
             float movementVertical = Input.GetAxis("Vertical") * dM_Acceleration * 2;
 
-            //Add force as thrust
-            rb.AddForce(transform.right * movementVertical, ForceMode.Acceleration);
-
             bool invertXRot = false;
             bool invertYRot = (dM_currentRotX < -180f);
+
+            if (isThrusting == true) {
+                //Add force as thrust
+                rb.AddForce(transform.right * movementVertical, ForceMode.Acceleration);
+            }
 
             //Set rotation of ship
             dM_currentRotX = (dM_currentRotX + (invertXRot ? -movementHorizontal : movementHorizontal)) % 360f;
@@ -102,18 +104,21 @@ public class PlayerMovement : MonoBehaviour {
 
         if (startChargeTimer == true)
         {
+            transform.GetChild(1).transform.gameObject.SetActive(true);
             chargeTimer += 1 * Time.deltaTime;
             Debug.Log("chargeTimer begun");
-            if (chargeTimer >= maxChargeTime)
+            if (chargeTimer >= maxChargeTime && chargeTimer >= maxChargeTime / 2)
             {
                 Debug.Log("timer at max");
+                transform.GetChild(3).transform.gameObject.SetActive(true);
                 canShootMidCharge = false;
                 chargeTimer = maxChargeTime;
                 canShootFullCharge = true;
             }
-            else if (chargeTimer == maxChargeTime / 2)
+            else if (chargeTimer >= maxChargeTime / 2 && chargeTimer <= maxChargeTime)
             {
                 Debug.Log("Can Shoot MID");
+                transform.GetChild(2).transform.gameObject.SetActive(true);
                 canShootSmallCharge = false;
                 canShootMidCharge = true;
             }
@@ -156,6 +161,15 @@ public class PlayerMovement : MonoBehaviour {
             rb.maxLinearVelocity = dM_MaxVelocity;
             rb.linearDamping = dM_Damping;
             Debug.Log("DF_MODE SETTINGS SET");
+        }
+    }
+
+    public void OnThrust(InputAction.CallbackContext context) {
+        if (context.performed == true) {
+            isThrusting = true;
+        }
+        else {
+            isThrusting = false;
         }
     }
 
@@ -204,6 +218,9 @@ public class PlayerMovement : MonoBehaviour {
                 newSmallChargeshot.transform.GetComponent<ChargeShotScript>().speed = midShotSpeed;
                 canShootSmallCharge = false;
             }
+            transform.GetChild(1).transform.gameObject.SetActive(false);
+            transform.GetChild(2).transform.gameObject.SetActive(false);
+            transform.GetChild(3).transform.gameObject.SetActive(false);
             startChargeTimer = false;
             chargeTimer = 0;
         }
