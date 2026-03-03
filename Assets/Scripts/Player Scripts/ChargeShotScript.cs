@@ -25,11 +25,11 @@ public class ChargeShotScript : MonoBehaviour {
         if (triggerDelay >= maxDelay) {
             transform.GetChild(0).transform.gameObject.SetActive(true);
             triggerDelay = maxDelay;
-        }
-        if (transform.GetChild(0).GetComponent<ChargeShotTriggerScript>().firstEnemy != null) {
-            localEnemy = transform.GetChild(0).GetComponent<ChargeShotTriggerScript>().firstEnemy;
-            if (localEnemy != null) {
-                transform.LookAt(localEnemy.transform.position);
+            if (transform.GetChild(0).GetComponent<ChargeShotTriggerScript>().firstEnemy != null) {
+                localEnemy = transform.GetChild(0).GetComponent<ChargeShotTriggerScript>().firstEnemy;
+                if (localEnemy != null) {
+                    transform.LookAt(localEnemy.transform.position);
+                }
             }
         }
         if(life >= maxLife) {

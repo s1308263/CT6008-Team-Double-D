@@ -9,9 +9,9 @@ public class PlayerMovement : MonoBehaviour {
 
     [Header("Auto Shooting Properties:")]
     [SerializeField] private Transform bulletSpawn;
-    [SerializeField] private float autoFireRate;
+    [SerializeField] private float autoFireTimer;
+    [SerializeField] private float maxAutoFireRate;
     [SerializeField] private float fireLength;
-    [SerializeField] private ParticleSystem bulletParticle;
     [SerializeField] private ParticleSystem bulletImpactParticle;
     [SerializeField] private TrailRenderer bulletTrail;
 
@@ -66,7 +66,8 @@ public class PlayerMovement : MonoBehaviour {
         {
             //Debug.Log("moveInput = " + moveInput);
             rb.AddForce(moveInput.x * lM_MoveForce, moveInput.y * lM_MoveForce, 0);
-            if (leftPressed == true || rightPressed == true) {
+            if (leftPressed == true || rightPressed == true)
+            {
                 StartCoroutine(LM_RotShip());
             }
         }
@@ -80,7 +81,8 @@ public class PlayerMovement : MonoBehaviour {
             bool invertXRot = false;
             bool invertYRot = (dM_currentRotX < -180f);
 
-            if (isThrusting == true) {
+            if (isThrusting == true)
+            {
                 //Add force as thrust
                 rb.AddForce(transform.right * movementVertical, ForceMode.Acceleration);
             }
@@ -98,9 +100,14 @@ public class PlayerMovement : MonoBehaviour {
         }
         if (autoShoot == true && isShootingAuto == false)
         {
-            StartCoroutine(AutoFire());
+            autoFireTimer += 1 * Time.deltaTime;
+            if (autoFireTimer >= maxAutoFireRate)
+            {
+                autoFireTimer = 0;
+                AutoFire();
+            }
+            //else { StopCoroutine(AutoFire()); }
         }
-        else { StopCoroutine(AutoFire()); }
 
         if (startChargeTimer == true)
         {
@@ -129,6 +136,7 @@ public class PlayerMovement : MonoBehaviour {
                 canShootSmallCharge = true;
             }
         }
+
     }
 
     //Move inputs
@@ -180,6 +188,7 @@ public class PlayerMovement : MonoBehaviour {
         }
         else {
             autoShoot = false;
+            autoFireTimer = 0;
         }
     }
 
@@ -192,7 +201,7 @@ public class PlayerMovement : MonoBehaviour {
             if (canShootFullCharge == true && canShootMidCharge == false && canShootSmallCharge == false)
             {
                 var newBigChargeshot = Instantiate(chargeShotPrefab_big, bulletSpawn);
-                Debug.Log("Charge shot");
+                Debug.Log("big charge shot");
                 newBigChargeshot.transform.SetParent(null);
                 newBigChargeshot.transform.localScale = new Vector3(1, 1, 1);
                 newBigChargeshot.transform.GetComponent<ChargeShotScript>().speed = bigShotSpeed;
@@ -202,7 +211,7 @@ public class PlayerMovement : MonoBehaviour {
             else if (canShootFullCharge == false && canShootMidCharge == true && canShootSmallCharge == false)
             {
                 var newMidChargeshot = Instantiate(chargeShotPrefab_mid, bulletSpawn);
-                Debug.Log("Charge shot");
+                Debug.Log("mid charge shot");
                 newMidChargeshot.transform.SetParent(null);
                 newMidChargeshot.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
                 newMidChargeshot.transform.GetComponent<ChargeShotScript>().speed = midShotSpeed;
@@ -211,11 +220,11 @@ public class PlayerMovement : MonoBehaviour {
 
             else if (canShootFullCharge == false && canShootMidCharge == false && canShootSmallCharge == true)
             {
-                var newSmallChargeshot = Instantiate(chargeShotPrefab_mid, bulletSpawn);
-                Debug.Log("Charge shot");
+                var newSmallChargeshot = Instantiate(chargeShotPrefab_small, bulletSpawn);
+                Debug.Log("small charge shot");
                 newSmallChargeshot.transform.SetParent(null);
                 newSmallChargeshot.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
-                newSmallChargeshot.transform.GetComponent<ChargeShotScript>().speed = midShotSpeed;
+                newSmallChargeshot.transform.GetComponent<ChargeShotScript>().speed = smallShotSpeed;
                 canShootSmallCharge = false;
             }
             transform.GetChild(1).transform.gameObject.SetActive(false);
@@ -237,10 +246,33 @@ public class PlayerMovement : MonoBehaviour {
         }
     }
 
-    IEnumerator AutoFire() {
+    private void AutoFire()
+    {
         isShootingAuto = true;
+
+
+
+
+        Debug.DrawRay(bulletSpawn.position, bulletSpawn.right * fireLength, Color.red, 1);
+        TrailRenderer trailRend = Instantiate(bulletTrail, bulletSpawn.position, Quaternion.identity);
+        float time = 0;
+        Vector3 startPos = trailRend.transform.position;
+        Vector3 endPos = startPos + (bulletSpawn.right * fireLength);
+
+        while (time < 1)
+        {
+            trailRend.transform.position = Vector3.Lerp(startPos, endPos, time);
+            time += Time.deltaTime / trailRend.time;
+        }
+        trailRend.transform.position = endPos;
+        Destroy(trailRend.gameObject, trailRend.time);
+
+
+
+
         RaycastHit hit;
-        if (Physics.Raycast(bulletSpawn.position, bulletSpawn.right, out hit, fireLength)) {
+        if (Physics.Raycast(bulletSpawn.position, bulletSpawn.right, out hit, fireLength))
+        {
             Debug.Log("Raycast hit something!");
             Debug.DrawRay(bulletSpawn.position, bulletSpawn.right * fireLength, Color.green, 1);
             TrailRenderer trail = Instantiate(bulletTrail, bulletSpawn.position, Quaternion.identity);
@@ -248,25 +280,18 @@ public class PlayerMovement : MonoBehaviour {
 
 
             //ADD ENEMY DAMAGE CALC HERE
-        }
-        else {
-            Debug.DrawRay(bulletSpawn.position, bulletSpawn.right * fireLength, Color.red, 1);
-            TrailRenderer trailRend = Instantiate(bulletTrail, bulletSpawn.position, Quaternion.identity);
-            float time = 0;
-            Vector3 startPos = trailRend.transform.position;
-            Vector3 endPos = startPos + (bulletSpawn.right * fireLength);
 
-            while (time < 1) {
-                trailRend.transform.position = Vector3.Lerp(startPos, endPos, time);
-                time += Time.deltaTime / trailRend.time;
-                yield return null;
-            }
-            trailRend.transform.position = endPos;
-            Destroy(trailRend.gameObject, trailRend.time);
         }
-        yield return new WaitForSeconds(autoFireRate);
+       // else
+        //{
+
+        //}
         isShootingAuto = false;
     }
+
+    //IEnumerator AutoFire() {
+
+    //}
 
     IEnumerator BulletTrail(TrailRenderer Trail, RaycastHit Hit) {
 

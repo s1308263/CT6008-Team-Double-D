@@ -34,18 +34,9 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Fire_Alt",
+                    "name": "Fire_Super",
                     "type": "Button",
                     "id": "c5a43368-eaf8-470c-b253-eafbc7fb3fd5",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Land",
-                    "type": "Button",
-                    "id": "bb4e2027-0ce6-4f2f-9621-ac2d93736895",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -107,7 +98,7 @@
                 {
                     "name": "up",
                     "id": "3c5268d9-e719-42cd-a036-9e590b39daf4",
-                    "path": "<Keyboard>/upArrow",
+                    "path": "<Keyboard>/w",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -118,7 +109,7 @@
                 {
                     "name": "down",
                     "id": "f85f83cc-f06c-4727-a009-4c918a4d3a6e",
-                    "path": "<Keyboard>/downArrow",
+                    "path": "<Keyboard>/s",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -129,7 +120,7 @@
                 {
                     "name": "left",
                     "id": "6f96c2b5-7c8e-46db-9abc-e84a331081c5",
-                    "path": "<Keyboard>/leftArrow",
+                    "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -140,7 +131,7 @@
                 {
                     "name": "right",
                     "id": "c8612289-06c9-48c7-b9e1-38faf89be225",
-                    "path": "<Keyboard>/rightArrow",
+                    "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -162,7 +153,7 @@
                 {
                     "name": "",
                     "id": "861ff74d-5fd2-468f-b308-5c457fbc77e8",
-                    "path": "<Keyboard>/space",
+                    "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -184,7 +175,7 @@
                 {
                     "name": "",
                     "id": "288e0adb-ad46-4483-8e0b-578fb6d08a93",
-                    "path": "<Keyboard>/d",
+                    "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -199,18 +190,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Fire_Alt",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "71473115-1e46-4f10-99ed-23f202b38b1d",
-                    "path": "<Gamepad>/buttonNorth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Land",
+                    "action": "Fire_Super",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -228,7 +208,7 @@
                 {
                     "name": "",
                     "id": "f9b9ec86-8733-4123-a6a3-29a11fd0c619",
-                    "path": "<Keyboard>/c",
+                    "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -239,7 +219,7 @@
                 {
                     "name": "",
                     "id": "74e7a151-ff87-4af2-938b-7531f136f2e2",
-                    "path": "<Keyboard>/upArrow",
+                    "path": "<Keyboard>/w",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
