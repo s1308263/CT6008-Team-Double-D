@@ -7,6 +7,9 @@ using UnityEngine.UIElements.InputSystem;
 
 public class PlayerMovement : MonoBehaviour {
 
+    [Header("General Settings")]
+    [SerializeField] private GameObject cam;
+
     [Header("Auto Shooting Properties:")]
     [SerializeField] private Transform bulletSpawn;
     [SerializeField] private float autoFireTimer;
@@ -106,7 +109,6 @@ public class PlayerMovement : MonoBehaviour {
                 autoFireTimer = 0;
                 AutoFire();
             }
-            //else { StopCoroutine(AutoFire()); }
         }
 
         if (startChargeTimer == true)
@@ -121,7 +123,9 @@ public class PlayerMovement : MonoBehaviour {
                 canShootMidCharge = false;
                 chargeTimer = maxChargeTime;
                 canShootFullCharge = true;
+                cam.transform.GetComponent<CamScript>().CamShake();
             }
+
             else if (chargeTimer >= maxChargeTime / 2 && chargeTimer <= maxChargeTime)
             {
                 Debug.Log("Can Shoot MID");
@@ -249,51 +253,29 @@ public class PlayerMovement : MonoBehaviour {
     private void AutoFire()
     {
         isShootingAuto = true;
-
-
-
-
-        Debug.DrawRay(bulletSpawn.position, bulletSpawn.right * fireLength, Color.red, 1);
-        TrailRenderer trailRend = Instantiate(bulletTrail, bulletSpawn.position, Quaternion.identity);
-        float time = 0;
-        Vector3 startPos = trailRend.transform.position;
-        Vector3 endPos = startPos + (bulletSpawn.right * fireLength);
-
-        while (time < 1)
-        {
-            trailRend.transform.position = Vector3.Lerp(startPos, endPos, time);
-            time += Time.deltaTime / trailRend.time;
-        }
-        trailRend.transform.position = endPos;
-        Destroy(trailRend.gameObject, trailRend.time);
-
-
-
-
         RaycastHit hit;
+
         if (Physics.Raycast(bulletSpawn.position, bulletSpawn.right, out hit, fireLength))
         {
             Debug.Log("Raycast hit something!");
             Debug.DrawRay(bulletSpawn.position, bulletSpawn.right * fireLength, Color.green, 1);
             TrailRenderer trail = Instantiate(bulletTrail, bulletSpawn.position, Quaternion.identity);
-            StartCoroutine(BulletTrail(trail, hit));
+            StartCoroutine(BulletTrailHit(trail, hit));
 
 
             //ADD ENEMY DAMAGE CALC HERE
 
         }
-       // else
-        //{
-
-        //}
-        isShootingAuto = false;
+        else
+        {
+            Debug.DrawRay(bulletSpawn.position, bulletSpawn.right * fireLength, Color.red, 1);
+            TrailRenderer trailRend = Instantiate(bulletTrail, bulletSpawn.position, Quaternion.identity);
+            StartCoroutine(BulletTrailMiss(trailRend));
+        }
+            isShootingAuto = false;
     }
 
-    //IEnumerator AutoFire() {
-
-    //}
-
-    IEnumerator BulletTrail(TrailRenderer Trail, RaycastHit Hit) {
+    IEnumerator BulletTrailHit(TrailRenderer Trail, RaycastHit Hit) {
 
         float time = 0;
         Vector3 startPos = Trail.transform.position;
@@ -305,6 +287,21 @@ public class PlayerMovement : MonoBehaviour {
         }
         Trail.transform.position = Hit.point;
         Instantiate(bulletImpactParticle, Hit.point, Quaternion.LookRotation(Hit.normal));
+        Destroy(Trail.gameObject, Trail.time);
+    }
+    IEnumerator BulletTrailMiss(TrailRenderer Trail)
+    {
+        float time = 0;
+        Vector3 startPos = Trail.transform.position;
+        Vector3 endPos = startPos + (bulletSpawn.right * fireLength);
+
+        while (time < 1)
+        {
+            Trail.transform.position = Vector3.Lerp(startPos, endPos, time);
+            time += Time.deltaTime / Trail.time;
+            yield return null;
+        }
+        Trail.transform.position = endPos;
         Destroy(Trail.gameObject, Trail.time);
     }
 
@@ -324,9 +321,4 @@ public class PlayerMovement : MonoBehaviour {
             break;
         }
     }
-
-    //IEnumerator DF_RotShip() {
-    //    transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 180, 0), lM_RotSpeed * Time.deltaTime);
-    //    yield return new WaitForSeconds(dM_RotSpeed);
-    //}
 }
