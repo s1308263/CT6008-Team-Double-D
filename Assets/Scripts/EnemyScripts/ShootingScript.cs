@@ -14,7 +14,7 @@ public class ShootingScript : MonoBehaviour
         if (other.tag == "Player")
         {
             reload += Time.deltaTime;
-            if (reload >= 0.2)
+            if (reload >= 0.4)
             {
                 enemyScript.Fire();
                 reload = 0;

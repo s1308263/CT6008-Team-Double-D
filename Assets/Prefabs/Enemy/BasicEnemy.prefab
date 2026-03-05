@@ -357,9 +357,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ade5aca249793424c885cbc6b35d3156, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
   missile: {fileID: 7466608243923696252, guid: 331122ffe65a66f4fb6267fcf53fb0c5, type: 3}
-  bullet: {fileID: 0}
+  bullet: {fileID: 3102534638243489890, guid: c67e963388089754e8f3886feb396f04, type: 3}
 --- !u!54 &2091538409540906553
 Rigidbody:
   m_ObjectHideFlags: 0

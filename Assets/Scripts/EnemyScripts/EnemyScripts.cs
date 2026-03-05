@@ -8,7 +8,7 @@ public class EnemyScripts : MonoBehaviour
     GameObject player;
     float dashPower = 5, 
         dashCD = 1, 
-        maxSpeed = 5, 
+        maxSpeed = 10, 
         rotationSpeed = 3;
     [SerializeField] GameObject missile, bullet;
 
@@ -30,12 +30,12 @@ public class EnemyScripts : MonoBehaviour
         void FixedUpdate()
     {
         //Enemy Movement (Follow Player)
-        //transform.position = Vector3.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime);
         if (canMove == true) {
             StartCoroutine(Burst());
         }
         //Enemy Rotation (Face Player)
         StartCoroutine(LookAt());       
+
     }
     void OnCollisionEnter(Collision collision)
     {
@@ -60,7 +60,7 @@ public class EnemyScripts : MonoBehaviour
     IEnumerator LookAt(){
         Quaternion LookRotation = Quaternion.LookRotation(player.transform.position - transform.position);
         float time = 0;
-        while (time < 1)
+        while (time < .5f)
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, LookRotation, time);
             time += Time.deltaTime * rotationSpeed;
@@ -69,7 +69,7 @@ public class EnemyScripts : MonoBehaviour
     }
     public void FireMissile()
     {
-        Vector3 railPos = transform.position + transform.forward*1.5f;
+        Vector3 railPos = transform.position + transform.forward *1.5f;
         GameObject newMissile = Instantiate(missile, railPos, Quaternion.identity);
     }
 

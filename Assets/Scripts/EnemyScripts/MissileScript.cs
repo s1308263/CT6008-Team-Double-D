@@ -47,7 +47,7 @@ public class MissileScript : MonoBehaviour
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, LookRotation, time);
             rb.AddForce(transform.forward * thrust, ForceMode.Impulse);
-            time += Time.deltaTime * 2f;
+            time += Time.deltaTime * 1.5f;
             yield return null;
         }
     }
