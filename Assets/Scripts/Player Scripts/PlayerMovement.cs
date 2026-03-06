@@ -31,7 +31,7 @@ public class PlayerMovement : MonoBehaviour {
 
     public float cooldownTimer;
 
-    bool canStartCharge, startChargeTimer, canShootFullCharge, canShootMidCharge, canShootSmallCharge;
+    bool canStartCharge, startChargeTimer, canShootFullCharge, canShootMidCharge, canShootSmallCharge, canCooldown;
 
     [Header("Landing_Mode Settings:")]
     [SerializeField] private float lM_MoveForce;
@@ -60,6 +60,7 @@ public class PlayerMovement : MonoBehaviour {
         rb = GetComponent<Rigidbody>();
         rb.maxLinearVelocity = 3;
         canShoot = true;
+        canCooldown = true;
     }
 
     void Start() {
@@ -70,8 +71,6 @@ public class PlayerMovement : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        cooldownTimer += 1 * Time.deltaTime;
-
         //Landing mode movement
         if (dF_Mode == false)
         {
@@ -121,6 +120,11 @@ public class PlayerMovement : MonoBehaviour {
             }
         }
 
+        if(canCooldown == true)
+        {
+            cooldownTimer += 1 * Time.deltaTime;
+        }
+
         if (startChargeTimer == true)
         {
             transform.GetChild(1).transform.gameObject.SetActive(true);
@@ -156,14 +160,17 @@ public class PlayerMovement : MonoBehaviour {
         {
             cooldownTimer = maxCooldown;
             canStartCharge = true;
+            transform.GetChild(4).gameObject.SetActive(true);
         }
         else
         {
             canStartCharge = false;
+            transform.GetChild(4).gameObject.transform.localScale = new Vector3(1.25f, 6.5f, 2.5f);
+            transform.GetChild(4).gameObject.SetActive(false);
         }
     }
 
-    //Move inputs
+    //Movement inputs
     public void OnMove(InputAction.CallbackContext context) {
         moveInput = context.ReadValue<Vector2>();
         //rotate player in moving direction
@@ -185,6 +192,7 @@ public class PlayerMovement : MonoBehaviour {
                 rb.linearDamping = lM_Damping;
             }
         }
+        //Dogfight mode settings applied
         else if (dF_Mode == true)
         {
             Debug.Log("IN DF_MODE");
@@ -196,6 +204,7 @@ public class PlayerMovement : MonoBehaviour {
         }
     }
 
+    //Thrust input
     public void OnThrust(InputAction.CallbackContext context) {
         if (context.performed == true) {
             isThrusting = true;
@@ -205,7 +214,7 @@ public class PlayerMovement : MonoBehaviour {
         }
     }
 
-    //fire main gun (auto)
+    //Fire main gun (auto)
     public void OnFire_Auto(InputAction.CallbackContext context) {
         if (context.performed == true) {
             autoShoot = true;
@@ -216,12 +225,15 @@ public class PlayerMovement : MonoBehaviour {
         }
     }
 
+    //Fire charge shot
     public void OnFire_Charge(InputAction.CallbackContext context) {
         if (context.performed == true && canStartCharge == true) {
             startChargeTimer = true;
+            canCooldown = false;
         }
 
         else {
+            //Fire large charge shot
             if (canShootFullCharge == true && canShootMidCharge == false && canShootSmallCharge == false)
             {
                 var newBigChargeshot = Instantiate(chargeShotPrefab_big, bulletSpawn);
@@ -231,7 +243,7 @@ public class PlayerMovement : MonoBehaviour {
                 newBigChargeshot.transform.GetComponent<ChargeShotScript>().speed = bigShotSpeed;
                 canShootFullCharge = false;
             }
-
+            //Fire medium charge shot
             else if (canShootFullCharge == false && canShootMidCharge == true && canShootSmallCharge == false)
             {
                 var newMidChargeshot = Instantiate(chargeShotPrefab_mid, bulletSpawn);
@@ -241,7 +253,7 @@ public class PlayerMovement : MonoBehaviour {
                 newMidChargeshot.transform.GetComponent<ChargeShotScript>().speed = midShotSpeed;
                 canShootMidCharge = false;
             }
-
+            //Fire small charge shot
             else if (canShootFullCharge == false && canShootMidCharge == false && canShootSmallCharge == true)
             {
                 var newSmallChargeshot = Instantiate(chargeShotPrefab_small, bulletSpawn);
@@ -251,10 +263,12 @@ public class PlayerMovement : MonoBehaviour {
                 newSmallChargeshot.transform.GetComponent<ChargeShotScript>().speed = smallShotSpeed;
                 canShootSmallCharge = false;
             }
+            //reset charge shot settings
             transform.GetChild(1).transform.gameObject.SetActive(false);
             transform.GetChild(2).transform.gameObject.SetActive(false);
             transform.GetChild(3).transform.gameObject.SetActive(false);
             startChargeTimer = false;
+            canCooldown = true;
             chargeTimer = 0;
             if(cooldownTimer >= maxCooldown)
             {
@@ -263,6 +277,7 @@ public class PlayerMovement : MonoBehaviour {
         }
     }
 
+    //Dogfight mode input
     public void OnChangeMode(InputAction.CallbackContext context) {
         switch (context.performed) {
             case true:
@@ -287,7 +302,7 @@ public class PlayerMovement : MonoBehaviour {
             StartCoroutine(BulletTrail(trail, hit));
 
 
-            //ADD ENEMY DAMAGE CALC HERE
+            //ADD ENEMY DAMAGE CALC HERE////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         }
         else

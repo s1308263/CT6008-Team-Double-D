@@ -2521,14 +2521,26 @@ PrefabInstance:
       propertyPath: maxCooldown
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 1705253479978455189, guid: fa051bc374048594ea68fe841fe67419, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1741845876465431846, guid: fa051bc374048594ea68fe841fe67419, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 3938432261517658995, guid: fa051bc374048594ea68fe841fe67419, type: 3}
+      propertyPath: shrinkSpeed
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6156603653916710293, guid: fa051bc374048594ea68fe841fe67419, type: 3}
       propertyPath: cam
       value: 
       objectReference: {fileID: 330585545}
+    - target: {fileID: 9214427348152616680, guid: fa051bc374048594ea68fe841fe67419, type: 3}
+      propertyPath: m_Actions
+      value: 
+      objectReference: {fileID: -944628639613478452, guid: 6a461988dc24c2e4f9f1e81a0f9a7705, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
