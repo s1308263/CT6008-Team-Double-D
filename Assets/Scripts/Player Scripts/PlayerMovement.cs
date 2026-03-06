@@ -27,6 +27,11 @@ public class PlayerMovement : MonoBehaviour {
     [SerializeField] private float bigShotSpeed;
     [SerializeField] private float midShotSpeed;
     [SerializeField] private float smallShotSpeed;
+    [SerializeField] private float maxCooldown;
+
+    public float cooldownTimer;
+
+    bool canStartCharge, startChargeTimer, canShootFullCharge, canShootMidCharge, canShootSmallCharge;
 
     [Header("Landing_Mode Settings:")]
     [SerializeField] private float lM_MoveForce;
@@ -49,11 +54,12 @@ public class PlayerMovement : MonoBehaviour {
     private float dM_currentRotX;
     private float dM_currentRotY;
 
-    bool canShoot = true, leftPressed, rightPressed, dF_Mode, isThrusting, autoShoot, isShootingAuto, startChargeTimer, canShootFullCharge, canShootMidCharge, canShootSmallCharge;
+    bool canShoot, leftPressed, rightPressed, dF_Mode, isThrusting, autoShoot, isShootingAuto;
 
     void Awake() {
         rb = GetComponent<Rigidbody>();
         rb.maxLinearVelocity = 3;
+        canShoot = true;
     }
 
     void Start() {
@@ -64,6 +70,8 @@ public class PlayerMovement : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
+        cooldownTimer += 1 * Time.deltaTime;
+
         //Landing mode movement
         if (dF_Mode == false)
         {
@@ -74,6 +82,7 @@ public class PlayerMovement : MonoBehaviour {
                 StartCoroutine(LM_RotShip());
             }
         }
+
         //Dogfight mode movement
         else if (dF_Mode == true)
         {
@@ -101,6 +110,7 @@ public class PlayerMovement : MonoBehaviour {
             Quaternion rotation = rotX * rotY;
             transform.rotation = rotation;
         }
+
         if (autoShoot == true && isShootingAuto == false)
         {
             autoFireTimer += 1 * Time.deltaTime;
@@ -141,6 +151,16 @@ public class PlayerMovement : MonoBehaviour {
             }
         }
 
+        //charge shot cooldown timer
+        if (cooldownTimer >= maxCooldown)
+        {
+            cooldownTimer = maxCooldown;
+            canStartCharge = true;
+        }
+        else
+        {
+            canStartCharge = false;
+        }
     }
 
     //Move inputs
@@ -197,7 +217,7 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     public void OnFire_Charge(InputAction.CallbackContext context) {
-        if (context.performed == true) {
+        if (context.performed == true && canStartCharge == true) {
             startChargeTimer = true;
         }
 
@@ -236,6 +256,10 @@ public class PlayerMovement : MonoBehaviour {
             transform.GetChild(3).transform.gameObject.SetActive(false);
             startChargeTimer = false;
             chargeTimer = 0;
+            if(cooldownTimer >= maxCooldown)
+            {
+                cooldownTimer = 0;
+            }
         }
     }
 
@@ -260,7 +284,7 @@ public class PlayerMovement : MonoBehaviour {
             Debug.Log("Raycast hit something!");
             Debug.DrawRay(bulletSpawn.position, bulletSpawn.right * fireLength, Color.green, 1);
             TrailRenderer trail = Instantiate(bulletTrail, bulletSpawn.position, Quaternion.identity);
-            StartCoroutine(BulletTrailHit(trail, hit));
+            StartCoroutine(BulletTrail(trail, hit));
 
 
             //ADD ENEMY DAMAGE CALC HERE
@@ -270,55 +294,60 @@ public class PlayerMovement : MonoBehaviour {
         {
             Debug.DrawRay(bulletSpawn.position, bulletSpawn.right * fireLength, Color.red, 1);
             TrailRenderer trailRend = Instantiate(bulletTrail, bulletSpawn.position, Quaternion.identity);
-            StartCoroutine(BulletTrailMiss(trailRend));
+            StartCoroutine(BulletTrail(trailRend, hit));
         }
             isShootingAuto = false;
     }
 
-    IEnumerator BulletTrailHit(TrailRenderer Trail, RaycastHit Hit) {
+    IEnumerator BulletTrail(TrailRenderer Trail, RaycastHit Hit) {
 
         float time = 0;
         Vector3 startPos = Trail.transform.position;
 
-        while (time < 1) {
-            Trail.transform.position = Vector3.Lerp(startPos, Hit.point, time);
-            time += Time.deltaTime / Trail.time;
-            yield return null;
-        }
-        Trail.transform.position = Hit.point;
-        Instantiate(bulletImpactParticle, Hit.point, Quaternion.LookRotation(Hit.normal));
-        Destroy(Trail.gameObject, Trail.time);
-    }
-    IEnumerator BulletTrailMiss(TrailRenderer Trail)
-    {
-        float time = 0;
-        Vector3 startPos = Trail.transform.position;
-        Vector3 endPos = startPos + (bulletSpawn.right * fireLength);
-
-        while (time < 1)
+        if(Hit.collider != null)
         {
-            Trail.transform.position = Vector3.Lerp(startPos, endPos, time);
-            time += Time.deltaTime / Trail.time;
-            yield return null;
+            while (time < 1)
+            {
+                Trail.transform.position = Vector3.Lerp(startPos, Hit.point, time);
+                time += Time.deltaTime / Trail.time;
+                yield return null;
+            }
+            Trail.transform.position = Hit.point;
+            Instantiate(bulletImpactParticle, Hit.point, Quaternion.LookRotation(Hit.normal));
+            Destroy(Trail.gameObject, Trail.time);
         }
-        Trail.transform.position = endPos;
-        Destroy(Trail.gameObject, Trail.time);
+
+        else
+        {
+            Vector3 endPos = startPos + (bulletSpawn.right * fireLength);
+
+            while (time < 1)
+            {
+                Trail.transform.position = Vector3.Lerp(startPos, endPos, time);
+                time += Time.deltaTime / Trail.time;
+                yield return null;
+            }
+            Trail.transform.position = endPos;
+            Destroy(Trail.gameObject, Trail.time);
+        }
     }
 
-    IEnumerator LM_RotShip() {
-        switch (leftPressed, rightPressed) {
+    IEnumerator LM_RotShip()
+    {
+        switch (leftPressed, rightPressed)
+        {
             case (true, false):
-            canShoot = false;
-            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 180, 0), lM_RotSpeed * Time.deltaTime);
-            yield return new WaitForSeconds(lM_RotSpeed);
-            canShoot = true;
-            break;
+                canShoot = false;
+                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 180, 0), lM_RotSpeed * Time.deltaTime);
+                yield return new WaitForSeconds(lM_RotSpeed);
+                canShoot = true;
+                break;
             case (false, true):
-            canShoot = false;
-            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, 0), lM_RotSpeed * Time.deltaTime);
-            yield return new WaitForSeconds(lM_RotSpeed);
-            canShoot = true;
-            break;
+                canShoot = false;
+                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, 0), lM_RotSpeed * Time.deltaTime);
+                yield return new WaitForSeconds(lM_RotSpeed);
+                canShoot = true;
+                break;
         }
     }
 }

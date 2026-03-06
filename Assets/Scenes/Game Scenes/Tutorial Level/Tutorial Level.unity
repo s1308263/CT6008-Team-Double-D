@@ -2517,6 +2517,10 @@ PrefabInstance:
       propertyPath: cam
       value: 
       objectReference: {fileID: 330585543}
+    - target: {fileID: 779586746523252171, guid: fa051bc374048594ea68fe841fe67419, type: 3}
+      propertyPath: maxCooldown
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 1741845876465431846, guid: fa051bc374048594ea68fe841fe67419, type: 3}
       propertyPath: m_Name
       value: Player
