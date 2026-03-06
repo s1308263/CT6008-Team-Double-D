@@ -6,6 +6,7 @@ using UnityEngine;
 public class EnemyScripts : MonoBehaviour
 {
     GameObject player;
+    public Quaternion LookRotation;
     float dashPower = 5, 
         dashCD = 1, 
         maxSpeed = 10, 
@@ -58,7 +59,7 @@ public class EnemyScripts : MonoBehaviour
         }
     }
     IEnumerator LookAt(){
-        Quaternion LookRotation = Quaternion.LookRotation(player.transform.position - transform.position);
+        LookRotation = Quaternion.LookRotation(player.transform.position - transform.position);
         float time = 0;
         while (time < .5f)
         {
@@ -77,5 +78,7 @@ public class EnemyScripts : MonoBehaviour
     {
         Vector3 railPos = transform.position + transform.forward *1.5f;
         GameObject newBullet = Instantiate(bullet, railPos, Quaternion.identity);
+        newBullet.transform.rotation = LookRotation;
+        newBullet.GetComponent<Rigidbody>().AddForce (transform.forward * 100f);
     }
 }

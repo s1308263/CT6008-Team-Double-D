@@ -4,6 +4,7 @@ using UnityEngine.ProBuilder.Shapes;
 public class BulletScript : MonoBehaviour {
 
     [SerializeField] private float speed;
+    [SerializeField] private test props;
     GameObject target;
     Rigidbody rb;
     Vector3 aim;
@@ -11,14 +12,14 @@ public class BulletScript : MonoBehaviour {
     private void Awake() {
         target = GameObject.FindWithTag("Player");
         rb = GetComponent<Rigidbody>();
-        rb.maxLinearVelocity = 5f;
+        rb.maxLinearVelocity = 10f;
         aim = target.transform.position - rb.position;
 
 
     }
 
     void Update() {
-        rb.AddForce(aim * speed, ForceMode.VelocityChange);
+        rb.AddForce(aim * props.speed, ForceMode.VelocityChange);
     }
 
     private void OnCollisionEnter(Collision collision) {
@@ -30,5 +31,6 @@ public class BulletScript : MonoBehaviour {
             Destroy(collision.gameObject);
         }
     }
+
 }
 
