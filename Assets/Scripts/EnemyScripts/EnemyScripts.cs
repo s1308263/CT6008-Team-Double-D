@@ -7,7 +7,7 @@ public class EnemyScripts : MonoBehaviour
 {
     GameObject player;
     public Quaternion LookRotation;
-    float dashPower = 5, 
+    public float dashPower = 5, 
         dashCD = 1, 
         maxSpeed = 10, 
         rotationSpeed = 3;
