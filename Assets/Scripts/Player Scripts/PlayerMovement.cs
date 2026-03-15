@@ -54,12 +54,11 @@ public class PlayerMovement : MonoBehaviour {
     private float dM_currentRotX;
     private float dM_currentRotY;
 
-    bool canShoot, leftPressed, rightPressed, dF_Mode, isThrusting, autoShoot, isShootingAuto;
+    bool leftPressed, rightPressed, dF_Mode, isThrusting, autoShoot, isShootingAuto;
 
     void Awake() {
         rb = GetComponent<Rigidbody>();
         rb.maxLinearVelocity = 3;
-        canShoot = true;
         canCooldown = true;
     }
 
@@ -87,7 +86,6 @@ public class PlayerMovement : MonoBehaviour {
         {
             //set handling and acceleration
             float movementHorizontal = Input.GetAxis("Horizontal") * dM_Handling;
-            float movementVertical = Input.GetAxis("Vertical") * dM_Acceleration * 2;
 
             bool invertXRot = false;
             bool invertYRot = (dM_currentRotX < -180f);
@@ -95,7 +93,7 @@ public class PlayerMovement : MonoBehaviour {
             if (isThrusting == true)
             {
                 //Add force as thrust
-                rb.AddForce(transform.right * movementVertical, ForceMode.Acceleration);
+                rb.AddForce(transform.right * dM_Acceleration * 2, ForceMode.Acceleration);
             }
 
             //Set rotation of ship
@@ -106,10 +104,11 @@ public class PlayerMovement : MonoBehaviour {
             Quaternion rotY = Quaternion.AngleAxis(dM_currentRotY, Vector3.up);
 
             //apply rotation
-            Quaternion rotation = rotX * rotY;
-            transform.rotation = rotation;
+            Quaternion dF_Rotation = rotX * rotY;
+            transform.rotation = dF_Rotation;
         }
 
+        //Auto-fire attack
         if (autoShoot == true && isShootingAuto == false)
         {
             autoFireTimer += 1 * Time.deltaTime;
@@ -120,16 +119,19 @@ public class PlayerMovement : MonoBehaviour {
             }
         }
 
+        //Charge attack cooldown
         if(canCooldown == true)
         {
             cooldownTimer += 1 * Time.deltaTime;
         }
 
+        //Charge attack
         if (startChargeTimer == true)
         {
             transform.GetChild(1).transform.gameObject.SetActive(true);
             chargeTimer += 1 * Time.deltaTime;
             Debug.Log("chargeTimer begun");
+            //Max charge attack
             if (chargeTimer >= maxChargeTime && chargeTimer >= maxChargeTime / 2)
             {
                 Debug.Log("timer at max");
@@ -140,6 +142,7 @@ public class PlayerMovement : MonoBehaviour {
                 cam.transform.GetComponent<CamScript>().CamShake();
             }
 
+            //Mid charge attack
             else if (chargeTimer >= maxChargeTime / 2 && chargeTimer <= maxChargeTime)
             {
                 Debug.Log("Can Shoot MID");
@@ -148,6 +151,7 @@ public class PlayerMovement : MonoBehaviour {
                 canShootMidCharge = true;
             }
 
+            //Small charge attack
             else if (chargeTimer <= maxChargeTime / 2)
             {
                 Debug.Log("Can Shoot SMALL");
@@ -281,10 +285,14 @@ public class PlayerMovement : MonoBehaviour {
     public void OnChangeMode(InputAction.CallbackContext context) {
         switch (context.performed) {
             case true:
+            if (dF_Mode == false) {
                 dF_Mode = true;
-                break;
-            case false:
+                dM_currentRotX = transform.rotation.x;
+                dM_currentRotY = transform.rotation.y;
+            }
+            else {
                 dF_Mode = false;
+            }
                 break;
         }
     }
@@ -352,16 +360,12 @@ public class PlayerMovement : MonoBehaviour {
         switch (leftPressed, rightPressed)
         {
             case (true, false):
-                canShoot = false;
                 transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 180, 0), lM_RotSpeed * Time.deltaTime);
                 yield return new WaitForSeconds(lM_RotSpeed);
-                canShoot = true;
                 break;
             case (false, true):
-                canShoot = false;
                 transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, 0), lM_RotSpeed * Time.deltaTime);
                 yield return new WaitForSeconds(lM_RotSpeed);
-                canShoot = true;
                 break;
         }
     }

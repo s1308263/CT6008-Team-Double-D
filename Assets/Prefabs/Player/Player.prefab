@@ -1341,7 +1341,7 @@ MonoBehaviour:
   lM_Damping: 1.5
   lM_RotSpeed: 3
   dM_Acceleration: 15
-  dM_Handling: 0.2
+  dM_Handling: 1
   dM_MaxVelocity: 15
   dM_Damping: 1
   dM_RotSpeed: 1
