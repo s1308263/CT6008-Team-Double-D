@@ -2521,6 +2521,10 @@ PrefabInstance:
       propertyPath: maxCooldown
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 779586746523252171, guid: fa051bc374048594ea68fe841fe67419, type: 3}
+      propertyPath: chargeSpherePrefab
+      value: 
+      objectReference: {fileID: 3388953636302920109, guid: 06b4fb2604599aa488a09d401338d7d8, type: 3}
     - target: {fileID: 1705253479978455189, guid: fa051bc374048594ea68fe841fe67419, type: 3}
       propertyPath: m_IsActive
       value: 0

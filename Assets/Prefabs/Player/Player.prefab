@@ -717,7 +717,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.637, y: 0, z: 0}
-  m_LocalScale: {x: 0.20091826, y: 0.61821, z: 0.4018365}
+  m_LocalScale: {x: 0.2, y: 1, z: 0.4}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 762573754942222915}
@@ -1267,7 +1267,19 @@ MonoBehaviour:
     m_ActionId: 8c8a82b3-1efb-4747-a985-8b8cd430c081
     m_ActionName: Player/Fire_Charge
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 779586746523252171}
+        m_TargetAssemblyTypeName: PlayerMovement, Assembly-CSharp
+        m_MethodName: OnFire_Super
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: c5a43368-eaf8-470c-b253-eafbc7fb3fd5
     m_ActionName: Player/Fire_Alt
   - m_PersistentCalls:
@@ -1336,12 +1348,13 @@ MonoBehaviour:
   smallShotSpeed: 15
   maxCooldown: 0
   cooldownTimer: 0
+  chargeSpherePrefab: {fileID: 3388953636302920109, guid: 06b4fb2604599aa488a09d401338d7d8, type: 3}
   lM_MoveForce: 3
   lM_MaxVelocity: 3
   lM_Damping: 1.5
   lM_RotSpeed: 3
   dM_Acceleration: 15
-  dM_Handling: 1
+  dM_Handling: 0.25
   dM_MaxVelocity: 15
   dM_Damping: 1
   dM_RotSpeed: 1

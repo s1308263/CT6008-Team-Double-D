@@ -33,6 +33,9 @@ public class PlayerMovement : MonoBehaviour {
 
     bool canStartCharge, startChargeTimer, canShootFullCharge, canShootMidCharge, canShootSmallCharge, canCooldown;
 
+    [Header("Super Attack Properties:")]
+    [SerializeField] private GameObject chargeSpherePrefab;
+
     [Header("Landing_Mode Settings:")]
     [SerializeField] private float lM_MoveForce;
     [SerializeField] private float lM_MaxVelocity;
@@ -54,7 +57,7 @@ public class PlayerMovement : MonoBehaviour {
     private float dM_currentRotX;
     private float dM_currentRotY;
 
-    bool leftPressed, rightPressed, dF_Mode, isThrusting, autoShoot, isShootingAuto;
+    bool leftPressed, rightPressed, dF_Mode, isThrusting, autoShoot, isShootingAuto, canFireSuper = true;
 
     void Awake() {
         rb = GetComponent<Rigidbody>();
@@ -278,6 +281,15 @@ public class PlayerMovement : MonoBehaviour {
             {
                 cooldownTimer = 0;
             }
+        }
+    }
+
+    public void OnFire_Super(InputAction.CallbackContext context){
+        if(context.performed == true && canFireSuper == true) {
+            GameObject energyWave = Instantiate(chargeSpherePrefab);
+            energyWave.transform.SetParent(bulletSpawn, false);
+            energyWave.transform.position = bulletSpawn.position;
+            canFireSuper = false;
         }
     }
 

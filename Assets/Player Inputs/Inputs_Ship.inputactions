@@ -196,6 +196,17 @@
                 },
                 {
                     "name": "",
+                    "id": "6b863376-406c-438b-9caa-8387b77858bb",
+                    "path": "<Mouse>/middleButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Fire_Super",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "303cb8c5-3633-4eb4-b5bd-ce42c23a7a76",
                     "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
