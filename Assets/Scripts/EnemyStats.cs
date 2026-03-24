@@ -1,0 +1,10 @@
+using UnityEngine;
+
+[CreateAssetMenu(fileName = "EnemyStats", menuName = "Scriptable Objects/EnemyStats")]
+public class EnemyStats : ScriptableObject
+{   
+    [SerializeField] public float speed = 3;
+    [SerializeField] public int health = 10;
+    [SerializeField] public float attackSpeed = 10;
+    [SerializeField] public int damage = 10;
+}

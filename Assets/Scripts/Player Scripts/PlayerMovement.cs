@@ -303,7 +303,11 @@ public class PlayerMovement : MonoBehaviour {
 
 
             //ADD ENEMY DAMAGE CALC HERE////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+            if (hit.rigidbody.tag == "Enemy")
+            {
+                hit.transform.gameObject.GetComponent<EnemyScripts>().Damage(1);
+            }
+            //maybe works?????????? - Alex
         }
         else
         {

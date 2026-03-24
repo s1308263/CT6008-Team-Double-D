@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Reflection;
 using Unity.VisualScripting;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
+using UnityEngine.Timeline;
 
 public class EnemyScripts : MonoBehaviour
 {
@@ -12,6 +14,8 @@ public class EnemyScripts : MonoBehaviour
         maxSpeed = 10, 
         rotationSpeed = 3;
     [SerializeField] GameObject missile, bullet;
+    public EnemyStats stats;
+    public int health;
 
     Rigidbody rb;
     bool canMove = true;
@@ -20,6 +24,7 @@ public class EnemyScripts : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rb.maxLinearVelocity = maxSpeed;
         MissileLock lockScript = GetComponent<MissileLock>();
+        health = stats.health;
     }
     void Awake()
     {
@@ -27,7 +32,7 @@ public class EnemyScripts : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rb.maxLinearVelocity = maxSpeed;
         MissileLock lockScript = GetComponent<MissileLock>();
-    }
+}
         void FixedUpdate()
     {
         //Enemy Movement (Follow Player)
@@ -35,7 +40,11 @@ public class EnemyScripts : MonoBehaviour
             StartCoroutine(Burst());
         }
         //Enemy Rotation (Face Player)
-        StartCoroutine(LookAt());       
+        StartCoroutine(LookAt());
+
+        //Damage?
+        Die();
+        
 
     }
     void OnCollisionEnter(Collision collision)
@@ -80,5 +89,16 @@ public class EnemyScripts : MonoBehaviour
         GameObject newBullet = Instantiate(bullet, railPos, Quaternion.identity);
         newBullet.transform.rotation = LookRotation;
         newBullet.GetComponent<Rigidbody>().AddForce (transform.forward * 100f);
+    }
+    public void Die()
+    {
+        if (health <= 0)
+        {
+            Destroy(gameObject);
+        }
+    }
+    public void Damage(int damage)
+    {
+        health -= damage;
     }
 }
