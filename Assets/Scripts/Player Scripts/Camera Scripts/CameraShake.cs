@@ -1,28 +1,14 @@
 using System.Collections;
 using UnityEngine;
 
-public class CamScript : MonoBehaviour {
-
-    [Header("Camera Follow Settings")]
-    [SerializeField] private Transform player;
-    [SerializeField] private float damping;
-    [SerializeField] private Vector3 offset;
+public class CameraShake : MonoBehaviour {
 
     [Header("Camera Shake Settings")]
     [SerializeField] private float shakeDuration;
     [SerializeField] private float shakeAmount;
     [SerializeField] private float shakeDamping;
 
-    private Vector3 velocity;
-    private Vector3 camOffset;
     private Vector3 startPos;
-
-    // Update is called once per frame
-    void Update() {
-        Vector3 destination = player.position + offset + camOffset;
-        transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, damping);
-        startPos = Vector3.SmoothDamp(transform.position, destination, ref velocity, damping);
-    }
 
     public void CamShake()
     {

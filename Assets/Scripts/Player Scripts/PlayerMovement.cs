@@ -142,7 +142,7 @@ public class PlayerMovement : MonoBehaviour {
                 canShootMidCharge = false;
                 chargeTimer = maxChargeTime;
                 canShootFullCharge = true;
-                cam.transform.GetComponent<CamScript>().CamShake();
+                cam.transform.GetComponent<CameraShake>().CamShake();
             }
 
             //Mid charge attack
