@@ -30,8 +30,9 @@ public class PlayerMovement : MonoBehaviour {
     [SerializeField] private float maxCooldown;
 
     public float cooldownTimer;
+    public bool canStartCharge, isCoolingDown;
 
-    bool canStartCharge, startChargeTimer, canShootFullCharge, canShootMidCharge, canShootSmallCharge, canCooldown;
+    bool startChargeTimer, canShootFullCharge, canShootMidCharge, canShootSmallCharge, canCooldown;
 
     [Header("Super Attack Properties:")]
     [SerializeField] private GameObject chargeSpherePrefab;
@@ -63,6 +64,7 @@ public class PlayerMovement : MonoBehaviour {
         rb = GetComponent<Rigidbody>();
         rb.maxLinearVelocity = 3;
         canCooldown = true;
+        isCoolingDown = true;
     }
 
     void Start() {
@@ -126,6 +128,10 @@ public class PlayerMovement : MonoBehaviour {
         if(canCooldown == true)
         {
             cooldownTimer += 1 * Time.deltaTime;
+            if (cooldownTimer >= maxCooldown)
+            {
+                cooldownTimer = maxCooldown;
+            }
         }
 
         //Charge attack
@@ -137,7 +143,7 @@ public class PlayerMovement : MonoBehaviour {
             //Max charge attack
             if (chargeTimer >= maxChargeTime && chargeTimer >= maxChargeTime / 2)
             {
-                Debug.Log("timer at max");
+                Debug.Log("charge timer at MAX");
                 transform.GetChild(3).transform.gameObject.SetActive(true);
                 canShootMidCharge = false;
                 chargeTimer = maxChargeTime;
@@ -163,15 +169,14 @@ public class PlayerMovement : MonoBehaviour {
         }
 
         //charge shot cooldown timer
-        if (cooldownTimer >= maxCooldown)
+        if (cooldownTimer >= maxCooldown && isCoolingDown == true)
         {
             cooldownTimer = maxCooldown;
-            canStartCharge = true;
             transform.GetChild(4).gameObject.SetActive(true);
         }
         else
         {
-            canStartCharge = false;
+            transform.GetChild(4).GetComponent<CooldownShrink>().shrinkTimer = 0;
             transform.GetChild(4).gameObject.transform.localScale = new Vector3(1.25f, 6.5f, 2.5f);
             transform.GetChild(4).gameObject.SetActive(false);
         }
@@ -183,7 +188,6 @@ public class PlayerMovement : MonoBehaviour {
         //rotate player in moving direction
         if (dF_Mode == false) {
             rb.mass = 1;
-            rb.useGravity = false;
             if (moveInput.x <= -0.85f) {
                 rightPressed = false;
                 leftPressed = true;
@@ -194,17 +198,14 @@ public class PlayerMovement : MonoBehaviour {
                 rightPressed = true;
             }
             //Sets ship velocity and damping
-            if (rb.linearVelocity.magnitude > lM_MaxVelocity) {
-                rb.maxLinearVelocity = lM_MaxVelocity;
-                rb.linearDamping = lM_Damping;
-            }
+            rb.maxLinearVelocity = lM_MaxVelocity;
+            rb.linearDamping = lM_Damping;
         }
         //Dogfight mode settings applied
         else if (dF_Mode == true)
         {
             Debug.Log("IN DF_MODE");
             rb.mass = dM_Mass;
-            rb.useGravity = true;
             rb.maxLinearVelocity = dM_MaxVelocity;
             rb.linearDamping = dM_Damping;
             Debug.Log("DF_MODE SETTINGS SET");
@@ -234,7 +235,7 @@ public class PlayerMovement : MonoBehaviour {
 
     //Fire charge shot
     public void OnFire_Charge(InputAction.CallbackContext context) {
-        if (context.performed == true && canStartCharge == true) {
+        if (context.performed == true && canStartCharge == true && isCoolingDown == false) {
             startChargeTimer = true;
             canCooldown = false;
         }
@@ -277,8 +278,7 @@ public class PlayerMovement : MonoBehaviour {
             startChargeTimer = false;
             canCooldown = true;
             chargeTimer = 0;
-            if(cooldownTimer >= maxCooldown)
-            {
+            if (cooldownTimer >= maxCooldown && isCoolingDown == false) {
                 cooldownTimer = 0;
             }
         }
@@ -299,12 +299,18 @@ public class PlayerMovement : MonoBehaviour {
             case true:
             if (dF_Mode == false) {
                 dF_Mode = true;
+                rb.useGravity = true;
+                transform.GetChild(8).GetComponent<TrailRenderer>().emitting = true;
+                transform.GetChild(9).GetComponent<TrailRenderer>().emitting = true;
                 dM_currentRotX = transform.rotation.x;
                 dM_currentRotY = transform.rotation.y;
             }
             else {
                 dF_Mode = false;
-            }
+                    rb.useGravity = false;
+                    transform.GetChild(8).GetComponent<TrailRenderer>().emitting = false;
+                    transform.GetChild(9).GetComponent<TrailRenderer>().emitting = false;
+                }
                 break;
         }
     }

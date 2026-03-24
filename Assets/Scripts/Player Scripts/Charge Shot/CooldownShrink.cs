@@ -3,13 +3,11 @@ using UnityEngine;
 public class CooldownShrink : MonoBehaviour
 {
     [SerializeField] private float shrinkSpeed;
-    [SerializeField] private float shrinkTimer;
+    public float shrinkTimer;
 
-    Vector3 originScale;
-
-    void Awake()
+    private void Awake()
     {
-        //originScale = transform.localScale;
+        transform.GetComponentInParent<PlayerMovement>().isCoolingDown = true;
     }
 
     // Update is called once per frame
@@ -21,6 +19,12 @@ public class CooldownShrink : MonoBehaviour
         if (shrinkTimer >= shrinkSpeed)
         {
             shrinkTimer = shrinkSpeed;
+            transform.GetComponentInParent<PlayerMovement>().isCoolingDown = false;
+            transform.GetComponentInParent<PlayerMovement>().canStartCharge = true;
+        }
+        else {
+            
+            transform.GetComponentInParent<PlayerMovement>().canStartCharge = false; 
         }
     }
 }
