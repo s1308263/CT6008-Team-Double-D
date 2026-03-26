@@ -1,24 +1,36 @@
 using UnityEngine;
+using UnityEngine.ProBuilder.Shapes;
 
 public class BulletScript : MonoBehaviour {
 
     [SerializeField] private float speed;
-
+    [SerializeField] private EnemyStats stats;
+    GameObject target;
     Rigidbody rb;
+    Vector3 aim;
 
     private void Awake() {
+        target = GameObject.FindWithTag("Player");
         rb = GetComponent<Rigidbody>();
+        rb.maxLinearVelocity = 10f;
+        aim = target.transform.position - rb.position;
+
+
     }
 
-    // Update is called once per frame
     void Update() {
-        rb.linearVelocity = transform.right * speed;
+        rb.AddForce(aim * stats.speed, ForceMode.VelocityChange);
     }
 
     private void OnCollisionEnter(Collision collision) {
-        if (collision.collider.tag != "Player") {
+        if (collision.collider.tag == "Player") {
             Destroy(gameObject);
+        }if (collision.collider.tag == "Missile")
+        {
+            Destroy(gameObject);
+            Destroy(collision.gameObject);
         }
     }
+
 }
 

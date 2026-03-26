@@ -1,15 +1,21 @@
 using System.Collections;
 using System.Reflection;
 using Unity.VisualScripting;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
+using UnityEngine.Timeline;
 
 public class EnemyScripts : MonoBehaviour
 {
-    [SerializeField] GameObject player;
-    public float strength, cd, maxSpeed, rotationSpeed;
-    [SerializeField] Collider range;
-    [SerializeField] GameObject missile;
-    [SerializeField] Transform rail;
+    GameObject player;
+    public Quaternion LookRotation;
+    public float dashPower = 5, 
+        dashCD = 1, 
+        maxSpeed = 10, 
+        rotationSpeed = 3;
+    [SerializeField] GameObject missile, bullet;
+    public EnemyStats stats;
+    public int health;
 
     Rigidbody rb;
     bool canMove = true;
@@ -18,16 +24,28 @@ public class EnemyScripts : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rb.maxLinearVelocity = maxSpeed;
         MissileLock lockScript = GetComponent<MissileLock>();
+        health = stats.health;
     }
-    void FixedUpdate()
+    void Awake()
+    {
+        player = GameObject.FindWithTag("Player");
+        rb = GetComponent<Rigidbody>();
+        rb.maxLinearVelocity = maxSpeed;
+        MissileLock lockScript = GetComponent<MissileLock>();
+}
+        void FixedUpdate()
     {
         //Enemy Movement (Follow Player)
-        //transform.position = Vector3.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime);
         if (canMove == true) {
             StartCoroutine(Burst());
         }
         //Enemy Rotation (Face Player)
-        StartCoroutine(LookAt());       
+        StartCoroutine(LookAt());
+
+        //Damage?
+        Die();
+        
+
     }
     void OnCollisionEnter(Collision collision)
     {
@@ -39,20 +57,20 @@ public class EnemyScripts : MonoBehaviour
         }
     }
     void burst(){
-        rb.AddForce(transform.forward * strength, ForceMode.Impulse);
+        rb.AddForce(transform.forward * dashPower, ForceMode.Impulse);
     }
     IEnumerator Burst(){
         {
             burst();
             canMove = false;
-            yield return new WaitForSeconds(cd);
+            yield return new WaitForSeconds(dashCD);
             canMove = true;
         }
     }
     IEnumerator LookAt(){
-        Quaternion LookRotation = Quaternion.LookRotation(player.transform.position - transform.position);
-        float time = 0; 
-        while (time < 1)
+        LookRotation = Quaternion.LookRotation(player.transform.position - transform.position);
+        float time = 0;
+        while (time < .5f)
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, LookRotation, time);
             time += Time.deltaTime * rotationSpeed;
@@ -61,10 +79,26 @@ public class EnemyScripts : MonoBehaviour
     }
     public void FireMissile()
     {
-        GameObject newMissile = Instantiate(missile, rail.transform.position, Quaternion.identity);
+        Vector3 railPos = transform.position + transform.forward *1.5f;
+        GameObject newMissile = Instantiate(missile, railPos, Quaternion.identity);
     }
+
     public void Fire()
     {
-
+        Vector3 railPos = transform.position + transform.forward *1.5f;
+        GameObject newBullet = Instantiate(bullet, railPos, Quaternion.identity);
+        newBullet.transform.rotation = LookRotation;
+        newBullet.GetComponent<Rigidbody>().AddForce (transform.forward * 100f);
+    }
+    public void Die()
+    {
+        if (health <= 0)
+        {
+            Destroy(gameObject);
+        }
+    }
+    public void Damage(int damage)
+    {
+        health -= damage;
     }
 }
