@@ -5,6 +5,8 @@ public class MenuScript : MonoBehaviour {
 
     [SerializeField] private GameObject mainMenuPrefab, settingsPrefab;
 
+    bool isSettings = false;
+
     public void PlayTutorial() {
         SceneManager.LoadScene("Tutorial Level");
     }
@@ -18,16 +20,14 @@ public class MenuScript : MonoBehaviour {
         Application.Quit();
     }
 
-    public void ShowSettings() {
-        mainMenuPrefab.SetActive(false);
-        settingsPrefab.SetActive(true);
+    public void Settings() {
+        if (isSettings == false) {
+            settingsPrefab.SetActive(true);
+            isSettings = true;
+        }
+        else if (isSettings == true){
+            settingsPrefab.SetActive(false); 
+            isSettings = false;
+        }
     }
-
-    public void HideSettings() {
-        mainMenuPrefab.SetActive(true);
-        settingsPrefab.SetActive(false);
-    }
-
-
-
 }

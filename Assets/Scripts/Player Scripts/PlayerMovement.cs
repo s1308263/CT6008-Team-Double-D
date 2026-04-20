@@ -54,17 +54,25 @@ public class PlayerMovement : MonoBehaviour {
     private Rigidbody rb;
 
     private Vector2 moveInput;
+    private Vector2 moveRotate;
+
+    public AudioSource audioSource;
+    public AudioClip basicShotClip, ricochetClip, chargeClip, fullChargeClip, chargeReadyClip;
 
     private float dM_currentRotX;
     private float dM_currentRotY;
 
-    bool leftPressed, rightPressed, dF_Mode, isThrusting, autoShoot, isShootingAuto, canFireSuper = true;
+    bool leftPressed, rightPressed, dF_Mode, isThrusting, autoShoot, isShootingAuto, canFireSuper = true, dF_rightPressed, dF_leftPressed;
+
+    bool fullChargeIsPlaying = false;
 
     void Awake() {
+        audioSource = GetComponent<AudioSource>();
         rb = GetComponent<Rigidbody>();
         rb.maxLinearVelocity = 3;
         canCooldown = true;
         isCoolingDown = true;
+        fullChargeIsPlaying = false;
     }
 
     void Start() {
@@ -73,32 +81,39 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void FixedUpdate() {
         //Landing mode movement
-        if (dF_Mode == false)
-        {
+        if (dF_Mode == false) {
             //Debug.Log("moveInput = " + moveInput);
             rb.AddForce(moveInput.x * lM_MoveForce, moveInput.y * lM_MoveForce, 0);
-            if (leftPressed == true || rightPressed == true)
-            {
+            if (leftPressed == true || rightPressed == true) {
                 StartCoroutine(LM_RotShip());
             }
         }
 
         //Dogfight mode movement
-        else if (dF_Mode == true)
-        {
+        else if (dF_Mode == true) {
+            //if (dF_rightPressed == true) {
+            //    Debug.Log("ROTATING LEFT");
+            //    transform.Rotate(-Vector3.forward * +dM_Handling * Time.deltaTime);
+            //    transform.GetChild(5).transform.Rotate(-Vector3.right * +dM_Handling * Time.deltaTime, 1, Space.World);
+            //}
+            //else if (dF_leftPressed == true) {
+            //    Debug.Log("ROTATING RIGHT");
+            //    transform.Rotate(Vector3.forward * +dM_Handling * Time.deltaTime);
+            //    transform.GetChild(5).transform.Rotate(Vector3.right * +dM_Handling * Time.deltaTime, 1, Space.World);
+            //}
+
+
             //set handling and acceleration
             float movementHorizontal = Input.GetAxis("Horizontal") * dM_Handling;
 
             bool invertXRot = false;
             bool invertYRot = (dM_currentRotX < -180f);
 
-            if (isThrusting == true)
-            {
+            if (isThrusting == true) {
                 //Add force as thrust
-                rb.AddForce(transform.right * dM_Acceleration * 2, ForceMode.Acceleration);
+                rb.AddForce(transform.right * dM_Acceleration * 2, ForceMode.Impulse);
             }
 
             //Set rotation of ship
@@ -114,46 +129,41 @@ public class PlayerMovement : MonoBehaviour {
         }
 
         //Auto-fire attack
-        if (autoShoot == true && isShootingAuto == false)
-        {
+        if (autoShoot == true && isShootingAuto == false) {
             autoFireTimer += 1 * Time.deltaTime;
-            if (autoFireTimer >= maxAutoFireRate)
-            {
+            if (autoFireTimer >= maxAutoFireRate) {
                 autoFireTimer = 0;
                 AutoFire();
             }
         }
 
         //Charge attack cooldown
-        if(canCooldown == true)
-        {
+        if (canCooldown == true) {
             cooldownTimer += 1 * Time.deltaTime;
-            if (cooldownTimer >= maxCooldown)
-            {
+            if (cooldownTimer >= maxCooldown) {
                 cooldownTimer = maxCooldown;
             }
         }
 
         //Charge attack
-        if (startChargeTimer == true)
-        {
+        if (startChargeTimer == true) {
             transform.GetChild(1).transform.gameObject.SetActive(true);
             chargeTimer += 1 * Time.deltaTime;
             Debug.Log("chargeTimer begun");
             //Max charge attack
-            if (chargeTimer >= maxChargeTime && chargeTimer >= maxChargeTime / 2)
-            {
+            if (chargeTimer >= maxChargeTime && chargeTimer >= maxChargeTime / 2) {
                 Debug.Log("charge timer at MAX");
+                audioSource.Stop();
                 transform.GetChild(3).transform.gameObject.SetActive(true);
                 canShootMidCharge = false;
                 chargeTimer = maxChargeTime;
                 canShootFullCharge = true;
-                cam.transform.GetComponent<CameraShake>().CamShake();
+                //cam.transform.GetComponent<CameraShake>().CamShake();
             }
 
+
             //Mid charge attack
-            else if (chargeTimer >= maxChargeTime / 2 && chargeTimer <= maxChargeTime)
-            {
+            else if (chargeTimer >= maxChargeTime / 2 && chargeTimer <= maxChargeTime) {
                 Debug.Log("Can Shoot MID");
                 transform.GetChild(2).transform.gameObject.SetActive(true);
                 canShootSmallCharge = false;
@@ -161,28 +171,25 @@ public class PlayerMovement : MonoBehaviour {
             }
 
             //Small charge attack
-            else if (chargeTimer <= maxChargeTime / 2)
-            {
+            else if (chargeTimer <= maxChargeTime / 2) {
                 Debug.Log("Can Shoot SMALL");
                 canShootSmallCharge = true;
             }
         }
 
         //charge shot cooldown timer
-        if (cooldownTimer >= maxCooldown && isCoolingDown == true)
-        {
+        if (cooldownTimer >= maxCooldown && isCoolingDown == true) {
             cooldownTimer = maxCooldown;
             transform.GetChild(4).gameObject.SetActive(true);
         }
-        else
-        {
+        else if (cooldownTimer == maxCooldown && isCoolingDown == false) {
             transform.GetChild(4).GetComponent<CooldownShrink>().shrinkTimer = 0;
             transform.GetChild(4).gameObject.transform.localScale = new Vector3(1.25f, 6.5f, 2.5f);
             transform.GetChild(4).gameObject.SetActive(false);
         }
     }
 
-    //Movement inputs
+    //landing mode movement inputs
     public void OnMove(InputAction.CallbackContext context) {
         moveInput = context.ReadValue<Vector2>();
         //rotate player in moving direction
@@ -202,13 +209,31 @@ public class PlayerMovement : MonoBehaviour {
             rb.linearDamping = lM_Damping;
         }
         //Dogfight mode settings applied
-        else if (dF_Mode == true)
-        {
+        else if (dF_Mode == true) {
             Debug.Log("IN DF_MODE");
             rb.mass = dM_Mass;
             rb.maxLinearVelocity = dM_MaxVelocity;
             rb.linearDamping = dM_Damping;
             Debug.Log("DF_MODE SETTINGS SET");
+        }
+    }
+
+    //Dogfight mode movement inputs
+    public void OnDM_Rotate(InputAction.CallbackContext context) {
+        if (dF_Mode == true) {
+            moveRotate = context.ReadValue<Vector2>();
+            if (context.performed == true && context.ReadValue<Vector2>().x < 0 || context.performed == true && context.ReadValue<Vector2>().x > 0) {
+                moveRotate = context.ReadValue<Vector2>();
+                if (moveRotate.x <= -0.85f) {
+                    dF_rightPressed = false;
+                    dF_leftPressed = true;
+                }
+                else if (moveRotate.x >= 0.85f) {
+                    dF_leftPressed = false;
+                    dF_rightPressed = true;
+                }
+            }
+            else { dF_rightPressed = false; dF_leftPressed = false; }
         }
     }
 
@@ -238,12 +263,13 @@ public class PlayerMovement : MonoBehaviour {
         if (context.performed == true && canStartCharge == true && isCoolingDown == false) {
             startChargeTimer = true;
             canCooldown = false;
+            audioSource.PlayOneShot(chargeClip);
         }
 
         else {
             //Fire large charge shot
-            if (canShootFullCharge == true && canShootMidCharge == false && canShootSmallCharge == false)
-            {
+            if (canShootFullCharge == true && canShootMidCharge == false && canShootSmallCharge == false) {
+                audioSource.Stop();
                 var newBigChargeshot = Instantiate(chargeShotPrefab_big, bulletSpawn);
                 Debug.Log("big charge shot");
                 newBigChargeshot.transform.SetParent(null);
@@ -252,8 +278,8 @@ public class PlayerMovement : MonoBehaviour {
                 canShootFullCharge = false;
             }
             //Fire medium charge shot
-            else if (canShootFullCharge == false && canShootMidCharge == true && canShootSmallCharge == false)
-            {
+            else if (canShootFullCharge == false && canShootMidCharge == true && canShootSmallCharge == false) {
+                audioSource.Stop();
                 var newMidChargeshot = Instantiate(chargeShotPrefab_mid, bulletSpawn);
                 Debug.Log("mid charge shot");
                 newMidChargeshot.transform.SetParent(null);
@@ -262,8 +288,8 @@ public class PlayerMovement : MonoBehaviour {
                 canShootMidCharge = false;
             }
             //Fire small charge shot
-            else if (canShootFullCharge == false && canShootMidCharge == false && canShootSmallCharge == true)
-            {
+            else if (canShootFullCharge == false && canShootMidCharge == false && canShootSmallCharge == true) {
+                audioSource.Stop();
                 var newSmallChargeshot = Instantiate(chargeShotPrefab_small, bulletSpawn);
                 Debug.Log("small charge shot");
                 newSmallChargeshot.transform.SetParent(null);
@@ -284,8 +310,8 @@ public class PlayerMovement : MonoBehaviour {
         }
     }
 
-    public void OnFire_Super(InputAction.CallbackContext context){
-        if(context.performed == true && canFireSuper == true) {
+    public void OnFire_Super(InputAction.CallbackContext context) {
+        if (context.performed == true && canFireSuper == true) {
             GameObject energyWave = Instantiate(chargeSpherePrefab);
             energyWave.transform.SetParent(bulletSpawn, false);
             energyWave.transform.position = bulletSpawn.position;
@@ -307,21 +333,21 @@ public class PlayerMovement : MonoBehaviour {
             }
             else {
                 dF_Mode = false;
-                    rb.useGravity = false;
-                    transform.GetChild(8).GetComponent<TrailRenderer>().emitting = false;
-                    transform.GetChild(9).GetComponent<TrailRenderer>().emitting = false;
-                }
-                break;
+                rb.useGravity = false;
+                transform.GetChild(8).GetComponent<TrailRenderer>().emitting = false;
+                transform.GetChild(9).GetComponent<TrailRenderer>().emitting = false;
+            }
+            break;
         }
     }
 
-    private void AutoFire()
-    {
+    private void AutoFire() {
+        audioSource.PlayOneShot(basicShotClip);
+        audioSource.volume = 0.2f;
+        audioSource.pitch = 1;
         isShootingAuto = true;
         RaycastHit hit;
-
-        if (Physics.Raycast(bulletSpawn.position, bulletSpawn.right, out hit, fireLength))
-        {
+        if (Physics.Raycast(bulletSpawn.position, bulletSpawn.right, out hit, fireLength)) {
             Debug.Log("Raycast hit something!");
             Debug.DrawRay(bulletSpawn.position, bulletSpawn.right * fireLength, Color.green, 1);
             TrailRenderer trail = Instantiate(bulletTrail, bulletSpawn.position, Quaternion.identity);
@@ -329,19 +355,18 @@ public class PlayerMovement : MonoBehaviour {
 
 
             //ADD ENEMY DAMAGE CALC HERE////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            if (hit.rigidbody.tag == "Enemy")
-            {
-                hit.transform.gameObject.GetComponent<EnemyScripts>().Damage(1);
-            }
+            //if (hit.rigidbody.tag == "Enemy")
+            //{
+            //    hit.transform.gameObject.GetComponent<EnemyScripts>().Damage(1);
+            //}
             //maybe works?????????? - Alex
         }
-        else
-        {
+        else {
             Debug.DrawRay(bulletSpawn.position, bulletSpawn.right * fireLength, Color.red, 1);
             TrailRenderer trailRend = Instantiate(bulletTrail, bulletSpawn.position, Quaternion.identity);
             StartCoroutine(BulletTrail(trailRend, hit));
         }
-            isShootingAuto = false;
+        isShootingAuto = false;
     }
 
     IEnumerator BulletTrail(TrailRenderer Trail, RaycastHit Hit) {
@@ -349,25 +374,24 @@ public class PlayerMovement : MonoBehaviour {
         float time = 0;
         Vector3 startPos = Trail.transform.position;
 
-        if(Hit.collider != null)
-        {
-            while (time < 1)
-            {
+        if (Hit.collider != null) {
+            while (time < 1) {
                 Trail.transform.position = Vector3.Lerp(startPos, Hit.point, time);
                 time += Time.deltaTime / Trail.time;
                 yield return null;
             }
             Trail.transform.position = Hit.point;
             Instantiate(bulletImpactParticle, Hit.point, Quaternion.LookRotation(Hit.normal));
+            audioSource.PlayOneShot(ricochetClip);
+            audioSource.pitch = Random.Range(0.7f, 1.2f);
+            audioSource.volume = 0.2f;
             Destroy(Trail.gameObject, Trail.time);
         }
 
-        else
-        {
+        else {
             Vector3 endPos = startPos + (bulletSpawn.right * fireLength);
 
-            while (time < 1)
-            {
+            while (time < 1) {
                 Trail.transform.position = Vector3.Lerp(startPos, endPos, time);
                 time += Time.deltaTime / Trail.time;
                 yield return null;
@@ -377,18 +401,16 @@ public class PlayerMovement : MonoBehaviour {
         }
     }
 
-    IEnumerator LM_RotShip()
-    {
-        switch (leftPressed, rightPressed)
-        {
+    IEnumerator LM_RotShip() {
+        switch (leftPressed, rightPressed) {
             case (true, false):
-                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 180, 0), lM_RotSpeed * Time.deltaTime);
-                yield return new WaitForSeconds(lM_RotSpeed);
-                break;
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 180, 0), lM_RotSpeed * Time.deltaTime);
+            yield return new WaitForSeconds(lM_RotSpeed);
+            break;
             case (false, true):
-                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, 0), lM_RotSpeed * Time.deltaTime);
-                yield return new WaitForSeconds(lM_RotSpeed);
-                break;
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, 0), lM_RotSpeed * Time.deltaTime);
+            yield return new WaitForSeconds(lM_RotSpeed);
+            break;
         }
     }
 }

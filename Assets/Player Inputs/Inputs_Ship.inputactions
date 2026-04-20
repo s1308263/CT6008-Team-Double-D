@@ -16,6 +16,15 @@
                     "initialStateCheck": true
                 },
                 {
+                    "name": "DM_Rotate",
+                    "type": "Value",
+                    "id": "bf02a1eb-32c2-4bdf-87c4-7f26f8a2fdc6",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
                     "name": "Fire_Auto",
                     "type": "Button",
                     "id": "721bda40-b07d-43dc-8ce5-705d5a098762",
@@ -286,6 +295,61 @@
                     "processors": "",
                     "groups": "",
                     "action": "Debug_LoseHealth",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "2D Vector",
+                    "id": "a0a4e93e-47f6-47b4-a736-bfe6c1ec145c",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DM_Rotate",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "left",
+                    "id": "234e300c-2bd3-4a8b-9bd2-55d5471825d5",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DM_Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "1cb84690-8ae8-493b-a070-0ffbabda6024",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DM_Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "b9eee5a6-11d8-457a-bc1a-b92895566f46",
+                    "path": "<Gamepad>/dpad",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DM_Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e3be8ff4-18e9-4477-93d0-3044611c366d",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DM_Rotate",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
