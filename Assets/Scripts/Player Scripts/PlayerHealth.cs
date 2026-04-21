@@ -13,6 +13,15 @@ public class PlayerHealth : MonoBehaviour {
 
     bool isDead = false, hasSpawnedExplo1 = false, hasSpawnedExplo2 = false;
 
+    private void OnCollisionEnter(Collision collision) {
+        if(collision.collider.tag == "Ground" || collision.collider.tag == "Enemy") {
+            SpawnExplosion();
+            newExplosion.transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
+            menuManager.SetActive(true);
+            Destroy(gameObject);
+            Time.timeScale = 0.5f;
+        }
+    }
     private void Update() {
         if(isDead == true) {
             deathTimer += 1 * Time.deltaTime;

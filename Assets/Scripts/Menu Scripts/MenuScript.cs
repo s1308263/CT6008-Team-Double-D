@@ -7,6 +7,10 @@ public class MenuScript : MonoBehaviour {
 
     bool isSettings = false;
 
+    private void Awake() {
+        Time.timeScale = 1;
+    }
+
     public void PlayTutorial() {
         SceneManager.LoadScene("Tutorial Level");
     }

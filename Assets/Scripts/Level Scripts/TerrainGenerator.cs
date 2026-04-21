@@ -24,6 +24,8 @@ public class TerrainGenerator : MonoBehaviour {
 
     public TerrainType[] regions;
 
+    bool canRandColours;
+
     private void Awake() {
         seed = Random.Range(0, 1000);
         meshHeightMultiplier = Random.Range(150, 300);

@@ -362,9 +362,9 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1741845876465431846}
   serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 1.5
-  m_AngularDrag: 1
+  m_Mass: 10000
+  m_Drag: 0
+  m_AngularDrag: 0
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -616,11 +616,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   explosionPrefab: {fileID: 2255722986795932130, guid: 9905f088d39dbc547808a20c9317b778, type: 3}
-  deathMenu: {fileID: 0}
+  menuManager: {fileID: 0}
   deathTimer: 0
   maxDeathTimer: 3
   timeSpeed: 0.25
-  menuTimer: 0
   currenthealth: 1
 --- !u!82 &6037303981096252622
 AudioSource:
@@ -15361,7 +15360,7 @@ Transform:
   m_GameObject: {fileID: 4639088094077916416}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.79, y: 0, z: 0.89053}
+  m_LocalPosition: {x: -0.79, y: 0.508, z: 0.89053}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -25356,7 +25355,7 @@ Transform:
   m_GameObject: {fileID: 7949623154739885950}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.78007007, y: 0, z: -0.89053}
+  m_LocalPosition: {x: -0.78007007, y: 0.508, z: -0.89053}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 1
   m_Children: []
