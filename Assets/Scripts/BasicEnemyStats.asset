@@ -12,7 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 293152c852f1bfa4391639e1b1d69aca, type: 3}
   m_Name: BasicEnemyStats
   m_EditorClassIdentifier: 
-  speed: 0
+  speed: 7
   health: 5
   attackSpeed: 10
   damage: 10
+  compartmentHealth: 5
+  playerHealth: 1
+  missileDamge: 2
