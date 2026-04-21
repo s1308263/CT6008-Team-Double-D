@@ -14,7 +14,7 @@ public class MissileLock : MonoBehaviour
         if (other.tag == "Player")
         {
             lockTime += Time.deltaTime;
-            if (lockTime >= 5)
+            if (lockTime >= 10)
             {
                 enemyScript.FireMissile();
                 lockTime = 0;

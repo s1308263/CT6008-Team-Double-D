@@ -27,6 +27,7 @@ public class BulletScript : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision) {
         if (collision.collider.tag == "Player") {
+            collision.transform.GetComponent<PlayerHealth>().RemoveHealth();
             Destroy(gameObject);
         }
         if (collision.collider.tag == "Missile")

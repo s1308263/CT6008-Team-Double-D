@@ -355,10 +355,7 @@ public class PlayerMovement : MonoBehaviour {
 
 
             //ADD ENEMY DAMAGE CALC HERE////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            //if (hit.rigidbody.tag == "Enemy")
-            //{
-            //    hit.transform.gameObject.GetComponent<EnemyScripts>().Damage(1);
-            //}
+
             //maybe works?????????? - Alex
         }
         else {
@@ -386,6 +383,9 @@ public class PlayerMovement : MonoBehaviour {
             audioSource.pitch = Random.Range(0.7f, 1.2f);
             audioSource.volume = 0.2f;
             Destroy(Trail.gameObject, Trail.time);
+            if (Hit.rigidbody.tag == "Enemy") {
+                Hit.transform.gameObject.GetComponent<EnemyScripts>().Damage(2);
+            }
         }
 
         else {

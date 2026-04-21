@@ -28,6 +28,7 @@ public class MissileScript : MonoBehaviour
         if (collision.gameObject.tag == "Player")
         {
             stats.compartmentHealth -= stats.missileDamge;
+            collision.transform.GetComponent<PlayerHealth>().RemoveHealth();
             //Destroy missile on Impact
             Destroy(gameObject);
         }

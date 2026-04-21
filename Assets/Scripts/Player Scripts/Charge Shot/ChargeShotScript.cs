@@ -45,6 +45,8 @@ public class ChargeShotScript : MonoBehaviour {
             Debug.Log("CHARGE SHOT DAMAGED: " + collision.gameObject.name);
 
             //DAMAGE CALC HERE//////////////////////////////////////////////////////////////////////////////////////////
+                collision.transform.gameObject.GetComponent<EnemyScripts>().Damage(1000);
+
         }
         if (collision.gameObject.tag != "Player") {
             TrailRenderer tr;

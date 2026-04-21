@@ -102,7 +102,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -464,7 +464,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -491,6 +491,8 @@ MonoBehaviour:
   bullet: {fileID: 3102534638243489890, guid: c67e963388089754e8f3886feb396f04, type: 3}
   stats: {fileID: 11400000, guid: 4fa28acce93f83f4b829ddea64554620, type: 2}
   health: 0
+  waveSpawner: {fileID: 0}
+  waveSpawnerScript: {fileID: 0}
 --- !u!54 &2091538409540906553
 Rigidbody:
   m_ObjectHideFlags: 0

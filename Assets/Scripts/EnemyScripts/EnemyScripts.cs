@@ -51,7 +51,7 @@ public class EnemyScripts : MonoBehaviour
         StartCoroutine(LookAt());
 
         //Damage?
-        //Die(null);
+        Die();
        
     }
     void OnCollisionEnter(Collision collision)
@@ -60,7 +60,7 @@ public class EnemyScripts : MonoBehaviour
             //Add damage to player later
 
             //Destroy Enemy on Impact
-            Die(collision);
+            Die();
         
     }
     void burst(){
@@ -97,9 +97,9 @@ public class EnemyScripts : MonoBehaviour
         newBullet.transform.rotation = LookRotation;
         newBullet.GetComponent<Rigidbody>().AddForce (transform.forward * 100f);
     }
-    public void Die(Collision Collide)
+    public void Die()
     {
-        if (health <= 0 || Collide.gameObject.tag == "Player")
+        if (health <= 0)
         {
             waveSpawnerScript.waves[waveSpawnerScript.currentWave].enemiesLeft--;
             Destroy(gameObject);
