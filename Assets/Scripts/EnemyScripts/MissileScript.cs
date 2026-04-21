@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
 public class MissileScript : MonoBehaviour
@@ -6,33 +7,30 @@ public class MissileScript : MonoBehaviour
     [SerializeField] GameObject player;
     [SerializeField] float thrust, maxSpeed;
     Rigidbody rb;
+    public int health;
+    public EnemyStats stats;
     void Awake()
     {
         player = GameObject.FindWithTag("Player");
         rb = GetComponent<Rigidbody>();
         rb.maxLinearVelocity = maxSpeed;
+        health = stats.compartmentHealth;
     }
     void FixedUpdate()
     {
-        StartCoroutine(Follow());
-        StartCoroutine(KillMissile());
         transform.LookAt(player.transform.position);
+        StartCoroutine(LookAt());
+        StartCoroutine(KillMissile());
+
     }
     void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Player")
         {
-            //Add damage to player later
-
-            //Destroy Enemy on Impact
+            stats.compartmentHealth -= stats.missileDamge;
+            //Destroy missile on Impact
             Destroy(gameObject);
         }
-    }
-    IEnumerator Follow()
-    {
-        rb.AddForce(transform.forward * thrust, ForceMode.Impulse);
-        yield return null;
-
     }
     IEnumerator KillMissile()
     {
@@ -42,12 +40,14 @@ public class MissileScript : MonoBehaviour
     IEnumerator LookAt()
     {
         Quaternion LookRotation = Quaternion.LookRotation(player.transform.position - transform.position);
+
         float time = 0;
         while (time < 1)
         {
-            transform.rotation = Quaternion.Slerp(transform.rotation, LookRotation, time);
             rb.AddForce(transform.forward * thrust, ForceMode.Impulse);
-            time += Time.deltaTime * 0.2f;
+            transform.rotation = Quaternion.Slerp(transform.rotation, LookRotation, time);
+            time += Time.deltaTime * 1f;
+
             yield return null;
         }
     }

@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.ProBuilder.Shapes;
 
@@ -8,13 +10,14 @@ public class BulletScript : MonoBehaviour {
     GameObject target;
     Rigidbody rb;
     Vector3 aim;
+    float timer = 3f;
 
     private void Awake() {
         target = GameObject.FindWithTag("Player");
         rb = GetComponent<Rigidbody>();
         rb.maxLinearVelocity = 10f;
         aim = target.transform.position - rb.position;
-
+        StartCoroutine(Die());
 
     }
 
@@ -25,12 +28,17 @@ public class BulletScript : MonoBehaviour {
     private void OnCollisionEnter(Collision collision) {
         if (collision.collider.tag == "Player") {
             Destroy(gameObject);
-        }if (collision.collider.tag == "Missile")
+        }
+        if (collision.collider.tag == "Missile")
         {
             Destroy(gameObject);
             Destroy(collision.gameObject);
         }
     }
-
+    IEnumerator Die()
+    {
+        yield return new WaitForSeconds(timer);
+        Destroy(gameObject);
+    }
 }
 

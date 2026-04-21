@@ -7,4 +7,7 @@ public class EnemyStats : ScriptableObject
     [SerializeField] public int health = 10;
     [SerializeField] public float attackSpeed = 10;
     [SerializeField] public int damage = 10;
+    [SerializeField] public int compartmentHealth = 5;
+    [SerializeField] public int playerHealth = 1;
+    [SerializeField] public int missileDamge = 2;
 }

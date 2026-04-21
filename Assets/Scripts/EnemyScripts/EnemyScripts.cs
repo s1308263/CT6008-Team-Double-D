@@ -4,6 +4,7 @@ using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.Timeline;
+using UnityEngine.VFX;
 
 public class EnemyScripts : MonoBehaviour
 {
@@ -16,6 +17,8 @@ public class EnemyScripts : MonoBehaviour
     [SerializeField] GameObject missile, bullet;
     public EnemyStats stats;
     public int health;
+    public GameObject waveSpawner;
+    public EnemySpawnScript waveSpawnerScript;
 
     Rigidbody rb;
     bool canMove = true;
@@ -25,6 +28,8 @@ public class EnemyScripts : MonoBehaviour
         rb.maxLinearVelocity = maxSpeed;
         MissileLock lockScript = GetComponent<MissileLock>();
         health = stats.health;
+        waveSpawner = GameObject.FindWithTag("Spawner");
+        waveSpawnerScript = waveSpawner.GetComponent<EnemySpawnScript>();
     }
     void Awake()
     {
@@ -32,6 +37,9 @@ public class EnemyScripts : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rb.maxLinearVelocity = maxSpeed;
         MissileLock lockScript = GetComponent<MissileLock>();
+        waveSpawner = GameObject.FindWithTag("Spawner");
+        waveSpawnerScript = waveSpawner.GetComponent<EnemySpawnScript>();
+
 }
         void FixedUpdate()
     {
@@ -43,18 +51,17 @@ public class EnemyScripts : MonoBehaviour
         StartCoroutine(LookAt());
 
         //Damage?
-        Die();
-        
-
+        //Die(null);
+       
     }
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Player"){
+       
             //Add damage to player later
 
             //Destroy Enemy on Impact
-            Destroy(gameObject);
-        }
+            Die(collision);
+        
     }
     void burst(){
         rb.AddForce(transform.forward * dashPower, ForceMode.Impulse);
@@ -90,10 +97,11 @@ public class EnemyScripts : MonoBehaviour
         newBullet.transform.rotation = LookRotation;
         newBullet.GetComponent<Rigidbody>().AddForce (transform.forward * 100f);
     }
-    public void Die()
+    public void Die(Collision Collide)
     {
-        if (health <= 0)
+        if (health <= 0 || Collide.gameObject.tag == "Player")
         {
+            waveSpawnerScript.waves[waveSpawnerScript.currentWave].enemiesLeft--;
             Destroy(gameObject);
         }
     }

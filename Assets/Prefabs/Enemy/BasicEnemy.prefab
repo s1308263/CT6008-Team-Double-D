@@ -483,8 +483,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LookRotation: {x: 0, y: 0, z: 0, w: 0}
+  dashPower: 5
+  dashCD: 1
+  maxSpeed: 10
+  rotationSpeed: 3
   missile: {fileID: 7466608243923696252, guid: 331122ffe65a66f4fb6267fcf53fb0c5, type: 3}
   bullet: {fileID: 3102534638243489890, guid: c67e963388089754e8f3886feb396f04, type: 3}
+  stats: {fileID: 11400000, guid: 4fa28acce93f83f4b829ddea64554620, type: 2}
+  health: 0
 --- !u!54 &2091538409540906553
 Rigidbody:
   m_ObjectHideFlags: 0
