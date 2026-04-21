@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Enemy
   - Missile
+  - ChargeShot_Big
+  - Ground
   layers:
   - Default
   - TransparentFX

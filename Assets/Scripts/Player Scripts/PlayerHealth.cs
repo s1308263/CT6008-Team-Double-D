@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerHealth : MonoBehaviour {
 
-    [SerializeField] private GameObject explosionPrefab;
+    [SerializeField] private GameObject explosionPrefab, menuManager;
 
     [SerializeField] private float deathTimer, maxDeathTimer, timeSpeed;
 
@@ -22,6 +22,7 @@ public class PlayerHealth : MonoBehaviour {
                 deathTimer = maxDeathTimer;
                 SpawnExplosion();
                 newExplosion.transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
+                menuManager.SetActive(true);
                 Destroy(gameObject);
             }
             else if (deathTimer >= maxDeathTimer / 3 * 2) {

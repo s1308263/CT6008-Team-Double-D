@@ -30,4 +30,8 @@ public class MenuScript : MonoBehaviour {
             isSettings = false;
         }
     }
+
+    public void BackToMainMenu() {
+        SceneManager.LoadScene("MainMenu");
+    }
 }

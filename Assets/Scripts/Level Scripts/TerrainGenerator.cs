@@ -25,6 +25,11 @@ public class TerrainGenerator : MonoBehaviour {
     public TerrainType[] regions;
 
     private void Awake() {
+        seed = Random.Range(0, 1000);
+        meshHeightMultiplier = Random.Range(150, 300);
+        offset.x = Random.Range(0, 1000);
+        offset.y = Random.Range(0, 1000);
+        n_scale = Random.Range(1, 30);
         CreateMap();
     }
 
