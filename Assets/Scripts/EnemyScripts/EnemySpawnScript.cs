@@ -1,4 +1,6 @@
+using NUnit.Framework;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -10,7 +12,9 @@ public class EnemySpawnScript : MonoBehaviour
     public int currentWave = 0;
     public Wave[] waves;
     private bool readyToCountDown;
-
+    public GameObject plane;
+    public GameObject rd;
+    List<GameObject> activeEnemies = new List<GameObject>();
 
     private void Start()
     {
@@ -23,7 +27,8 @@ public class EnemySpawnScript : MonoBehaviour
     {
         readyToCountDown = true;
         myCollider = GetComponent<Collider>();
-        waveCountdown = waves[currentWave].timeToNextWave;        
+        waveCountdown = waves[currentWave].timeToNextWave;
+        plane = GameObject.FindGameObjectWithTag("Player");
     }
     void Update()
     {
@@ -37,7 +42,7 @@ public class EnemySpawnScript : MonoBehaviour
         {
             waveCountdown -= Time.deltaTime;
         }
-        if(waveCountdown <= 0)
+        if (waveCountdown <= 0)
         {
             readyToCountDown = false;
             waveCountdown = waves[currentWave].timeToNextWave;
@@ -58,17 +63,32 @@ public class EnemySpawnScript : MonoBehaviour
     }
     private IEnumerator SpawnWave()
     {
+
         if (currentWave < waves.Length)
         {
             for (int i = 0; i < waves[currentWave].enemies.Length; i++)
             {
                 Vector3 spawnPoint = SpawnPoint(myCollider.bounds);
                 GameObject newEnemy = Instantiate(waves[currentWave].enemies[i].gameObject, spawnPoint, Quaternion.identity);
+                activeEnemies.Add(newEnemy);
+                SpawnIndicator(newEnemy);
                 yield return new WaitForSeconds(waves[currentWave].timeToNextEnemy);
             }
         }
     }
 
+    void SpawnIndicator(GameObject enemy)
+    {
+        GameObject newIndicator = Instantiate(rd);
+
+        // Optional: parent it so it's easier to manage
+        newIndicator.transform.SetParent(plane.transform);
+        newIndicator.GetComponent<IndicatorFollow>().player = plane.transform;
+
+        // Store reference if needed
+        IndicatorFollow follow = newIndicator.GetComponent<IndicatorFollow>();
+        follow.target = enemy.transform;
+    }
     [System.Serializable]
     public class Wave 
     {
