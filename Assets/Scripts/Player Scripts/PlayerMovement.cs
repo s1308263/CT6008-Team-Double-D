@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
@@ -59,9 +60,6 @@ public class PlayerMovement : MonoBehaviour {
     public AudioSource audioSource;
     public AudioClip basicShotClip, ricochetClip, chargeClip, fullChargeClip, chargeReadyClip;
 
-    private float dM_currentRotX;
-    private float dM_currentRotY;
-
     bool leftPressed, rightPressed, dF_Mode, isThrusting, autoShoot, isShootingAuto, canFireSuper = true, dF_rightPressed, dF_leftPressed;
 
     bool fullChargeIsPlaying = false;
@@ -75,16 +73,10 @@ public class PlayerMovement : MonoBehaviour {
         fullChargeIsPlaying = false;
     }
 
-    void Start() {
-        dM_currentRotX = 0.0f;
-        dM_currentRotY = 0.0f;
-    }
-
     // Update is called once per frame
     void FixedUpdate() {
         //Landing mode movement
         if (dF_Mode == false) {
-            //Debug.Log("moveInput = " + moveInput);
             rb.AddForce(moveInput.x * lM_MoveForce, moveInput.y * lM_MoveForce, 0);
             if (leftPressed == true || rightPressed == true) {
                 StartCoroutine(LM_RotShip());
@@ -93,39 +85,20 @@ public class PlayerMovement : MonoBehaviour {
 
         //Dogfight mode movement
         else if (dF_Mode == true) {
-            //if (dF_rightPressed == true) {
-            //    Debug.Log("ROTATING LEFT");
-            //    transform.Rotate(-Vector3.forward * +dM_Handling * Time.deltaTime);
-            //    transform.GetChild(5).transform.Rotate(-Vector3.right * +dM_Handling * Time.deltaTime, 1, Space.World);
-            //}
-            //else if (dF_leftPressed == true) {
-            //    Debug.Log("ROTATING RIGHT");
-            //    transform.Rotate(Vector3.forward * +dM_Handling * Time.deltaTime);
-            //    transform.GetChild(5).transform.Rotate(Vector3.right * +dM_Handling * Time.deltaTime, 1, Space.World);
-            //}
-
-
-            //set handling and acceleration
-            float movementHorizontal = Input.GetAxis("Horizontal") * dM_Handling;
-
-            bool invertXRot = false;
-            bool invertYRot = (dM_currentRotX < -180f);
-
+            if (dF_rightPressed == true) {
+                Debug.Log("ROTATING LEFT");
+                transform.Rotate(-Vector3.forward * +dM_Handling * Time.deltaTime);
+                transform.GetChild(2).transform.Rotate(-Vector3.right * +dM_Handling * Time.deltaTime, 4 , Space.Self);
+            }
+            else if (dF_leftPressed == true) {
+                Debug.Log("ROTATING RIGHT");
+                transform.Rotate(Vector3.forward * +dM_Handling * Time.deltaTime);
+                transform.GetChild(2).transform.Rotate(Vector3.right * +dM_Handling * Time.deltaTime, 4, Space.Self);
+            }
             if (isThrusting == true) {
                 //Add force as thrust
                 rb.AddForce(transform.right * dM_Acceleration * 2, ForceMode.Impulse);
             }
-
-            //Set rotation of ship
-            dM_currentRotX = (dM_currentRotX + (invertXRot ? -movementHorizontal : movementHorizontal)) % 360f;
-            dM_currentRotY = (dM_currentRotY + (invertYRot ? -movementHorizontal : movementHorizontal)) % 360f;
-
-            Quaternion rotX = Quaternion.AngleAxis(dM_currentRotX, Vector3.right);
-            Quaternion rotY = Quaternion.AngleAxis(dM_currentRotY, Vector3.up);
-
-            //apply rotation
-            Quaternion dF_Rotation = rotX * rotY;
-            transform.rotation = dF_Rotation;
         }
 
         //Auto-fire attack
@@ -154,24 +127,21 @@ public class PlayerMovement : MonoBehaviour {
             if (chargeTimer >= maxChargeTime && chargeTimer >= maxChargeTime / 2) {
                 Debug.Log("charge timer at MAX");
                 audioSource.Stop();
-                transform.GetChild(3).transform.gameObject.SetActive(true);
+                transform.GetChild(2).transform.GetChild(2).transform.gameObject.SetActive(true);
                 canShootMidCharge = false;
                 chargeTimer = maxChargeTime;
                 canShootFullCharge = true;
                 //cam.transform.GetComponent<CameraShake>().CamShake();
             }
-
-
             //Mid charge attack
             else if (chargeTimer >= maxChargeTime / 2 && chargeTimer <= maxChargeTime) {
                 Debug.Log("Can Shoot MID");
-                transform.GetChild(2).transform.gameObject.SetActive(true);
+                transform.GetChild(2).transform.GetChild(1).transform.gameObject.SetActive(true);
                 canShootSmallCharge = false;
                 canShootMidCharge = true;
             }
-
             //Small charge attack
-            else if (chargeTimer <= maxChargeTime / 2) {
+            else if (chargeTimer <= maxChargeTime / 2 && chargeTimer < 0) {
                 Debug.Log("Can Shoot SMALL");
                 canShootSmallCharge = true;
             }
@@ -180,12 +150,12 @@ public class PlayerMovement : MonoBehaviour {
         //charge shot cooldown timer
         if (cooldownTimer >= maxCooldown && isCoolingDown == true) {
             cooldownTimer = maxCooldown;
-            transform.GetChild(4).gameObject.SetActive(true);
+            transform.GetChild(1).gameObject.SetActive(true);
         }
         else if (cooldownTimer == maxCooldown && isCoolingDown == false) {
-            transform.GetChild(4).GetComponent<CooldownShrink>().shrinkTimer = 0;
-            transform.GetChild(4).gameObject.transform.localScale = new Vector3(1.25f, 6.5f, 2.5f);
-            transform.GetChild(4).gameObject.SetActive(false);
+            transform.GetChild(1).GetComponent<CooldownShrink>().shrinkTimer = 0;
+            transform.GetChild(1).gameObject.transform.localScale = new Vector3(1.25f, 6.5f, 2.5f);
+            transform.GetChild(1).gameObject.SetActive(false);
         }
     }
 
@@ -220,30 +190,32 @@ public class PlayerMovement : MonoBehaviour {
 
     //Dogfight mode movement inputs
     public void OnDM_Rotate(InputAction.CallbackContext context) {
-        if (dF_Mode == true) {
+        moveRotate = context.ReadValue<Vector2>();
+        if (context.performed == true && context.ReadValue<Vector2>().x < 0 || context.performed == true && context.ReadValue<Vector2>().x > 0) {
             moveRotate = context.ReadValue<Vector2>();
-            if (context.performed == true && context.ReadValue<Vector2>().x < 0 || context.performed == true && context.ReadValue<Vector2>().x > 0) {
-                moveRotate = context.ReadValue<Vector2>();
-                if (moveRotate.x <= -0.85f) {
-                    dF_rightPressed = false;
-                    dF_leftPressed = true;
-                }
-                else if (moveRotate.x >= 0.85f) {
-                    dF_leftPressed = false;
-                    dF_rightPressed = true;
-                }
+            if (moveRotate.x <= -0.85f) {
+                dF_rightPressed = false;
+                dF_leftPressed = true;
             }
-            else { dF_rightPressed = false; dF_leftPressed = false; }
+            else if (moveRotate.x >= 0.85f) {
+                dF_leftPressed = false;
+                dF_rightPressed = true;
+            }
         }
+        else { dF_rightPressed = false; dF_leftPressed = false; }
     }
 
     //Thrust input
     public void OnThrust(InputAction.CallbackContext context) {
         if (context.performed == true) {
             isThrusting = true;
+            if (dF_Mode == true) {
+                transform.GetChild(2).transform.GetChild(5).gameObject.SetActive(true);
+            }
         }
         else {
             isThrusting = false;
+                transform.GetChild(2).transform.GetChild(5).gameObject.SetActive(false);
         }
     }
 
@@ -298,9 +270,9 @@ public class PlayerMovement : MonoBehaviour {
                 canShootSmallCharge = false;
             }
             //reset charge shot settings
-            transform.GetChild(1).transform.gameObject.SetActive(false);
-            transform.GetChild(2).transform.gameObject.SetActive(false);
-            transform.GetChild(3).transform.gameObject.SetActive(false);
+            transform.GetChild(2).transform.GetChild(0).transform.gameObject.SetActive(false);
+            transform.GetChild(2).transform.GetChild(1).transform.gameObject.SetActive(false);
+            transform.GetChild(2).transform.GetChild(2).transform.gameObject.SetActive(false);
             startChargeTimer = false;
             canCooldown = true;
             chargeTimer = 0;
@@ -326,16 +298,14 @@ public class PlayerMovement : MonoBehaviour {
             if (dF_Mode == false) {
                 dF_Mode = true;
                 rb.useGravity = true;
-                transform.GetChild(8).GetComponent<TrailRenderer>().emitting = true;
-                transform.GetChild(9).GetComponent<TrailRenderer>().emitting = true;
-                dM_currentRotX = transform.rotation.x;
-                dM_currentRotY = transform.rotation.y;
+                transform.GetChild(2).transform.GetChild(3).GetComponent<TrailRenderer>().emitting = true;
+                transform.GetChild(2).transform.GetChild(4).GetComponent<TrailRenderer>().emitting = true;
             }
             else {
                 dF_Mode = false;
                 rb.useGravity = false;
-                transform.GetChild(8).GetComponent<TrailRenderer>().emitting = false;
-                transform.GetChild(9).GetComponent<TrailRenderer>().emitting = false;
+                transform.GetChild(2).transform.GetChild(3).GetComponent<TrailRenderer>().emitting = false;
+                transform.GetChild(2).transform.GetChild(4).GetComponent<TrailRenderer>().emitting = false;
             }
             break;
         }
@@ -352,11 +322,6 @@ public class PlayerMovement : MonoBehaviour {
             Debug.DrawRay(bulletSpawn.position, bulletSpawn.right * fireLength, Color.green, 1);
             TrailRenderer trail = Instantiate(bulletTrail, bulletSpawn.position, Quaternion.identity);
             StartCoroutine(BulletTrail(trail, hit));
-
-
-            //ADD ENEMY DAMAGE CALC HERE////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-            //maybe works?????????? - Alex
         }
         else {
             Debug.DrawRay(bulletSpawn.position, bulletSpawn.right * fireLength, Color.red, 1);
@@ -383,6 +348,8 @@ public class PlayerMovement : MonoBehaviour {
             audioSource.pitch = Random.Range(0.7f, 1.2f);
             audioSource.volume = 0.2f;
             Destroy(Trail.gameObject, Trail.time);
+
+            //Damage Calc
             if (Hit.rigidbody.tag == "Enemy") {
                 Hit.transform.gameObject.GetComponent<EnemyScripts>().Damage(2);
             }
@@ -405,10 +372,12 @@ public class PlayerMovement : MonoBehaviour {
         switch (leftPressed, rightPressed) {
             case (true, false):
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 180, 0), lM_RotSpeed * Time.deltaTime);
+            transform.GetChild(2).transform.rotation = Quaternion.Lerp(transform.GetChild(2).transform.rotation, Quaternion.Euler(-90, 180, 0), lM_RotSpeed * Time.deltaTime);
             yield return new WaitForSeconds(lM_RotSpeed);
             break;
             case (false, true):
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, 0), lM_RotSpeed * Time.deltaTime);
+            transform.GetChild(2).transform.rotation = Quaternion.Lerp(transform.GetChild(2).transform.rotation, Quaternion.Euler(-90, 0, 0), lM_RotSpeed * Time.deltaTime);
             yield return new WaitForSeconds(lM_RotSpeed);
             break;
         }

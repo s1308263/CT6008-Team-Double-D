@@ -14,7 +14,7 @@ public class CooldownShrink : MonoBehaviour
     void Update()
     {
         shrinkTimer += 1 * Time.deltaTime;
-        transform.localScale = Vector3.Lerp(transform.localScale, new Vector3(0.0125f, 0.065f, 0.025f), shrinkSpeed * Time.deltaTime);
+        transform.localScale = Vector3.Lerp(transform.localScale, new Vector3(0.1f, 0.1f, 0.1f), shrinkSpeed * Time.deltaTime);  //0.0125f, 0.065f, 0.025f
 
         if (shrinkTimer >= shrinkSpeed)
         {
