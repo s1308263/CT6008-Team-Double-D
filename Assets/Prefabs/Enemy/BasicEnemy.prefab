@@ -121,7 +121,7 @@ GameObject:
   - component: {fileID: 5354587258233773262}
   - component: {fileID: 8212020554783063965}
   - component: {fileID: 7092019532243484531}
-  m_Layer: 0
+  m_Layer: 24
   m_Name: LockRange
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -246,7 +246,7 @@ GameObject:
   - component: {fileID: 404826219322307872}
   - component: {fileID: 3970394815446058043}
   - component: {fileID: 290232807767386598}
-  m_Layer: 0
+  m_Layer: 24
   m_Name: GunRange
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -18,6 +18,7 @@ public class PlayerMovement : MonoBehaviour {
     [SerializeField] private float fireLength;
     [SerializeField] private ParticleSystem bulletImpactParticle;
     [SerializeField] private TrailRenderer bulletTrail;
+    [SerializeField] private LayerMask mask;
 
     [Header("Charge Shot Properties:")]
     [SerializeField] private GameObject chargeShotPrefab_big;
@@ -60,7 +61,9 @@ public class PlayerMovement : MonoBehaviour {
     public AudioSource audioSource;
     public AudioClip basicShotClip, ricochetClip, chargeClip, fullChargeClip, chargeReadyClip;
 
-    bool leftPressed, rightPressed, dF_Mode, isThrusting, autoShoot, isShootingAuto, canFireSuper = true, dF_rightPressed, dF_leftPressed;
+    public bool dF_Mode;
+
+    bool leftPressed, rightPressed, isThrusting, autoShoot, isShootingAuto, canFireSuper = true, dF_rightPressed, dF_leftPressed;
 
     bool fullChargeIsPlaying = false;
 
@@ -98,6 +101,7 @@ public class PlayerMovement : MonoBehaviour {
             if (isThrusting == true) {
                 //Add force as thrust
                 rb.AddForce(transform.right * dM_Acceleration * 2, ForceMode.Impulse);
+                transform.GetChild(2).transform.GetChild(5).gameObject.SetActive(true);
             }
         }
 
@@ -154,7 +158,7 @@ public class PlayerMovement : MonoBehaviour {
         }
         else if (cooldownTimer == maxCooldown && isCoolingDown == false) {
             transform.GetChild(1).GetComponent<CooldownShrink>().shrinkTimer = 0;
-            transform.GetChild(1).gameObject.transform.localScale = new Vector3(1.25f, 6.5f, 2.5f);
+            transform.GetChild(1).gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
             transform.GetChild(1).gameObject.SetActive(false);
         }
     }
@@ -209,9 +213,6 @@ public class PlayerMovement : MonoBehaviour {
     public void OnThrust(InputAction.CallbackContext context) {
         if (context.performed == true) {
             isThrusting = true;
-            if (dF_Mode == true) {
-                transform.GetChild(2).transform.GetChild(5).gameObject.SetActive(true);
-            }
         }
         else {
             isThrusting = false;
@@ -317,7 +318,7 @@ public class PlayerMovement : MonoBehaviour {
         audioSource.pitch = 1;
         isShootingAuto = true;
         RaycastHit hit;
-        if (Physics.Raycast(bulletSpawn.position, bulletSpawn.right, out hit, fireLength)) {
+        if (Physics.Raycast(bulletSpawn.position, bulletSpawn.right, out hit, fireLength, ~mask)) {
             Debug.Log("Raycast hit something!");
             Debug.DrawRay(bulletSpawn.position, bulletSpawn.right * fireLength, Color.green, 1);
             TrailRenderer trail = Instantiate(bulletTrail, bulletSpawn.position, Quaternion.identity);

@@ -47,8 +47,8 @@ Material:
     - _Speed: 10
     m_Colors:
     - _Background: {r: 0, g: 0, b: 1, a: 0}
-    - _Base: {r: 0, g: 0.6313722, b: 1, a: 0}
-    - _Highlight: {r: 0.48584902, g: 0.9848979, b: 1, a: 0}
+    - _Base: {r: 0, g: 1, b: 0, a: 0}
+    - _Highlight: {r: 1, g: 0.9534058, b: 0, a: 0}
     - _ScrollDirection: {r: 0, g: -1, b: 0, a: 0}
     - _ScrollDirection_1: {r: 0, g: -1, b: 0, a: 0}
     - _ScrollDirection_2: {r: 0, g: -1, b: 0, a: 0}

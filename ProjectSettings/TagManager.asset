@@ -8,6 +8,10 @@ TagManager:
   - Missile
   - ChargeShot_Big
   - Ground
+  - Spawner
+  - SafeHouse
+  - IngameMenu
+  - DeadMenu
   layers:
   - Default
   - TransparentFX
@@ -33,7 +37,7 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - IgnoreRaycast
   - 
   - 
   - 
