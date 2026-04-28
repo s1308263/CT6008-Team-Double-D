@@ -8,7 +8,8 @@ public class PlayerHealth : MonoBehaviour {
 
     [SerializeField] private TextMeshProUGUI healthCounter;
 
-    [SerializeField] AudioSource outOfBoundsSource;
+    [SerializeField] AudioSource audioSource;
+    [SerializeField] private AudioClip playerHitClip;
 
     [SerializeField] private float deathTimer, maxDeathTimer, timeSpeed;
 
@@ -20,6 +21,7 @@ public class PlayerHealth : MonoBehaviour {
     bool isDead = false, hasSpawnedExplo1 = false, hasSpawnedExplo2 = false;
 
     private void Awake() {
+        audioSource = GetComponent<AudioSource>();
         UpdateHealthBar();
     }
 
@@ -83,6 +85,7 @@ public class PlayerHealth : MonoBehaviour {
             SpawnExplosion();
             newExplosion.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
         }
+        audioSource.PlayOneShot(playerHitClip);
         UpdateHealthBar();
     }
 
@@ -106,7 +109,7 @@ public class PlayerHealth : MonoBehaviour {
         newExplosion.transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
         menuManager.SetActive(true);
         Time.timeScale = 0.5f;
-        outOfBoundsSource.Stop();
+        audioSource.Stop();
         currenthealth = 0;
         Destroy(gameObject);
     }
