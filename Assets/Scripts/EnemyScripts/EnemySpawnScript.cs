@@ -81,11 +81,9 @@ public class EnemySpawnScript : MonoBehaviour
     {
         GameObject newIndicator = Instantiate(rd);
 
-        // Optional: parent it so it's easier to manage
-        newIndicator.transform.SetParent(plane.transform);
+        newIndicator.transform.SetParent(plane.transform, false);
         newIndicator.GetComponent<IndicatorFollow>().player = plane.transform;
 
-        // Store reference if needed
         IndicatorFollow follow = newIndicator.GetComponent<IndicatorFollow>();
         follow.target = enemy.transform;
     }
