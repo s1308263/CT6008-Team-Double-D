@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: m_Thruster
+  m_Name: m_Thruster 1
   m_Shader: {fileID: -6465566751694194690, guid: da1c00f7e28819d4287a837825e46ee4, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -41,14 +41,14 @@ Material:
     - _Alpha: 1
     - _Alpha_Clip_Threshold: 5.86
     - _Brightness: 100
-    - _Flame_Height: 1.34
+    - _Flame_Height: 2.09
     - _QueueControl: 0
     - _QueueOffset: 0
     - _Speed: 10
     m_Colors:
-    - _Background: {r: 0.10435206, g: 0.15181907, b: 0.6320754, a: 0}
-    - _Base: {r: 0, g: 0, b: 1, a: 0}
-    - _Highlight: {r: 0, g: 0, b: 1, a: 0}
+    - _Background: {r: 0.08167648, g: 0, b: 1, a: 1}
+    - _Base: {r: 1, g: 0.5346087, b: 0, a: 0}
+    - _Highlight: {r: 1, g: 1, b: 0, a: 0}
     - _ScrollDirection: {r: 0, g: -1, b: 0, a: 0}
     - _ScrollDirection_1: {r: 0, g: -1, b: 0, a: 0}
     - _ScrollDirection_2: {r: 0, g: -1, b: 0, a: 0}

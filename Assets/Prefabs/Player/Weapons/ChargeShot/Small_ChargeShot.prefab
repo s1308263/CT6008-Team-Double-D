@@ -271,7 +271,7 @@ MonoBehaviour:
   life: 0
   maxLife: 10
   triggerDelay: 0
-  maxDelay: 1
+  maxDelay: 0.75
   speed: 100
 --- !u!1 &7994300687073246386
 GameObject:
