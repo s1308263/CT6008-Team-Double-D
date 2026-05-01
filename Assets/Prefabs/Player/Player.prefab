@@ -25570,6 +25570,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Thruster
       objectReference: {fileID: 0}
+    - target: {fileID: 8687858397387543748, guid: 8fd74151db5eacb479e452188d656a22, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
