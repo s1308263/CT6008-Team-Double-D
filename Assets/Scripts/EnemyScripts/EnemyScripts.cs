@@ -25,8 +25,11 @@ public class EnemyScripts : MonoBehaviour
     public PlayerMovement playerMovementScript;
     Vector3 targetPos;
     bool playerLost;
+    bool ableToMove;
+    bool patrolRunning;
     public GameObject deathParticle;
     GameObject explosion;
+    float downTime = 3;
 
     Rigidbody rb;
     bool canMove = true;
@@ -50,30 +53,34 @@ public class EnemyScripts : MonoBehaviour
         waveSpawner = GameObject.FindWithTag("Spawner");
         waveSpawnerScript = waveSpawner.GetComponent<EnemySpawnScript>();
         playerMovementScript = player.GetComponent<PlayerMovement>();
+
     }
         void FixedUpdate()
     {
-        //Enemy Movement (Follow Player)
-        if (canMove == true) {
-            StartCoroutine(Burst());
-        }
-        //Enemy Rotation (Face Player)
-        StartCoroutine(LookAt());
-
-        //Damage?
-        Die();
-
-        if (player.transform.position.y <= 20 && playerMovementScript.dF_Mode == false)
+        downTime -= Time.deltaTime;
+        if(downTime <= 0)
         {
-            Debug.Log("Player Lost");
-            Patrol();
-        }
-        else
-        {
-            playerLost = false;
-        }
-
-        
+            if (canMove == true)
+            {
+                //Enemy Movement (Follow Player)
+                StartCoroutine(Burst());
+            }
+            if (!patrolRunning)
+            {
+                //Enemy Rotation (Face Player)
+                StartCoroutine(LookAt());
+            }
+            //Damage?
+            Die();
+            if (transform.position == targetPos)
+            {
+                ableToMove = true;
+            }
+            if (player.transform.position.y <= 20)
+            {
+                playerLost = true;
+            }
+        } 
     }
     void OnCollisionEnter(Collision collision)
     {
@@ -96,14 +103,24 @@ public class EnemyScripts : MonoBehaviour
         }
     }
     IEnumerator LookAt(){
-        LookRotation = Quaternion.LookRotation(targetPos - transform.position);
-        float time = 0;
-        while (time < .5f)
+        if (playerLost && playerMovementScript.dF_Mode == false && ableToMove)
         {
-            transform.rotation = Quaternion.Slerp(transform.rotation, LookRotation, time);
-            time += Time.deltaTime * rotationSpeed;
-            yield return null;
+            targetPos = GetRandomPointAround(transform.position, 2f, 5f);
+            LookRotation = Quaternion.LookRotation(targetPos - transform.position);
+            ableToMove = false;
         }
+        else
+        {
+            LookRotation = Quaternion.LookRotation(player.transform.position - transform.position);
+            float time = 0;
+            while (time < .5f)
+            {
+                transform.rotation = Quaternion.Slerp(transform.rotation, LookRotation, time);
+                time += Time.deltaTime * rotationSpeed;
+                yield return null;
+            }
+        }
+        yield return null;
     }
     public void FireMissile()
     {
@@ -140,21 +157,5 @@ public class EnemyScripts : MonoBehaviour
 
         Vector3 offset = new Vector3(direction.x, 0f, direction.y);
         return center + offset * distance;
-    }
-    void Patrol()
-    {
-        if(playerLost)
-        {
-            targetPos = GetRandomPointAround(transform.position, 2f, 5f);
-
-            if(transform.position == targetPos)
-            {
-                Patrol();
-            }
-        }
-        else
-        {
-            targetPos = player.transform.position;
-        }
-    }
+    }   
 }

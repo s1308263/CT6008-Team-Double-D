@@ -58,7 +58,7 @@ public class EnemySpawnScript : MonoBehaviour
     {
         return new Vector3(
             Random.Range(bounds.min.x, bounds.max.x),
-            20,
+            50,
             0);
     }
     private IEnumerator SpawnWave()
