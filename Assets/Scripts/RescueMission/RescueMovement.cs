@@ -6,7 +6,7 @@ public class RescueMovement : MonoBehaviour {
     [SerializeField] GameObject safeHouse;
     [SerializeField] float speed;
 
-    public bool hasLanded, needsRescuing = true, isDroppedOff = false;
+    public bool hasLanded, needsRescuing, isDroppedOff = false, canFitOnShip;
 
     private void Awake() {
         hasLanded = false;
@@ -17,7 +17,7 @@ public class RescueMovement : MonoBehaviour {
     }
 
     private void OnCollisionEnter(Collision collider) {
-        if(collider.transform.tag == "Player" && needsRescuing == true) {
+        if(collider.transform.tag == "Player" && needsRescuing == true && canFitOnShip == true) {
             //Spawn follower here
             collider.transform.GetComponent<Player_Rescue>().AddPassenger();
             if (transform.parent != null) {

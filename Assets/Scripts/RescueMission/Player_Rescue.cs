@@ -8,6 +8,8 @@ public class Player_Rescue : MonoBehaviour {
 
     [SerializeField] private GameObject everyoneRescuedText;
 
+    public GameObject rescuePickupInScene;
+
     float rescuedTimer;
     bool canShowRescueText;
 
@@ -30,7 +32,6 @@ public class Player_Rescue : MonoBehaviour {
                 everyoneRescuedText.SetActive(false);
                 canShowRescueText = false;
             }
-
             Debug.Log("Everyone Rescued");
         }
     }
@@ -46,7 +47,13 @@ public class Player_Rescue : MonoBehaviour {
 
     public void AddPassenger() {
         for (int i = 0;i < amountInShip.Length;i++) {
-            amountInShip[i++] = 1;
+            if (amountInShip[i] == 0) {
+                rescuePickupInScene.transform.GetChild(0).transform.GetChild(0).transform.GetComponent<RescueMovement>().canFitOnShip = false;
+                amountInShip[i++] = 1;
+            }
+            else {
+                rescuePickupInScene.transform.GetChild(0).transform.GetChild(0).transform.GetComponent<RescueMovement>().canFitOnShip = false;
+            }
         }
     }
 
