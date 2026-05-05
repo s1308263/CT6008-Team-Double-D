@@ -6,6 +6,11 @@ public class IndicatorFollow : MonoBehaviour
     public Transform player;
     public Camera cam;
     SpriteRenderer sr;
+    public float minScale = .25f;
+    public float maxScale = 4f;
+
+    public float minDistance = 50f;   // closest distance
+    public float maxDistance = 200f;  // farthest distance
 
     private void Awake()
     {
@@ -15,7 +20,7 @@ public class IndicatorFollow : MonoBehaviour
         }
         sr = GetComponent<SpriteRenderer>();
     }
-    void Update()
+    void FixedUpdate()
     {
         if (target == null)
         {
@@ -34,9 +39,14 @@ public class IndicatorFollow : MonoBehaviour
             return;
         }
         Vector3 direction = (target.position - player.position).normalized;
-        transform.position = player.position + direction * 2f;
+        transform.position = player.position + direction * 3f;
 
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0f, 0f, angle);
+        float distance = Vector3.Distance(player.position, target.position);
+
+        float t = Mathf.InverseLerp(minDistance, maxDistance, distance);
+        float scale = Mathf.Lerp(maxScale, minScale, t);
+        transform.localScale = Vector3.one * scale;
     }
 }

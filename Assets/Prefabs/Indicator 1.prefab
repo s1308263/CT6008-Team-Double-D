@@ -103,3 +103,7 @@ MonoBehaviour:
   target: {fileID: 0}
   player: {fileID: 0}
   cam: {fileID: 0}
+  minScale: 0.25
+  maxScale: 1.2
+  minDistance: 20
+  maxDistance: 100
