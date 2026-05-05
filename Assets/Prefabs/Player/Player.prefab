@@ -19,7 +19,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5061928203774625162
 Transform:
   m_ObjectHideFlags: 0
@@ -31,7 +31,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 2}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 762573754942222915}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -535,6 +535,7 @@ MonoBehaviour:
   totalNeedRescuing: 0
   shipCapacity: 0
   everyoneRescuedText: {fileID: 0}
+  rescuePickupInScene: {fileID: 0}
 --- !u!82 &6037303981096252622
 AudioSource:
   m_ObjectHideFlags: 0
@@ -25452,7 +25453,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4ca18687cb114cd40acb6e9e044be5c5, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.017
+      value: 0.054
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4ca18687cb114cd40acb6e9e044be5c5, type: 3}
       propertyPath: m_LocalRotation.w

@@ -12,6 +12,7 @@ TagManager:
   - SafeHouse
   - IngameMenu
   - DeadMenu
+  - Rescue Platform
   layers:
   - Default
   - TransparentFX

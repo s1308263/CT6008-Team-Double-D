@@ -330,7 +330,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerTransform: {fileID: 0}
   safeHouse: {fileID: 0}
-  speed: 0.01
+  speed: 0.025
   hasLanded: 0
   needsRescuing: 0
   isDroppedOff: 0
+  canFitOnShip: 0

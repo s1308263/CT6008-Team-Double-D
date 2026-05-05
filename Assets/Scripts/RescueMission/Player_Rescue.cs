@@ -14,7 +14,6 @@ public class Player_Rescue : MonoBehaviour {
     bool canShowRescueText;
 
     private void Awake() {
-        totalNeedRescuing = 1;   //Random.Range(1, 5);
         //RANDOM SPAWN PLATFORMS HERE
 
         shipCapacity = 1;
@@ -48,18 +47,26 @@ public class Player_Rescue : MonoBehaviour {
     public void AddPassenger() {
         for (int i = 0;i < amountInShip.Length;i++) {
             if (amountInShip[i] == 0) {
-                rescuePickupInScene.transform.GetChild(0).transform.GetChild(0).transform.GetComponent<RescueMovement>().canFitOnShip = false;
                 amountInShip[i++] = 1;
-            }
-            else {
-                rescuePickupInScene.transform.GetChild(0).transform.GetChild(0).transform.GetComponent<RescueMovement>().canFitOnShip = false;
             }
         }
     }
 
     public void RemovePassenger() {
         for (int i = 0;i < amountInShip.Length;i++) {
+            if(amountInShip[i] == 1)
             amountInShip[i++] = 0;
+        }
+    }
+
+    public void CapacityCheck() {
+        for (int i = 0;i < amountInShip.Length;i++) {
+            if (amountInShip[i] == 0) {
+                rescuePickupInScene.transform.GetChild(0).transform.GetComponent<RescueMovement>().canFitOnShip = true;
+            }
+            else {
+                rescuePickupInScene.transform.GetChild(0).transform.GetComponent<RescueMovement>().canFitOnShip = false;
+            }
         }
     }
 }

@@ -1,12 +1,11 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour {
 
-    [SerializeField] private GameObject explosionPrefab, menuManager, heart, shield;
-
-    [SerializeField] private TextMeshProUGUI healthCounter;
+    [SerializeField] private GameObject explosionPrefab, menuManager, healthAnchor;
 
     [SerializeField] AudioSource audioSource;
     [SerializeField] private AudioClip playerHitClip;
@@ -15,6 +14,10 @@ public class PlayerHealth : MonoBehaviour {
 
     public int currenthealth;
     public int maxHealth;
+
+    public Sprite emptyHeart;
+    public Sprite fullHeart;
+    public Image[] hearts;
 
     GameObject newExplosion;
 
@@ -58,15 +61,27 @@ public class PlayerHealth : MonoBehaviour {
                 }
             }
         }
+
+        for (int i = 0;i < hearts.Length;i++) {
+            if(i < currenthealth) {
+                hearts[i].sprite = fullHeart;
+            }
+            else {
+                hearts[i].sprite = emptyHeart;
+            }
+            if (i < maxHealth) {
+                hearts[i].enabled = true;
+            }
+            else {
+                hearts[i].enabled = false;
+            }
+        }
     }
 
     public void AddHealth() {
         if (currenthealth < maxHealth) {
             currenthealth++;
             UpdateHealthBar();
-        }
-        if(currenthealth > 1) {
-            shield.SetActive(true);
         }
     }
 
@@ -78,7 +93,6 @@ public class PlayerHealth : MonoBehaviour {
         }
         if (currenthealth == 1) {
             //ADD FLASHING OF SOME KIND, MAYBE MATERIAL SWITCH?
-            shield.SetActive(false);
         }
         if (currenthealth <= 0) {
             isDead = true;
@@ -110,13 +124,13 @@ public class PlayerHealth : MonoBehaviour {
         menuManager.SetActive(true);
         Time.timeScale = 0.5f;
         audioSource.Stop();
-        currenthealth = 0;
         Destroy(gameObject);
     }
 
     private void UpdateHealthBar() {
-        healthCounter.text = currenthealth + "/" + maxHealth;
+        
     }
+    
 
 
     public void DEBUG_AddHealth(InputAction.CallbackContext context) {

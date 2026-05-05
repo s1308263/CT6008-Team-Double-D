@@ -124,7 +124,7 @@ public class PlayerMovement : MonoBehaviour {
 
         //Charge attack
         if (startChargeTimer == true) {
-            transform.GetChild(1).transform.gameObject.SetActive(true);
+            transform.GetChild(2).transform.GetChild(0).transform.gameObject.SetActive(true);
             chargeTimer += 1 * Time.deltaTime;
             Debug.Log("chargeTimer begun");
             //Max charge attack
