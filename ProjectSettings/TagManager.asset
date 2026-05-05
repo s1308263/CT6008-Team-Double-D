@@ -12,6 +12,7 @@ TagManager:
   - SafeHouse
   - IngameMenu
   - DeadMenu
+  - BoatEnemy
   layers:
   - Default
   - TransparentFX

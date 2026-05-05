@@ -353,6 +353,9 @@ public class PlayerMovement : MonoBehaviour {
             //Damage Calc
             if (Hit.rigidbody.tag == "Enemy") {
                 Hit.transform.gameObject.GetComponent<EnemyScripts>().Damage(2);
+            }
+            else if (Hit.rigidbody.tag == "BoatEnemy")
+            {
                 Hit.transform.gameObject.GetComponent<BoatEnemyMove>().Damage(2);
             }
             else

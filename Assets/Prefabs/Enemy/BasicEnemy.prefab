@@ -37,7 +37,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 11}
-  m_SizeDelta: {x: 100, y: 30}
+  m_SizeDelta: {x: 80, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &7420458029365277596
 MonoBehaviour:
@@ -885,7 +885,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ade5aca249793424c885cbc6b35d3156, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LookRotation: {x: 0, y: 0, z: 0, w: 0}
   dashPower: 5
   dashCD: 1
   maxSpeed: 10
@@ -893,13 +892,13 @@ MonoBehaviour:
   missile: {fileID: 7466608243923696252, guid: 331122ffe65a66f4fb6267fcf53fb0c5, type: 3}
   bullet: {fileID: 3102534638243489890, guid: c67e963388089754e8f3886feb396f04, type: 3}
   stats: {fileID: 11400000, guid: 4fa28acce93f83f4b829ddea64554620, type: 2}
-  health: 0
-  waveSpawner: {fileID: 0}
+  playerMovementScript: {fileID: 0}
   waveSpawnerScript: {fileID: 0}
+  waveSpawner: {fileID: 0}
+  deathParticle: {fileID: 2255722986795932130, guid: 9905f088d39dbc547808a20c9317b778, type: 3}
   enemyCanvas: {fileID: 8951334012444554651}
   healthbar: {fileID: 7420458029365277596}
-  playerMovementScript: {fileID: 0}
-  deathParticle: {fileID: 2255722986795932130, guid: 9905f088d39dbc547808a20c9317b778, type: 3}
+  downTime: 3
 --- !u!54 &2091538409540906553
 Rigidbody:
   m_ObjectHideFlags: 0
