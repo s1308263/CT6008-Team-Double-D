@@ -19,3 +19,4 @@ MonoBehaviour:
   compartmentHealth: 5
   playerHealth: 1
   missileDamge: 2
+  boatEnemyHealth: 10

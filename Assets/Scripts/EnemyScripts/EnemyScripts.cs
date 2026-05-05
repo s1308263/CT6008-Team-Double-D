@@ -2,6 +2,7 @@ using System.Collections;
 using System.Reflection;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Timeline;
 using UnityEngine.UI;
@@ -9,29 +10,32 @@ using UnityEngine.VFX;
 
 public class EnemyScripts : MonoBehaviour
 {
-    GameObject player;
-    public Quaternion LookRotation;
-    public float dashPower = 5, 
+
+    [Header("Enemy Stats: ")]
+    [SerializeField] public float dashPower = 5, 
         dashCD = 1, 
         maxSpeed = 10, 
-        rotationSpeed = 3;
+        rotationSpeed = 2;
+    [Header("Scripts & Dependencies: ")]
     [SerializeField] GameObject missile, bullet;
-    public EnemyStats stats;
-    public int health;
-    public GameObject waveSpawner;
-    public EnemySpawnScript waveSpawnerScript;
-    public Canvas enemyCanvas;
-    public Slider healthbar;
-    public PlayerMovement playerMovementScript;
-    Vector3 targetPos;
-    bool playerLost;
-    bool ableToMove;
-    bool patrolRunning;
-    public GameObject deathParticle;
-    GameObject explosion;
-    float downTime = 3;
+    [SerializeField] private EnemyStats stats;
+    [SerializeField] private PlayerMovement playerMovementScript;
+    [SerializeField] private EnemySpawnScript waveSpawnerScript;
+    [SerializeField] private GameObject waveSpawner;
+    [SerializeField] private GameObject deathParticle;
+    [SerializeField] private Canvas enemyCanvas;
+    [SerializeField] private Slider healthbar;
 
+    [Header("Down Time: ")]
+    [SerializeField] float downTime = 3;
+
+    GameObject player;
+    GameObject explosion;
     Rigidbody rb;
+    Quaternion LookRotation;
+    Vector3 targetPos;
+    bool patrolRunning;
+    int health;
     bool canMove = true;
     void Start(){
         player = GameObject.FindWithTag("Player");
@@ -53,44 +57,49 @@ public class EnemyScripts : MonoBehaviour
         waveSpawner = GameObject.FindWithTag("Spawner");
         waveSpawnerScript = waveSpawner.GetComponent<EnemySpawnScript>();
         playerMovementScript = player.GetComponent<PlayerMovement>();
-
     }
-        void FixedUpdate()
+    void FixedUpdate()
     {
+        //Spawn asleep
         downTime -= Time.deltaTime;
-        if(downTime <= 0)
+        if (downTime <= 0)
         {
+            //Move forward
             if (canMove == true)
             {
-                //Enemy Movement (Follow Player)
                 StartCoroutine(Burst());
             }
-            if (!patrolRunning)
+            //Taking Damage Script
+            Die();
+
+            //Patrol vs Chase Rotation Functions.
+            if (player.transform.position.y <= 20 && playerMovementScript.dF_Mode == false)
             {
-                //Enemy Rotation (Face Player)
+                patrolRunning = true;
+            }
+            else
+            {
+                patrolRunning = false;
+            }
+            if (patrolRunning == true)
+            {
+                StopCoroutine(LookAt());
+                StartCoroutine(Patrol());
+            }
+            else if (patrolRunning == false)
+            {
+                StopCoroutine(Patrol());
                 StartCoroutine(LookAt());
             }
-            //Damage?
-            Die();
-            if (transform.position == targetPos)
-            {
-                ableToMove = true;
-            }
-            if (player.transform.position.y <= 20)
-            {
-                playerLost = true;
-            }
-        } 
+        }
     }
-    void OnCollisionEnter(Collision collision)
-    {
-       
-            //Add damage to player later
-
+    //Destroy on Collision
+        void OnCollisionEnter(Collision collision)
+        {
             //Destroy Enemy on Impact
             Die();
-        
-    }
+        }
+    //Move Forward (Force)
     void burst(){
         rb.AddForce(transform.forward * dashPower, ForceMode.Impulse);
     }
@@ -102,32 +111,42 @@ public class EnemyScripts : MonoBehaviour
             canMove = true;
         }
     }
+    //Look at player
     IEnumerator LookAt(){
-        if (playerLost && playerMovementScript.dF_Mode == false && ableToMove)
-        {
-            targetPos = GetRandomPointAround(transform.position, 2f, 5f);
-            LookRotation = Quaternion.LookRotation(targetPos - transform.position);
-            ableToMove = false;
-        }
-        else
-        {
             LookRotation = Quaternion.LookRotation(player.transform.position - transform.position);
             float time = 0;
-            while (time < .5f)
+            while (time < 1f)
             {
                 transform.rotation = Quaternion.Slerp(transform.rotation, LookRotation, time);
                 time += Time.deltaTime * rotationSpeed;
                 yield return null;
-            }
+            }    
+        yield return null;
+    }
+    //Look towards random Location (Patrol)
+    IEnumerator Patrol()
+    {
+        Debug.Log(targetPos.ToString());
+        if (targetPos == new Vector3(0,0,0) || transform.position == targetPos)
+        {
+            targetPos = GetRandomPointAround(transform.position, 2f, 10f);
+        }
+        LookRotation = Quaternion.LookRotation(targetPos - transform.position);
+        float time = 0;
+        while(time <1f)
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, LookRotation, time);
+            time += Time.deltaTime * rotationSpeed;
         }
         yield return null;
     }
+    //Fire a missile
     public void FireMissile()
     {
         Vector3 railPos = transform.position + transform.forward *1.5f;
         GameObject newMissile = Instantiate(missile, railPos, Quaternion.identity);
     }
-
+    //Fire bullets
     public void Fire()
     {
         Vector3 railPos = transform.position + transform.forward *1.5f;
@@ -135,6 +154,7 @@ public class EnemyScripts : MonoBehaviour
         newBullet.transform.rotation = LookRotation;
         newBullet.GetComponent<Rigidbody>().AddForce (transform.forward * 100f);
     }
+    //Enemy Death
     public void Die()
     {
         if (health <= 0)
@@ -145,17 +165,19 @@ public class EnemyScripts : MonoBehaviour
             Destroy(gameObject);
         }
     }
+    //Taking Damage
     public void Damage(int damage)
     {
         health -= damage;
         healthbar.value -= damage;
     }
+    //Generate Random Location
     Vector3 GetRandomPointAround(Vector3 center, float minRadius, float maxRadius)
     {
         Vector2 direction = Random.insideUnitCircle.normalized;
         float distance = Random.Range(minRadius, maxRadius);
 
-        Vector3 offset = new Vector3(direction.x, 0f, direction.y);
+        Vector3 offset = new Vector3(direction.x, direction.y, 0f);
         return center + offset * distance;
     }   
 }

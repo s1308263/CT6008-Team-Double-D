@@ -20,7 +20,7 @@ public class EnemySpawnScript : MonoBehaviour
     {
         for (int i = 0; i < waves.Length; i++)
         {
-            waves[i].enemiesLeft = waves[i].enemies.Length;
+            waves[i].enemiesLeft = waves[i].enemies.Length + waves[i].boatEnemies.Length;
         }
     }
     void Awake()
@@ -61,6 +61,13 @@ public class EnemySpawnScript : MonoBehaviour
             50,
             0);
     }
+    public static Vector3 BoatSpawnPoint(Bounds bounds)
+    {
+        return new Vector3(
+            Random.Range(bounds.min.x, bounds.max.x),
+            0,
+            0);
+    }
     private IEnumerator SpawnWave()
     {
 
@@ -72,6 +79,14 @@ public class EnemySpawnScript : MonoBehaviour
                 GameObject newEnemy = Instantiate(waves[currentWave].enemies[i].gameObject, spawnPoint, Quaternion.identity);
                 activeEnemies.Add(newEnemy);
                 SpawnIndicator(newEnemy);
+                yield return new WaitForSeconds(waves[currentWave].timeToNextEnemy);
+            }
+            for (int i = 0; i < waves[currentWave].boatEnemies.Length; i++)
+            {
+                Vector3 spawnPoint = BoatSpawnPoint(myCollider.bounds);
+                GameObject newBoatEnemy = Instantiate(waves[currentWave].boatEnemies[i].gameObject, spawnPoint, Quaternion.identity);
+                activeEnemies.Add(newBoatEnemy);
+                SpawnIndicator(newBoatEnemy);
                 yield return new WaitForSeconds(waves[currentWave].timeToNextEnemy);
             }
         }
@@ -91,6 +106,7 @@ public class EnemySpawnScript : MonoBehaviour
     public class Wave 
     {
         public EnemyScripts[] enemies;
+        public BoatEnemyMove[] boatEnemies;
         public float timeToNextWave;
         public float timeToNextEnemy;
 
