@@ -509,9 +509,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   explosionPrefab: {fileID: 2255722986795932130, guid: 9905f088d39dbc547808a20c9317b778, type: 3}
   menuManager: {fileID: 0}
-  heart: {fileID: 0}
-  shield: {fileID: 0}
-  healthCounter: {fileID: 0}
+  healthAnchor: {fileID: 0}
   audioSource: {fileID: 0}
   playerHitClip: {fileID: 8300000, guid: dede421093b0c80498f6ca30d6b78807, type: 3}
   deathTimer: 0
@@ -519,6 +517,9 @@ MonoBehaviour:
   timeSpeed: 0.25
   currenthealth: 3
   maxHealth: 3
+  emptyHeart: {fileID: 0}
+  fullHeart: {fileID: 0}
+  hearts: []
 --- !u!114 &4241169063317065995
 MonoBehaviour:
   m_ObjectHideFlags: 0
