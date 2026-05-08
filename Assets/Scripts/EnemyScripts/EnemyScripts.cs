@@ -12,10 +12,11 @@ public class EnemyScripts : MonoBehaviour
 {
 
     [Header("Enemy Stats: ")]
-    [SerializeField] public float dashPower = 5, 
-        dashCD = 1, 
-        maxSpeed = 10, 
-        rotationSpeed = 2;
+    [SerializeField] public float dashPower = 5;
+    [SerializeField] public float dashCD = 1;
+    [SerializeField] public float maxSpeed = 10;
+    [SerializeField] public float rotationSpeed = 2;
+
     [Header("Scripts & Dependencies: ")]
     [SerializeField] GameObject missile, bullet;
     [SerializeField] private EnemyStats stats;
@@ -54,6 +55,8 @@ public class EnemyScripts : MonoBehaviour
         rb.maxLinearVelocity = maxSpeed;
         MissileLock lockScript = GetComponent<MissileLock>();
         health = stats.health;
+        healthbar.maxValue = stats.health;
+        healthbar.value = stats.health;
         waveSpawner = GameObject.FindWithTag("Spawner");
         waveSpawnerScript = waveSpawner.GetComponent<EnemySpawnScript>();
         playerMovementScript = player.GetComponent<PlayerMovement>();
