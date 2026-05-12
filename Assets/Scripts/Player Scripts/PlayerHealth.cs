@@ -29,6 +29,7 @@ public class PlayerHealth : MonoBehaviour {
     private CinemachineImpulseSource impulseSource;
 
     private void Awake() {
+        Cursor.visible = false;
         camera = GameObject.Find("Main Camera");
         audioSource = GetComponent<AudioSource>();
         mainMaterial = transform.GetChild(2).transform.GetComponent<MeshRenderer>().material;
@@ -122,7 +123,8 @@ public class PlayerHealth : MonoBehaviour {
                 hasBeenHit = true;
             }
             if (currenthealth == 1) {
-                //ADD smoke/fire coming from player
+                transform.GetChild(2).transform.GetChild(6).transform.GetComponent<ParticleSystem>().Play();
+                transform.GetChild(2).transform.GetChild(6).transform.GetChild(0).GetComponent<ParticleSystem>().Play();
             }
             if (currenthealth <= 0) {
                 isDead = true;
@@ -167,6 +169,8 @@ public class PlayerHealth : MonoBehaviour {
     public void DEBUG_AddHealth(InputAction.CallbackContext context) {
         if (context.performed == true) {
             AddHealth();
+            transform.GetChild(2).transform.GetChild(6).transform.GetComponent<ParticleSystem>().Stop();
+            transform.GetChild(2).transform.GetChild(6).transform.GetChild(0).GetComponent<ParticleSystem>().Stop();
         }
     }
 

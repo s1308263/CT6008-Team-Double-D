@@ -14,7 +14,9 @@ public class EnemySpawnScript : MonoBehaviour
     private bool readyToCountDown;
     public GameObject plane;
     public GameObject rd;
-    public List<GameObject> activeEnemies = new List<GameObject>();
+    List<GameObject> activeEnemies = new List<GameObject>();
+
+    [SerializeField] private GameObject canvas;
 
     private void Start()
     {
@@ -36,6 +38,7 @@ public class EnemySpawnScript : MonoBehaviour
         {
             Debug.Log("Finish");
             //End Game
+            canvas.GetComponent<Level_Complete>().NextLevel();
             return;
         }
         if (readyToCountDown == true)

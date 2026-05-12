@@ -370,7 +370,7 @@ public class PlayerMovement : MonoBehaviour {
 
             //Damage Calc
             if (Hit.rigidbody.tag == "Enemy") {
-                Hit.transform.gameObject.GetComponent<EnemyScripts>().Damage(2);
+                Hit.transform.gameObject.GetComponent<EnemyScripts>().Damage(100);
                 //Hit.transform.gameObject.GetComponent<BoatEnemyMove>().Damage(2);
             }
             else {
