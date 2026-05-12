@@ -18,7 +18,8 @@ public class EnemyScripts : MonoBehaviour
     [SerializeField] public float rotationSpeed = 2;
 
     [Header("Scripts & Dependencies: ")]
-    [SerializeField] GameObject missile, bullet;
+    [SerializeField] GameObject missile;
+    [SerializeField] GameObject bullet;
     [SerializeField] private EnemyStats stats;
     [SerializeField] private PlayerMovement playerMovementScript;
     [SerializeField] private EnemySpawnScript waveSpawnerScript;

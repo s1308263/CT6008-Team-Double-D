@@ -71,6 +71,7 @@ public class EnemySpawnScript : MonoBehaviour
             roundTime = 0;
         }
         scoreText.text = "Score: " + score;
+        enemiesLeftText.text = "Enemies Left:" + waves[currentWave].enemiesLeft;
         int minutes = Mathf.FloorToInt(roundTime / 60);
         int seconds = Mathf.FloorToInt(roundTime % 60);
         timerText.text = string.Format("{0:00} : {1:00}", minutes, seconds);

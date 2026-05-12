@@ -124,6 +124,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 20
   stats: {fileID: 11400000, guid: 4fa28acce93f83f4b829ddea64554620, type: 2}
+  deathParticle: {fileID: 2255722986795932130, guid: 9905f088d39dbc547808a20c9317b778, type: 3}
 --- !u!54 &-4145868093545772854
 Rigidbody:
   m_ObjectHideFlags: 0
