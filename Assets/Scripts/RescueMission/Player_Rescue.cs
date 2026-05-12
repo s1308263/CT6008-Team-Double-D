@@ -3,16 +3,17 @@ using UnityEngine.UI;
 
 public class Player_Rescue : MonoBehaviour {
 
-    public int[] amountInShip;
+    public int[] canFitInShip;
     public int totalNeedRescuing;
     [SerializeField] private int shipCapacity, maxShipCapacity;
 
-    [SerializeField] private GameObject everyoneRescuedText;
+    [SerializeField] private GameObject everyoneRescuedText, rescueFollow;
 
     public Sprite emptySeat;
     public Sprite fullSeat;
     public Image[] seats;
 
+    public GameObject[] followArray;
     public GameObject rescuePickupInScene;
 
     float rescuedTimer;
@@ -24,13 +25,14 @@ public class Player_Rescue : MonoBehaviour {
         ////////////////////////////
         //Remove for player class
         shipCapacity = 1;
+        maxShipCapacity = 1;
         ////////////////////////////
 
-        if(shipCapacity >= maxShipCapacity)
-        {
+        if(shipCapacity >= maxShipCapacity) {
             shipCapacity = maxShipCapacity;
         }
-        amountInShip = new int[shipCapacity];
+        canFitInShip = new int[shipCapacity];
+        followArray = new GameObject[shipCapacity];
         canShowRescueText = true;
     }
 
@@ -49,26 +51,7 @@ public class Player_Rescue : MonoBehaviour {
             }
             Debug.Log("Everyone Rescued");
         }
-
-
-        //////////////////////////////////////////////////////////////////////////////// Continue here
-        for (int i = 0; i < seats.Length; i++) {
-            if (i <= maxShipCapacity) {
-                seats[i].sprite = fullSeat;
-            }
-            else {
-                seats[i].sprite = emptySeat;
-            }
-            if (i >= shipCapacity) {
-                seats[i].enabled = true;
-            }
-            else {
-                seats[i].enabled = false;
-            }
-        }
     }
-    
-
 
     public void AddCapacity() {
         if (shipCapacity < maxShipCapacity) {
@@ -81,23 +64,29 @@ public class Player_Rescue : MonoBehaviour {
     }
 
     public void AddPassenger() {
-        for (int i = 0;i < amountInShip.Length;i++) {
-            if (amountInShip[i] == 0) {
-                amountInShip[i++] = 1;
+        for (int i = 0;i < canFitInShip.Length;i++) {
+            if (canFitInShip[i] == 0) {
+                canFitInShip[i++] = 1;
             }
         }
     }
 
     public void RemovePassenger() {
-        for (int i = 0;i < amountInShip.Length;i++) {
-            if(amountInShip[i] == 1)
-            amountInShip[i++] = 0;
+        for (int i = 0;i < canFitInShip.Length;i++) {
+            if(canFitInShip[i] == 1)
+            canFitInShip[i++] = 0;
+        }
+        for(int j = 0; j < followArray.Length;j++) {
+            if (followArray[j] != null) {
+                Destroy(followArray[j]);
+                followArray[j++] = null;
+            }
         }
     }
 
     public void CapacityCheck() {
-        for (int i = 0;i < amountInShip.Length;i++) {
-            if (amountInShip[i] == 0) {
+        for (int i = 0;i < canFitInShip.Length;i++) {
+            if (canFitInShip[i] == 0) {
                 rescuePickupInScene.transform.GetChild(0).transform.GetComponent<RescueMovement>().canFitOnShip = true;
             }
             else {

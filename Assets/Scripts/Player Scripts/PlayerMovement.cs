@@ -65,6 +65,8 @@ public class PlayerMovement : MonoBehaviour {
 
     bool leftPressed, rightPressed, isThrusting, autoShoot, isShootingAuto, canFireSuper = true, dF_rightPressed, dF_leftPressed, lM_PlayerIsLeft;
 
+    public float currentSpeed;
+
     void Awake() {
         audioSource = GetComponent<AudioSource>();
         rb = GetComponent<Rigidbody>();
@@ -115,7 +117,10 @@ public class PlayerMovement : MonoBehaviour {
                 transform.GetChild(2).transform.GetChild(5).gameObject.SetActive(true);
             }
         }
+    }
 
+    void Update() {
+        currentSpeed = rb.linearVelocity.magnitude;
         //Auto-fire attack
         if (autoShoot == true && isShootingAuto == false) {
             autoFireTimer += 1 * Time.deltaTime;

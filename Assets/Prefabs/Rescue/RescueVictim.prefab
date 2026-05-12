@@ -529,7 +529,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerTransform: {fileID: 0}
   safeHouse: {fileID: 0}
-  speed: 0.025
+  rescueFollow: {fileID: 5406314424214507248, guid: 05cb4b71579054c4dba5c2f6ab283243, type: 3}
+  speed: 0.1
   hasLanded: 0
   needsRescuing: 0
   isDroppedOff: 0

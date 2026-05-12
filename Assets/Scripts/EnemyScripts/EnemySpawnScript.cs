@@ -14,7 +14,7 @@ public class EnemySpawnScript : MonoBehaviour
     private bool readyToCountDown;
     public GameObject plane;
     public GameObject rd;
-    List<GameObject> activeEnemies = new List<GameObject>();
+    public List<GameObject> activeEnemies = new List<GameObject>();
 
     private void Start()
     {

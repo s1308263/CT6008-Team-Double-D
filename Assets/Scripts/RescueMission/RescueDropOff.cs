@@ -5,7 +5,7 @@ using TMPro;
 
 public class RescueDropOff : MonoBehaviour {
 
-    [SerializeField] private GameObject rescueVictim;
+    [SerializeField] private GameObject victim, rescueVictim, followVictim;
     GameObject player;
 
     private void OnTriggerEnter(Collider other) {
@@ -16,19 +16,19 @@ public class RescueDropOff : MonoBehaviour {
             }
         }
     }
+    
 
     private IEnumerator SpawnVictim() {
-        foreach (int rescuedVictim in player.GetComponent<Player_Rescue>().amountInShip) {
+        foreach (int rescuedVictim in player.GetComponent<Player_Rescue>().canFitInShip) {
             if (rescuedVictim != 0) {
-                GameObject victim = Instantiate(rescueVictim);
+                victim = Instantiate(rescueVictim);
                 victim.transform.position = player.transform.position;
                 victim.GetComponent<RescueMovement>().isDroppedOff = true;
                 victim.GetComponent<RescueMovement>().needsRescuing = false;
                 victim.transform.GetChild(0).transform.GetComponent<TextMeshPro>().SetText(" ");
+                victim.transform.GetChild(1).transform.gameObject.SetActive(false);
                 player.GetComponent<Player_Rescue>().RemovePassenger();
-                //player.GetComponent<Player_Rescue>().Rescued();
                 yield return new WaitForSeconds(1);
-
             }
         }
     }
