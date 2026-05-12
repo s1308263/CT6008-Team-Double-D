@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using TMPro;
+using UnityEngine.ProBuilder.MeshOperations;
 
 public class EnemySpawnScript : MonoBehaviour
 {
@@ -15,6 +17,13 @@ public class EnemySpawnScript : MonoBehaviour
     public GameObject plane;
     public GameObject rd;
     List<GameObject> activeEnemies = new List<GameObject>();
+    Canvas UI;
+    [SerializeField] TextMeshProUGUI timerText;
+    [SerializeField] TextMeshProUGUI scoreText;
+    [SerializeField] TextMeshProUGUI enemiesLeftText;
+    float roundTime = 150;
+    public int score;
+
 
     private void Start()
     {
@@ -53,6 +62,19 @@ public class EnemySpawnScript : MonoBehaviour
             readyToCountDown = true;
             currentWave++;
         }
+        if (roundTime > 0)
+        {
+            roundTime -= Time.deltaTime;
+        }
+        else
+        {
+            roundTime = 0;
+        }
+        scoreText.text = "Score: " + score;
+        enemiesLeftText.text = "Enemies Left:" + waves[currentWave].enemiesLeft;
+        int minutes = Mathf.FloorToInt(roundTime / 60);
+        int seconds = Mathf.FloorToInt(roundTime % 60);
+        timerText.text = string.Format("{0:00} : {1:00}", minutes, seconds);
     }
     public static Vector3 SpawnPoint(Bounds bounds)
     {

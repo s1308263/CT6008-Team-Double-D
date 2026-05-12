@@ -5,8 +5,10 @@ using UnityEngine.ProBuilder.Shapes;
 
 public class BulletScript : MonoBehaviour {
 
-    [SerializeField] private float speed;
-    [SerializeField] private EnemyStats stats;
+    [SerializeField] float speed;
+    [SerializeField] EnemyStats stats;
+    [SerializeField] GameObject deathParticle;
+    GameObject explosion;
     GameObject target;
     Rigidbody rb;
     Vector3 aim;
@@ -39,6 +41,8 @@ public class BulletScript : MonoBehaviour {
     IEnumerator Die()
     {
         yield return new WaitForSeconds(timer);
+        explosion = Instantiate(deathParticle);
+        explosion.transform.position = transform.position;
         Destroy(gameObject);
     }
 }

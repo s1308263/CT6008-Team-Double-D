@@ -12,7 +12,11 @@ TagManager:
   - SafeHouse
   - IngameMenu
   - DeadMenu
+<<<<<<< HEAD
   - Rescue Platform
+=======
+  - BoatEnemy
+>>>>>>> Aleks'-Branch
   layers:
   - Default
   - TransparentFX
