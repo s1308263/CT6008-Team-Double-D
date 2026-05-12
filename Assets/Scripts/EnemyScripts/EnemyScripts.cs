@@ -162,6 +162,7 @@ public class EnemyScripts : MonoBehaviour
     {
         if (health <= 0)
         {
+            waveSpawnerScript.score += 100;
             waveSpawnerScript.waves[waveSpawnerScript.currentWave].enemiesLeft--;
             explosion = Instantiate(deathParticle);
             explosion.transform.position = transform.position;
@@ -172,7 +173,7 @@ public class EnemyScripts : MonoBehaviour
     public void Damage(int damage)
     {
         health -= damage;
-        healthbar.value -= damage;
+        healthbar.value -= damage;    
     }
     //Generate Random Location
     Vector3 GetRandomPointAround(Vector3 center, float minRadius, float maxRadius)
