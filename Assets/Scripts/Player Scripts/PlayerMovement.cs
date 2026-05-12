@@ -37,7 +37,9 @@ public class PlayerMovement : MonoBehaviour {
     bool startChargeTimer, canShootFullCharge, canShootMidCharge, canShootSmallCharge, canCooldown;
 
     [Header("Super Attack Properties:")]
+    public int superSelector;
     [SerializeField] private GameObject chargeSpherePrefab;
+    [SerializeField] private GameObject superBombPrefab;
 
     [Header("Landing_Mode Settings:")]
     [SerializeField] private float lM_MoveForce;
@@ -302,11 +304,23 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     public void OnFire_Super(InputAction.CallbackContext context) {
-        if (context.performed == true && canFireSuper == true) {
-            GameObject energyWave = Instantiate(chargeSpherePrefab);
-            energyWave.transform.SetParent(bulletSpawn, false);
-            energyWave.transform.position = bulletSpawn.position;
-            canFireSuper = false;
+        switch (superSelector) {
+            case 1:
+                if (context.performed == true && canFireSuper == true) {
+                    GameObject energyWave = Instantiate(chargeSpherePrefab);
+                    energyWave.transform.SetParent(bulletSpawn, false);
+                    energyWave.transform.position = bulletSpawn.position;
+                    canFireSuper = false;
+                }
+                break;
+            case 2:
+                if(context.performed == true && canFireSuper == true) {
+                    GameObject energyBomb = Instantiate(superBombPrefab);
+                    //energyBomb.transform.SetParent(this.transform, false);
+                    energyBomb.transform.position = transform.position;
+                    canFireSuper = false;
+                }
+                break;
         }
     }
 
@@ -323,6 +337,7 @@ public class PlayerMovement : MonoBehaviour {
             else {
                 dF_Mode = false;
                 rb.useGravity = false;
+                rb.linearVelocity = new Vector3(0,0,0);
                 transform.GetChild(2).transform.GetChild(3).GetComponent<TrailRenderer>().emitting = false;
                 transform.GetChild(2).transform.GetChild(4).GetComponent<TrailRenderer>().emitting = false;
             }

@@ -51,8 +51,7 @@ public class PlayerHealth : MonoBehaviour {
             if (deathTimer >= maxDeathTimer) {
                 deathTimer = maxDeathTimer;
                 SpawnExplosion();
-                camera.GetComponent<CameraShake>().CineCameraShake(impulseSource);
-                newExplosion.transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
+                newExplosion.transform.localScale = new Vector3(7.5f, 7.5f, 7.5f);
                 menuManager.SetActive(true);
                 Destroy(gameObject);
             }

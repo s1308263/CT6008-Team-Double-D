@@ -2518,11 +2518,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 762573754942222915, guid: fa051bc374048594ea68fe841fe67419, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.31
+      value: -0.94
       objectReference: {fileID: 0}
     - target: {fileID: 762573754942222915, guid: fa051bc374048594ea68fe841fe67419, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 70.29
+      value: 7.673
       objectReference: {fileID: 0}
     - target: {fileID: 762573754942222915, guid: fa051bc374048594ea68fe841fe67419, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4110,6 +4110,63 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ff737ac7beb4bdc45a242f76d0846d34, type: 3}
+--- !u!1001 &2175232257930972726
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1998564970720378671, guid: dd402587dec8c4c46a855bc22cb7807a, type: 3}
+      propertyPath: m_Name
+      value: EnergyBomb
+      objectReference: {fileID: 0}
+    - target: {fileID: 7335268515163175592, guid: dd402587dec8c4c46a855bc22cb7807a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.91
+      objectReference: {fileID: 0}
+    - target: {fileID: 7335268515163175592, guid: dd402587dec8c4c46a855bc22cb7807a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 7.57
+      objectReference: {fileID: 0}
+    - target: {fileID: 7335268515163175592, guid: dd402587dec8c4c46a855bc22cb7807a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7335268515163175592, guid: dd402587dec8c4c46a855bc22cb7807a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7335268515163175592, guid: dd402587dec8c4c46a855bc22cb7807a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7335268515163175592, guid: dd402587dec8c4c46a855bc22cb7807a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7335268515163175592, guid: dd402587dec8c4c46a855bc22cb7807a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7335268515163175592, guid: dd402587dec8c4c46a855bc22cb7807a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7335268515163175592, guid: dd402587dec8c4c46a855bc22cb7807a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7335268515163175592, guid: dd402587dec8c4c46a855bc22cb7807a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: dd402587dec8c4c46a855bc22cb7807a, type: 3}
 --- !u!1001 &3531827572453181274
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4124,11 +4181,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6947897912943547735, guid: f6ede93b621770c47951eaade3a14da5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.31
+      value: -0.94
       objectReference: {fileID: 0}
     - target: {fileID: 6947897912943547735, guid: f6ede93b621770c47951eaade3a14da5, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 70.29
+      value: 7.673
       objectReference: {fileID: 0}
     - target: {fileID: 6947897912943547735, guid: f6ede93b621770c47951eaade3a14da5, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4639,3 +4696,4 @@ SceneRoots:
   - {fileID: 1915352623}
   - {fileID: 1770167955}
   - {fileID: 1345244215}
+  - {fileID: 2175232257930972726}
