@@ -28,9 +28,12 @@ public class TerrainGenerator : MonoBehaviour {
     public bool canRandColours, randomize;
 
     private void Awake() {
-        //if(randomize == true) {
+        if(randomize == true) {
             Randomize();
-       // }
+        }
+        else {
+            CreateMap();
+        }
     }
 
     public void CreateMap()

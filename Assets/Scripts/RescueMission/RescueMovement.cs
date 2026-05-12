@@ -29,6 +29,7 @@ public class RescueMovement : MonoBehaviour {
         }
         else if (collider.transform.tag == "SafeHouse") {
             playerTransform.gameObject.GetComponent<Player_Rescue>().Rescued();
+            transform.GetChild(1).gameObject.SetActive(false);
             Destroy(gameObject);
         }
     }

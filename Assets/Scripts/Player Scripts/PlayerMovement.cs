@@ -63,9 +63,7 @@ public class PlayerMovement : MonoBehaviour {
 
     public bool dF_Mode;
 
-    bool leftPressed, rightPressed, isThrusting, autoShoot, isShootingAuto, canFireSuper = true, dF_rightPressed, dF_leftPressed;
-
-    bool fullChargeIsPlaying = false;
+    bool leftPressed, rightPressed, isThrusting, autoShoot, isShootingAuto, canFireSuper = true, dF_rightPressed, dF_leftPressed, lM_PlayerIsLeft;
 
     void Awake() {
         audioSource = GetComponent<AudioSource>();
@@ -73,7 +71,6 @@ public class PlayerMovement : MonoBehaviour {
         rb.maxLinearVelocity = 3;
         canCooldown = true;
         isCoolingDown = true;
-        fullChargeIsPlaying = false;
     }
 
     // Update is called once per frame
@@ -89,14 +86,28 @@ public class PlayerMovement : MonoBehaviour {
         //Dogfight mode movement
         else if (dF_Mode == true) {
             if (dF_rightPressed == true) {
-                Debug.Log("ROTATING LEFT");
-                transform.Rotate(-Vector3.forward * +dM_Handling * Time.deltaTime);
-                transform.GetChild(2).transform.Rotate(-Vector3.right * +dM_Handling * Time.deltaTime, 4 , Space.Self);
+                if (lM_PlayerIsLeft == false) {
+                    Debug.Log("ROTATING LEFT");
+                    transform.Rotate(-Vector3.forward * +dM_Handling * Time.deltaTime);
+                    transform.GetChild(2).transform.Rotate(-Vector3.right * +dM_Handling * Time.deltaTime, 4, Space.Self);
+                }
+                else {
+                    Debug.Log("ROTATING Left (REVERSED)");
+                    transform.Rotate(Vector3.forward * +dM_Handling * Time.deltaTime);
+                    transform.GetChild(2).transform.Rotate(Vector3.right * +dM_Handling * Time.deltaTime, 4, Space.Self);
+                }
             }
             else if (dF_leftPressed == true) {
-                Debug.Log("ROTATING RIGHT");
-                transform.Rotate(Vector3.forward * +dM_Handling * Time.deltaTime);
-                transform.GetChild(2).transform.Rotate(Vector3.right * +dM_Handling * Time.deltaTime, 4, Space.Self);
+                if (lM_PlayerIsLeft == false) {
+                    Debug.Log("ROTATING RIGHT");
+                    transform.Rotate(Vector3.forward * +dM_Handling * Time.deltaTime);
+                    transform.GetChild(2).transform.Rotate(Vector3.right * +dM_Handling * Time.deltaTime, 4, Space.Self);
+                }
+                else {
+                    Debug.Log("ROTATING RIGHT (REVERSED)");
+                    transform.Rotate(-Vector3.forward * +dM_Handling * Time.deltaTime);
+                    transform.GetChild(2).transform.Rotate(-Vector3.right * +dM_Handling * Time.deltaTime, 4, Space.Self);
+                }
             }
             if (isThrusting == true) {
                 //Add force as thrust
@@ -172,11 +183,13 @@ public class PlayerMovement : MonoBehaviour {
             if (moveInput.x <= -0.85f) {
                 rightPressed = false;
                 leftPressed = true;
+                lM_PlayerIsLeft = true;
 
             }
             else if (moveInput.x >= 0.85f) {
                 leftPressed = false;
                 rightPressed = true;
+                lM_PlayerIsLeft = false;
             }
             //Sets ship velocity and damping
             rb.maxLinearVelocity = lM_MaxVelocity;
@@ -216,7 +229,7 @@ public class PlayerMovement : MonoBehaviour {
         }
         else {
             isThrusting = false;
-                transform.GetChild(2).transform.GetChild(5).gameObject.SetActive(false);
+            transform.GetChild(2).transform.GetChild(5).gameObject.SetActive(false);
         }
     }
 
@@ -353,6 +366,10 @@ public class PlayerMovement : MonoBehaviour {
             //Damage Calc
             if (Hit.rigidbody.tag == "Enemy") {
                 Hit.transform.gameObject.GetComponent<EnemyScripts>().Damage(2);
+                //Hit.transform.gameObject.GetComponent<BoatEnemyMove>().Damage(2);
+            }
+            else {
+                yield return null;
             }
         }
 
@@ -372,12 +389,12 @@ public class PlayerMovement : MonoBehaviour {
     IEnumerator LM_RotShip() {
         switch (leftPressed, rightPressed) {
             case (true, false):
-            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 180, 0), lM_RotSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.Euler(0, 180, 0);
             transform.GetChild(2).transform.rotation = Quaternion.Lerp(transform.GetChild(2).transform.rotation, Quaternion.Euler(-90, 180, 0), lM_RotSpeed * Time.deltaTime);
             yield return new WaitForSeconds(lM_RotSpeed);
             break;
             case (false, true):
-            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, 0), lM_RotSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.Euler(0, 0, 0);
             transform.GetChild(2).transform.rotation = Quaternion.Lerp(transform.GetChild(2).transform.rotation, Quaternion.Euler(-90, 0, 0), lM_RotSpeed * Time.deltaTime);
             yield return new WaitForSeconds(lM_RotSpeed);
             break;
