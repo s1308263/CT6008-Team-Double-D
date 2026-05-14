@@ -15,13 +15,13 @@ public class MissileScript : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rb.maxLinearVelocity = maxSpeed;
         health = stats.compartmentHealth;
+
     }
     void FixedUpdate()
     {
         transform.LookAt(player.transform.position);
         StartCoroutine(LookAt());
         StartCoroutine(KillMissile());
-
     }
     void OnCollisionEnter(Collision collision)
     {

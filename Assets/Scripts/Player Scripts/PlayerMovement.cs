@@ -351,17 +351,32 @@ public class PlayerMovement : MonoBehaviour {
             Destroy(Trail.gameObject, Trail.time);
 
             //Damage Calc
-            if (Hit.rigidbody.tag == "Enemy") {
-                Hit.transform.gameObject.GetComponent<EnemyScripts>().Damage(2);
-            }
-            else if (Hit.rigidbody.tag == "BoatEnemy")
+            switch (Hit.rigidbody.tag)
             {
-                Hit.transform.gameObject.GetComponent<BoatEnemyMove>().Damage(2);
+                case "Enemy":
+                    Hit.transform.gameObject.GetComponent<EnemyScripts>().Damage(2);
+                    break;
+
+                case "BoatEnemy":
+                    Hit.transform.gameObject.GetComponent<BoatEnemyMove>().Damage(2);
+                    break;
+
+                default:
+                    yield return null;
+                    break;
             }
-            else
-            {
-                yield return null;
-            }
+            //if (Hit.rigidbody.tag == "Enemy")
+            //{
+            //    Hit.transform.gameObject.GetComponent<EnemyScripts>().Damage(2);
+            //}
+            //else if (Hit.rigidbody.tag == "BoatEnemy")
+            //{
+            //    Hit.transform.gameObject.GetComponent<BoatEnemyMove>().Damage(2);
+            //}
+            //else
+            //{
+            //    yield return null;
+            //}
         }
 
         else {

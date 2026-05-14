@@ -23,10 +23,12 @@ public class EnemyScripts : MonoBehaviour
     [SerializeField] private EnemyStats stats;
     [SerializeField] private PlayerMovement playerMovementScript;
     [SerializeField] private EnemySpawnScript waveSpawnerScript;
+    [SerializeField] private CameraShake cameraShakeScript;
     [SerializeField] private GameObject waveSpawner;
     [SerializeField] private GameObject deathParticle;
     [SerializeField] private Canvas enemyCanvas;
     [SerializeField] private Slider healthbar;
+    [SerializeField] private Camera mainCam;
 
     [Header("Down Time: ")]
     [SerializeField] float downTime = 3;
@@ -41,6 +43,7 @@ public class EnemyScripts : MonoBehaviour
     bool canMove = true;
     void Start(){
         player = GameObject.FindWithTag("Player");
+        mainCam = Camera.main;
         rb = GetComponent<Rigidbody>();
         rb.maxLinearVelocity = maxSpeed;
         MissileLock lockScript = GetComponent<MissileLock>();
@@ -48,10 +51,12 @@ public class EnemyScripts : MonoBehaviour
         waveSpawner = GameObject.FindWithTag("Spawner");
         waveSpawnerScript = waveSpawner.GetComponent<EnemySpawnScript>();
         playerMovementScript = player.GetComponent<PlayerMovement>();
+        cameraShakeScript = mainCam.GetComponent<CameraShake>();
     }
     void Awake()
     {
         player = GameObject.FindWithTag("Player");
+        mainCam = Camera.main;
         rb = GetComponent<Rigidbody>();
         rb.maxLinearVelocity = maxSpeed;
         MissileLock lockScript = GetComponent<MissileLock>();
@@ -61,6 +66,7 @@ public class EnemyScripts : MonoBehaviour
         waveSpawner = GameObject.FindWithTag("Spawner");
         waveSpawnerScript = waveSpawner.GetComponent<EnemySpawnScript>();
         playerMovementScript = player.GetComponent<PlayerMovement>();
+        cameraShakeScript = mainCam.GetComponent<CameraShake>();
     }
     void FixedUpdate()
     {
@@ -167,6 +173,7 @@ public class EnemyScripts : MonoBehaviour
             waveSpawnerScript.waves[waveSpawnerScript.currentWave].enemiesLeft--;
             explosion = Instantiate(deathParticle);
             explosion.transform.position = transform.position;
+            cameraShakeScript.CamShake();
             Destroy(gameObject);
         }
     }

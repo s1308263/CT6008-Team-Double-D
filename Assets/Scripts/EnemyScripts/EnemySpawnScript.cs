@@ -2,9 +2,9 @@ using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
 using TMPro;
-using UnityEngine.ProBuilder.MeshOperations;
+using UnityEngine.UI;
+using System.Threading;
 
 public class EnemySpawnScript : MonoBehaviour
 {
@@ -21,8 +21,11 @@ public class EnemySpawnScript : MonoBehaviour
     [SerializeField] TextMeshProUGUI timerText;
     [SerializeField] TextMeshProUGUI scoreText;
     [SerializeField] TextMeshProUGUI enemiesLeftText;
+    [SerializeField] GameObject warningSign;
     float roundTime = 150;
     public int score;
+    bool isLerping;
+    Image image;
 
 
     private void Start()
@@ -38,6 +41,7 @@ public class EnemySpawnScript : MonoBehaviour
         myCollider = GetComponent<Collider>();
         waveCountdown = waves[currentWave].timeToNextWave;
         plane = GameObject.FindGameObjectWithTag("Player");
+        image = warningSign.GetComponent<Image>();
     }
     void Update()
     {
@@ -49,11 +53,17 @@ public class EnemySpawnScript : MonoBehaviour
         }
         if (readyToCountDown == true)
         {
+            if (!isLerping)
+            {
+                //WarningUI();
+            }
+            image.enabled = true;
             waveCountdown -= Time.deltaTime;
         }
         if (waveCountdown <= 0)
         {
             readyToCountDown = false;
+            image.enabled = false;
             waveCountdown = waves[currentWave].timeToNextWave;
             StartCoroutine(SpawnWave());
         }
@@ -87,7 +97,7 @@ public class EnemySpawnScript : MonoBehaviour
     {
         return new Vector3(
             Random.Range(bounds.min.x, bounds.max.x),
-            0,
+            2,
             0);
     }
     private IEnumerator SpawnWave()
@@ -114,6 +124,29 @@ public class EnemySpawnScript : MonoBehaviour
         }
     }
 
+    //void WarningUI()
+    //{
+    //    isLerping = true;
+    //    Debug.Log("hey");
+    //    if (waveCountdown >= waves[currentWave].timeToNextWave)
+    //    {
+    //        Debug.Log("LerpOut1");
+    //        Image image = warningSign.GetComponent<Image>();
+    //        image.enabled = true;
+
+    //        Debug.Log("LerpOut2");
+    //        image.enabled = false;
+    //    }
+    //    else if (waveCountdown <= waves[currentWave].timeToNextWave /2)
+    //    {
+    //        Debug.Log("LerpIn");
+    //        Image image = warningSign.GetComponent<Image>();
+    //        image.enabled = true;
+    //        image.color = new Color(image.color.r, image.color.g, image.color.b, Mathf.Lerp(0, 1, 200));
+    //        image.enabled = false;
+    //    }
+    //    isLerping = false;
+    //}
     void SpawnIndicator(GameObject enemy)
     {
         GameObject newIndicator = Instantiate(rd);
