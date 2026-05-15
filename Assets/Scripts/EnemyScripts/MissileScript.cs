@@ -15,13 +15,13 @@ public class MissileScript : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rb.maxLinearVelocity = maxSpeed;
         health = stats.compartmentHealth;
+
     }
     void FixedUpdate()
     {
         transform.LookAt(player.transform.position);
         StartCoroutine(LookAt());
         StartCoroutine(KillMissile());
-
     }
     void OnCollisionEnter(Collision collision)
     {
@@ -40,7 +40,7 @@ public class MissileScript : MonoBehaviour
     }
     IEnumerator LookAt()
     {
-        Quaternion LookRotation = Quaternion.LookRotation(player.transform.position - transform.position);
+        Quaternion LookRotation = Quaternion.LookRotation(player.transform.position - transform.position).normalized;
 
         float time = 0;
         while (time < 1)
