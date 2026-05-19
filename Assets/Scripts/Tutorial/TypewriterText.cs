@@ -46,12 +46,15 @@ public class TypewriterText : MonoBehaviour {
     private void Awake() {
         text = GetComponent<TMP_Text>();
         tutText = GetComponent<TutorialText>();
-        text.SetText(tutText.tutorialValues[0]);
-        tutValues = 0;
         shortDelay = new WaitForSeconds(1 / textSpeed);
         longDelay = new WaitForSeconds(longDelayTime);
         skippingDelay = new WaitForSeconds(1 / (textSpeed * skipSpeed));
         eventDelay = new WaitForSeconds(doneDelay);
+    }
+
+    private void Start() {
+        text.SetText(tutText.tutorialValues[0]);
+        tutValues = 0;
     }
 
     private void Update() {
