@@ -70,6 +70,14 @@ public class PlayerMovement : MonoBehaviour {
     public float currentSpeed;
 
     void Awake() {
+
+        ////////////////////////////////////////////////////////
+        //REMOVE FOR TRAILER
+
+        superSelector = 1;
+        ////////////////////////////////////////////////////////
+        
+
         audioSource = GetComponent<AudioSource>();
         rb = GetComponent<Rigidbody>();
         rb.maxLinearVelocity = 3;
@@ -384,11 +392,13 @@ public class PlayerMovement : MonoBehaviour {
             Destroy(Trail.gameObject, Trail.time);
 
             //Damage Calc
-            if (Hit.rigidbody.tag == "Enemy") {
-                Hit.transform.gameObject.GetComponent<EnemyScripts>().Damage(100);
-                //Hit.transform.gameObject.GetComponent<BoatEnemyMove>().Damage(2);
+            if (Hit.rigidbody.CompareTag("Enemy")) {
+                Hit.transform.gameObject.GetComponent<EnemyScripts>().Damage(2);
             }
-            else {
+            else if(Hit.rigidbody.CompareTag("BoatEnemy")) {
+                Hit.transform.gameObject.GetComponent<BoatEnemyMove>().Damage(2);
+            }
+            else if (Hit.rigidbody.CompareTag(null)){
                 yield return null;
             }
         }

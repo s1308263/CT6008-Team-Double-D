@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour {
 
-    [SerializeField] private GameObject explosionPrefab, menuManager, healthAnchor, camera;
+    [SerializeField] private GameObject explosionPrefab, menuManager, healthAnchor, cam;
 
     [SerializeField] AudioSource audioSource;
     [SerializeField] private AudioClip playerHitClip;
@@ -30,7 +30,7 @@ public class PlayerHealth : MonoBehaviour {
 
     private void Awake() {
         Cursor.visible = false;
-        camera = GameObject.Find("Main Camera");
+        cam = GameObject.Find("Main Camera");
         audioSource = GetComponent<AudioSource>();
         mainMaterial = transform.GetChild(2).transform.GetComponent<MeshRenderer>().material;
         canDamage = true;
@@ -52,13 +52,14 @@ public class PlayerHealth : MonoBehaviour {
                 deathTimer = maxDeathTimer;
                 SpawnExplosion();
                 newExplosion.transform.localScale = new Vector3(7.5f, 7.5f, 7.5f);
+                Cursor.visible = true;
                 menuManager.SetActive(true);
                 Destroy(gameObject);
             }
             else if (deathTimer >= maxDeathTimer / 3 * 2) {
                 if (hasSpawnedExplo2 == false) {
                     SpawnExplosion();
-                    camera.GetComponent<CameraShake>().CineCameraShake(impulseSource);
+                    cam.GetComponent<CameraShake>().CineCameraShake(impulseSource);
                     newExplosion.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
                     hasSpawnedExplo2 = true;
                 }
@@ -67,7 +68,7 @@ public class PlayerHealth : MonoBehaviour {
                 if (hasSpawnedExplo1 == false)
                 {
                     SpawnExplosion();
-                    camera.GetComponent<CameraShake>().CineCameraShake(impulseSource);
+                    cam.GetComponent<CameraShake>().CineCameraShake(impulseSource);
                     newExplosion.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
                     hasSpawnedExplo1 = true;
                 }
@@ -114,7 +115,7 @@ public class PlayerHealth : MonoBehaviour {
     public void RemoveHealth() {
         if (canDamage == true) {
             currenthealth--;
-            camera.GetComponent<CameraShake>().CineCameraShake(impulseSource);
+            cam.GetComponent<CameraShake>().CineCameraShake(impulseSource);
             transform.GetChild(4).gameObject.GetComponent<ParticleSystem>().Play();
             if (currenthealth > 0) {
                 invincibleTimer = 0;
@@ -153,6 +154,7 @@ public class PlayerHealth : MonoBehaviour {
     public void InstKill() {
         SpawnExplosion();
         newExplosion.transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
+        Cursor.visible = true;
         menuManager.SetActive(true);
         Time.timeScale = 0.5f;
         audioSource.Stop();

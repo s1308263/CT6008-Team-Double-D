@@ -527,10 +527,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3124ed6dd1f1f27489cac7a398011bbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerTransform: {fileID: 0}
+  player: {fileID: 0}
   safeHouse: {fileID: 0}
   rescueFollow: {fileID: 5406314424214507248, guid: 05cb4b71579054c4dba5c2f6ab283243, type: 3}
-  speed: 0.1
+  speed: 0.05
+  newFollow: {fileID: 0}
   hasLanded: 0
   needsRescuing: 0
   isDroppedOff: 0

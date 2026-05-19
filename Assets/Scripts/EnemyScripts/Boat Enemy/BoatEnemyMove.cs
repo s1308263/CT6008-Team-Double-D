@@ -1,6 +1,7 @@
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.UI;
+using Unity.Cinemachine;
 
 public class BoatEnemyMove : MonoBehaviour
 {
@@ -19,6 +20,8 @@ public class BoatEnemyMove : MonoBehaviour
     public Slider healthbar;
     private Camera mainCam;
 
+    private CinemachineImpulseSource impulseSource;
+
     void Awake()
     {
         mainCam = Camera.main;
@@ -33,6 +36,7 @@ public class BoatEnemyMove : MonoBehaviour
         manager.Register(this);
         healthbar.maxValue = stats.health;
         healthbar.value = stats.health;
+        impulseSource = GetComponent<CinemachineImpulseSource>();
     }
 
     void OnDestroy()
@@ -69,7 +73,7 @@ public class BoatEnemyMove : MonoBehaviour
             waveSpawnerScript.waves[waveSpawnerScript.currentWave].enemiesLeft--;
             explosion = Instantiate(deathParticle);
             explosion.transform.position = transform.position;
-            cameraShakeScript.CamShake();
+            mainCam.GetComponent<CameraShake>().CineCameraShake(impulseSource);
             Destroy(gameObject);
         }
     }
