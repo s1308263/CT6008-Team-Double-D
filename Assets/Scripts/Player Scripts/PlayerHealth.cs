@@ -34,10 +34,13 @@ public class PlayerHealth : MonoBehaviour {
         audioSource = GetComponent<AudioSource>();
         mainMaterial = transform.GetChild(2).transform.GetComponent<MeshRenderer>().material;
         canDamage = true;
-        UpdateHealthBar();
+        //UpdateHealthBar();
         impulseSource = GetComponent<CinemachineImpulseSource>();
     }
 
+    private void Start() {
+        UpdateHealthBar();
+    }
     private void OnCollisionEnter(Collision collision) {
         if(collision.collider.tag == "Ground" || collision.collider.tag == "Enemy") {
             InstKill();

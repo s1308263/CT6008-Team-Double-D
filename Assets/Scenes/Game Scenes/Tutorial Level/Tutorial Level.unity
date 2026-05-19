@@ -1120,7 +1120,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1077765138
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3600,7 +3600,7 @@ PrefabInstance:
       objectReference: {fileID: 1038969627}
     - target: {fileID: 5033838725408900406, guid: 97191df25a458fa4a9f675910847c4e0, type: 3}
       propertyPath: waves.Array.size
-      value: 10
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5033838725408900406, guid: 97191df25a458fa4a9f675910847c4e0, type: 3}
       propertyPath: waves.Array.data[1].timeToNextWave
@@ -3640,7 +3640,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5033838725408900406, guid: 97191df25a458fa4a9f675910847c4e0, type: 3}
       propertyPath: waves.Array.data[0].enemies.Array.size
-      value: 12
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5033838725408900406, guid: 97191df25a458fa4a9f675910847c4e0, type: 3}
       propertyPath: waves.Array.data[1].enemies.Array.size
@@ -3678,6 +3678,10 @@ PrefabInstance:
       propertyPath: waves.Array.data[9].enemies.Array.size
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 5033838725408900406, guid: 97191df25a458fa4a9f675910847c4e0, type: 3}
+      propertyPath: 'waves.Array.data[0].enemies.Array.data[0]'
+      value: 
+      objectReference: {fileID: 8522075427642568108, guid: 05562a037d425fa4da0765d4701f95e6, type: 3}
     - target: {fileID: 5033838725408900406, guid: 97191df25a458fa4a9f675910847c4e0, type: 3}
       propertyPath: 'waves.Array.data[0].enemies.Array.data[3]'
       value: 
@@ -3924,7 +3928,7 @@ PrefabInstance:
       objectReference: {fileID: 8522075427642568108, guid: 05562a037d425fa4da0765d4701f95e6, type: 3}
     - target: {fileID: 5033838725408900406, guid: 97191df25a458fa4a9f675910847c4e0, type: 3}
       propertyPath: waves.Array.data[0].boatEnemies.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5033838725408900406, guid: 97191df25a458fa4a9f675910847c4e0, type: 3}
       propertyPath: 'waves.Array.data[0].enemies.Array.data[10]'
@@ -4286,6 +4290,10 @@ PrefabInstance:
       propertyPath: 'waves.Array.data[9].enemies.Array.data[29]'
       value: 
       objectReference: {fileID: 8522075427642568108, guid: 05562a037d425fa4da0765d4701f95e6, type: 3}
+    - target: {fileID: 5033838725408900406, guid: 97191df25a458fa4a9f675910847c4e0, type: 3}
+      propertyPath: 'waves.Array.data[0].boatEnemies.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1962226048449675934, guid: a3efe8e517e866f4dae14b2b30276b51, type: 3}
     - target: {fileID: 5033838725408900406, guid: 97191df25a458fa4a9f675910847c4e0, type: 3}
       propertyPath: 'waves.Array.data[1].boatEnemies.Array.data[0]'
       value: 
