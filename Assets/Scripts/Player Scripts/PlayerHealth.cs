@@ -1,16 +1,17 @@
 using TMPro;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour {
 
-    [SerializeField] private GameObject explosionPrefab, menuManager, healthAnchor;
+    [SerializeField] private GameObject explosionPrefab, menuManager, healthAnchor, cam;
 
     [SerializeField] AudioSource audioSource;
     [SerializeField] private AudioClip playerHitClip;
 
-    [SerializeField] private float deathTimer, maxDeathTimer, timeSpeed;
+    [SerializeField] private float deathTimer, maxDeathTimer, timeSpeed, invincibleTimer = 1f, maxInvincibleTimer;
 
     public int currenthealth;
     public int maxHealth;
@@ -19,15 +20,27 @@ public class PlayerHealth : MonoBehaviour {
     public Sprite fullHeart;
     public Image[] hearts;
 
+    [SerializeField] private Material mainMaterial, invincibleMaterial;
+
     GameObject newExplosion;
 
-    bool isDead = false, hasSpawnedExplo1 = false, hasSpawnedExplo2 = false;
+    bool isDead = false, hasSpawnedExplo1 = false, hasSpawnedExplo2 = false, hasBeenHit, canDamage;
+
+    private CinemachineImpulseSource impulseSource;
 
     private void Awake() {
+        Cursor.visible = false;
+        cam = GameObject.Find("Main Camera");
         audioSource = GetComponent<AudioSource>();
-        UpdateHealthBar();
+        mainMaterial = transform.GetChild(2).transform.GetComponent<MeshRenderer>().material;
+        canDamage = true;
+        //UpdateHealthBar();
+        impulseSource = GetComponent<CinemachineImpulseSource>();
     }
 
+    private void Start() {
+        UpdateHealthBar();
+    }
     private void OnCollisionEnter(Collision collision) {
         if(collision.collider.tag == "Ground" || collision.collider.tag == "Enemy") {
             InstKill();
@@ -41,13 +54,15 @@ public class PlayerHealth : MonoBehaviour {
             if (deathTimer >= maxDeathTimer) {
                 deathTimer = maxDeathTimer;
                 SpawnExplosion();
-                newExplosion.transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
+                newExplosion.transform.localScale = new Vector3(7.5f, 7.5f, 7.5f);
+                Cursor.visible = true;
                 menuManager.SetActive(true);
                 Destroy(gameObject);
             }
             else if (deathTimer >= maxDeathTimer / 3 * 2) {
                 if (hasSpawnedExplo2 == false) {
                     SpawnExplosion();
+                    cam.GetComponent<CameraShake>().CineCameraShake(impulseSource);
                     newExplosion.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
                     hasSpawnedExplo2 = true;
                 }
@@ -56,6 +71,7 @@ public class PlayerHealth : MonoBehaviour {
                 if (hasSpawnedExplo1 == false)
                 {
                     SpawnExplosion();
+                    cam.GetComponent<CameraShake>().CineCameraShake(impulseSource);
                     newExplosion.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
                     hasSpawnedExplo1 = true;
                 }
@@ -76,6 +92,20 @@ public class PlayerHealth : MonoBehaviour {
                 hearts[i].enabled = false;
             }
         }
+
+        if(hasBeenHit == true) {
+            invincibleTimer += 1 * Time.deltaTime;
+            if(invincibleTimer < maxInvincibleTimer) {
+                Debug.Log("PLAYER IS INVINCIBLE");
+                canDamage = false;
+            }
+            else {
+                invincibleTimer = maxInvincibleTimer;
+                Debug.Log("PLAYER IS NOT INVINCIBLE");
+                canDamage = true;
+                transform.GetChild(2).transform.GetComponent<MeshRenderer>().material = mainMaterial;
+            }
+        }
     }
 
     public void AddHealth() {
@@ -86,21 +116,27 @@ public class PlayerHealth : MonoBehaviour {
     }
 
     public void RemoveHealth() {
-        currenthealth--;
-        transform.GetChild(4).gameObject.GetComponent<ParticleSystem>().Play();
-        if (currenthealth > 0) {
-            //ADD INVINCIBLE FRAMES HERE MAYBE?
+        if (canDamage == true) {
+            currenthealth--;
+            cam.GetComponent<CameraShake>().CineCameraShake(impulseSource);
+            transform.GetChild(4).gameObject.GetComponent<ParticleSystem>().Play();
+            if (currenthealth > 0) {
+                invincibleTimer = 0;
+                transform.GetChild(2).transform.GetComponent<MeshRenderer>().material = invincibleMaterial;
+                hasBeenHit = true;
+            }
+            if (currenthealth == 1) {
+                transform.GetChild(2).transform.GetChild(6).transform.GetComponent<ParticleSystem>().Play();
+                transform.GetChild(2).transform.GetChild(6).transform.GetChild(0).GetComponent<ParticleSystem>().Play();
+            }
+            if (currenthealth <= 0) {
+                isDead = true;
+                SpawnExplosion();
+                newExplosion.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+            }
+            audioSource.PlayOneShot(playerHitClip);
+            UpdateHealthBar();
         }
-        if (currenthealth == 1) {
-            //ADD FLASHING OF SOME KIND, MAYBE MATERIAL SWITCH?
-        }
-        if (currenthealth <= 0) {
-            isDead = true;
-            SpawnExplosion();
-            newExplosion.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-        }
-        audioSource.PlayOneShot(playerHitClip);
-        UpdateHealthBar();
     }
 
     public void AddMaxHealth() {
@@ -121,6 +157,7 @@ public class PlayerHealth : MonoBehaviour {
     public void InstKill() {
         SpawnExplosion();
         newExplosion.transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
+        Cursor.visible = true;
         menuManager.SetActive(true);
         Time.timeScale = 0.5f;
         audioSource.Stop();
@@ -135,14 +172,14 @@ public class PlayerHealth : MonoBehaviour {
 
     public void DEBUG_AddHealth(InputAction.CallbackContext context) {
         if (context.performed == true) {
-            AddMaxHealth();
             AddHealth();
+            transform.GetChild(2).transform.GetChild(6).transform.GetComponent<ParticleSystem>().Stop();
+            transform.GetChild(2).transform.GetChild(6).transform.GetChild(0).GetComponent<ParticleSystem>().Stop();
         }
     }
 
     public void DEBUG_RemoveHealth(InputAction.CallbackContext context) {
         if(context.performed == true) {
-            RemoveMaxHealth();
             RemoveHealth();
         }
     }

@@ -1,6 +1,7 @@
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.UI;
+using Unity.Cinemachine;
 
 public class BoatEnemyMove : MonoBehaviour
 {
@@ -13,12 +14,17 @@ public class BoatEnemyMove : MonoBehaviour
     public int health;
     public GameObject waveSpawner;
     public EnemySpawnScript waveSpawnerScript;
+    public CameraShake cameraShakeScript;
     public GameObject deathParticle;
     GameObject explosion;
     public Slider healthbar;
+    private Camera mainCam;
+
+    private CinemachineImpulseSource impulseSource;
 
     void Awake()
     {
+        mainCam = Camera.main;
         manager = GameObject.FindWithTag("Spawner").GetComponent<BoatEnemyManager>();
         fixedY = transform.position.y;
         fixedZ = transform.position.z;
@@ -26,8 +32,11 @@ public class BoatEnemyMove : MonoBehaviour
         health = stats.boatEnemyHealth;
         waveSpawner = GameObject.FindWithTag("Spawner");
         waveSpawnerScript = waveSpawner.GetComponent<EnemySpawnScript>();
-
+        cameraShakeScript = mainCam.GetComponent<CameraShake>();
         manager.Register(this);
+        healthbar.maxValue = stats.health;
+        healthbar.value = stats.health;
+        impulseSource = GetComponent<CinemachineImpulseSource>();
     }
 
     void OnDestroy()
@@ -60,14 +69,17 @@ public class BoatEnemyMove : MonoBehaviour
     {
         if (health <= 0)
         {
+            waveSpawnerScript.score += 200;
             waveSpawnerScript.waves[waveSpawnerScript.currentWave].enemiesLeft--;
             explosion = Instantiate(deathParticle);
             explosion.transform.position = transform.position;
+            mainCam.GetComponent<CameraShake>().CineCameraShake(impulseSource);
             Destroy(gameObject);
         }
     }
     public void Damage(int damage)
     {
+        Debug.Log("BoatHit");
         health -= damage;
         healthbar.value -= damage;
     }

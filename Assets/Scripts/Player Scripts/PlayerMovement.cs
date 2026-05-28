@@ -37,7 +37,9 @@ public class PlayerMovement : MonoBehaviour {
     bool startChargeTimer, canShootFullCharge, canShootMidCharge, canShootSmallCharge, canCooldown;
 
     [Header("Super Attack Properties:")]
+    public int superSelector;
     [SerializeField] private GameObject chargeSpherePrefab;
+    [SerializeField] private GameObject superBombPrefab;
 
     [Header("Landing_Mode Settings:")]
     [SerializeField] private float lM_MoveForce;
@@ -65,7 +67,17 @@ public class PlayerMovement : MonoBehaviour {
 
     bool leftPressed, rightPressed, isThrusting, autoShoot, isShootingAuto, canFireSuper = true, dF_rightPressed, dF_leftPressed, lM_PlayerIsLeft;
 
+    public float currentSpeed;
+
     void Awake() {
+
+        ////////////////////////////////////////////////////////
+        //REMOVE FOR TRAILER
+
+        superSelector = 1;
+        ////////////////////////////////////////////////////////
+        
+
         audioSource = GetComponent<AudioSource>();
         rb = GetComponent<Rigidbody>();
         rb.maxLinearVelocity = 3;
@@ -115,7 +127,10 @@ public class PlayerMovement : MonoBehaviour {
                 transform.GetChild(2).transform.GetChild(5).gameObject.SetActive(true);
             }
         }
+    }
 
+    void Update() {
+        currentSpeed = rb.linearVelocity.magnitude;
         //Auto-fire attack
         if (autoShoot == true && isShootingAuto == false) {
             autoFireTimer += 1 * Time.deltaTime;
@@ -297,11 +312,23 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     public void OnFire_Super(InputAction.CallbackContext context) {
-        if (context.performed == true && canFireSuper == true) {
-            GameObject energyWave = Instantiate(chargeSpherePrefab);
-            energyWave.transform.SetParent(bulletSpawn, false);
-            energyWave.transform.position = bulletSpawn.position;
-            canFireSuper = false;
+        switch (superSelector) {
+            case 1:
+                if (context.performed == true && canFireSuper == true) {
+                    GameObject energyWave = Instantiate(chargeSpherePrefab);
+                    energyWave.transform.SetParent(bulletSpawn, false);
+                    energyWave.transform.position = bulletSpawn.position;
+                    canFireSuper = false;
+                }
+                break;
+            case 2:
+                if(context.performed == true && canFireSuper == true) {
+                    GameObject energyBomb = Instantiate(superBombPrefab);
+                    //energyBomb.transform.SetParent(this.transform, false);
+                    energyBomb.transform.position = transform.position;
+                    canFireSuper = false;
+                }
+                break;
         }
     }
 
@@ -318,6 +345,7 @@ public class PlayerMovement : MonoBehaviour {
             else {
                 dF_Mode = false;
                 rb.useGravity = false;
+                rb.linearVelocity = new Vector3(0,0,0);
                 transform.GetChild(2).transform.GetChild(3).GetComponent<TrailRenderer>().emitting = false;
                 transform.GetChild(2).transform.GetChild(4).GetComponent<TrailRenderer>().emitting = false;
             }
@@ -364,18 +392,13 @@ public class PlayerMovement : MonoBehaviour {
             Destroy(Trail.gameObject, Trail.time);
 
             //Damage Calc
-            if (Hit.rigidbody.tag == "Enemy") {
+            if (Hit.rigidbody.CompareTag("Enemy")) {
                 Hit.transform.gameObject.GetComponent<EnemyScripts>().Damage(2);
-<<<<<<< HEAD
-                //Hit.transform.gameObject.GetComponent<BoatEnemyMove>().Damage(2);
-=======
             }
-            else if (Hit.rigidbody.tag == "BoatEnemy")
-            {
+            else if(Hit.rigidbody.CompareTag("BoatEnemy")) {
                 Hit.transform.gameObject.GetComponent<BoatEnemyMove>().Damage(2);
->>>>>>> Aleks'-Branch
             }
-            else {
+            else if (Hit.rigidbody.CompareTag(null)){
                 yield return null;
             }
         }

@@ -16,7 +16,7 @@ MonoBehaviour:
   health: 5
   attackSpeed: 10
   damage: 10
-  compartmentHealth: 5
+  compartmentHealth: -1
   playerHealth: 1
   missileDamge: 2
   boatEnemyHealth: 10
