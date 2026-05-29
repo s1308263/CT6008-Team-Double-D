@@ -56,7 +56,7 @@ public class EnemyScripts : MonoBehaviour
         waveSpawner = GameObject.FindWithTag("Spawner");
         waveSpawnerScript = waveSpawner.GetComponent<EnemySpawnScript>();
         playerMovementScript = player.GetComponent<PlayerMovement>();
-        //cameraShakeScript = mainCam.GetComponent<CameraShake>();
+        cameraShakeScript = mainCam.GetComponent<CameraShake>();
         impulseSource = GetComponent<CinemachineImpulseSource>();
     }
     void Awake()

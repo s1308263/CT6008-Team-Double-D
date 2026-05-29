@@ -34,7 +34,7 @@ public class EnemySpawnScript : MonoBehaviour
     {
         for (int i = 0; i < waves.Length; i++)
         {
-            waves[i].enemiesLeft = waves[i].enemies.Length + waves[i].boatEnemies.Length;
+            waves[i].enemiesLeft = waves[i].enemies.Length + waves[i].boatEnemies.Length + waves[i].advancedEnemies.Length;
         }
     }
     void Awake()
@@ -124,32 +124,16 @@ public class EnemySpawnScript : MonoBehaviour
                 SpawnIndicator(newBoatEnemy);
                 yield return new WaitForSeconds(waves[currentWave].timeToNextEnemy);
             }
+            for (int i = 0; i < waves[currentWave].advancedEnemies.Length; i++)
+            {
+                Vector3 spawnPoint = SpawnPoint(myCollider.bounds);
+                GameObject advancedEnemy = Instantiate(waves[currentWave].advancedEnemies[i].gameObject, spawnPoint, Quaternion.identity);
+                activeEnemies.Add(advancedEnemy);
+                SpawnIndicator(advancedEnemy);
+                yield return new WaitForSeconds(waves[currentWave].timeToNextEnemy);
+            }
         }
     }
-
-    //void WarningUI()
-    //{
-    //    isLerping = true;
-    //    Debug.Log("hey");
-    //    if (waveCountdown >= waves[currentWave].timeToNextWave)
-    //    {
-    //        Debug.Log("LerpOut1");
-    //        Image image = warningSign.GetComponent<Image>();
-    //        image.enabled = true;
-
-    //        Debug.Log("LerpOut2");
-    //        image.enabled = false;
-    //    }
-    //    else if (waveCountdown <= waves[currentWave].timeToNextWave /2)
-    //    {
-    //        Debug.Log("LerpIn");
-    //        Image image = warningSign.GetComponent<Image>();
-    //        image.enabled = true;
-    //        image.color = new Color(image.color.r, image.color.g, image.color.b, Mathf.Lerp(0, 1, 200));
-    //        image.enabled = false;
-    //    }
-    //    isLerping = false;
-    //}
     void SpawnIndicator(GameObject enemy)
     {
         GameObject newIndicator = Instantiate(rd);
@@ -165,6 +149,7 @@ public class EnemySpawnScript : MonoBehaviour
     {
         public EnemyScripts[] enemies;
         public BoatEnemyMove[] boatEnemies;
+        public AdvancedEnemy[] advancedEnemies;
         public float timeToNextWave;
         public float timeToNextEnemy;
 

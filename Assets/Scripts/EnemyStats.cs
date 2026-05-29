@@ -11,4 +11,5 @@ public class EnemyStats : ScriptableObject
     [SerializeField] public int playerHealth = 1;
     [SerializeField] public int missileDamge = 2;
     [SerializeField] public int boatEnemyHealth = 20;
+    [SerializeField] public int advancedEnemyHealth = 50;
 }

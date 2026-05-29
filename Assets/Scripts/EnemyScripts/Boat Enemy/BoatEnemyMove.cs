@@ -34,8 +34,8 @@ public class BoatEnemyMove : MonoBehaviour
         waveSpawnerScript = waveSpawner.GetComponent<EnemySpawnScript>();
         cameraShakeScript = mainCam.GetComponent<CameraShake>();
         manager.Register(this);
-        healthbar.maxValue = stats.health;
-        healthbar.value = stats.health;
+        healthbar.maxValue = stats.boatEnemyHealth;
+        healthbar.value = stats.boatEnemyHealth;
         impulseSource = GetComponent<CinemachineImpulseSource>();
     }
 

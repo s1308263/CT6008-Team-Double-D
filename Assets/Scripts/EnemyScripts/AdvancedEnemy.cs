@@ -1,54 +1,143 @@
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.ProBuilder;
+using UnityEngine.UI;
 
 public class AdvancedEnemy : MonoBehaviour
 {
+    [Header("Script Dependencies")]
     public EnemyStats stats;
-    float movementSpeed = 5f;
-    int health;
-    public GameObject enemySpawner;
     public EnemySpawnScript spawnerScript;
+    public GameObject enemySpawner;
+
+    //Components
     GameObject player;
-    public float smoothing;
-    Vector3 velocity = Vector3.zero;
+    Rigidbody rb;
+    public GameObject bullet;
+    [SerializeField] private GameObject deathParticle;
+    [SerializeField] private CameraShake cameraShakeScript;
+    [SerializeField] private Canvas enemyCanvas;
+    [SerializeField] private Slider healthbar;
+    [SerializeField] private Camera mainCam;
+    [SerializeField] private Transform visuals;
+    GameObject explosion;
+
+    private CinemachineImpulseSource impulseSource;
+
+    //Values
+    Vector3 currentVelocity;
+    float reload = 1f;
+    float fireTimer;
     float holdRadius = 15f;
+    float retreatRadius = 10f;
+    float movementSpeed = 7f;
+    int health;
+    bool isDead = false;
 
 
-
-    private void Awake()
+    void Awake()
     {
+        //Getting all the dependencies
         player = GameObject.FindWithTag("Player");
         enemySpawner = GameObject.FindWithTag("Spawner");
         spawnerScript = enemySpawner.GetComponent<EnemySpawnScript>();
-        health = stats.health;
-
+        health = stats.advancedEnemyHealth;
+        healthbar.maxValue = stats.advancedEnemyHealth;
+        healthbar.value = stats.advancedEnemyHealth;
+        rb = GetComponent<Rigidbody>();
+        mainCam = Camera.main;
+        cameraShakeScript = mainCam.GetComponent<CameraShake>();
+        impulseSource = GetComponent<CinemachineImpulseSource>();
     }
-    void Start()
+    void FixedUpdate()
     {
-        
-    }
+        if (player == null)
+            return;
+        Die();
 
-    void Update()
-    {
-        if (player == null) return;
+        Vector3 rawDirection = player.transform.position - transform.position;
+        rawDirection.z = 0f;
+        Vector3 direction = rawDirection.normalized;
+        float distance = Vector2.Distance(new Vector2(transform.position.x, transform.position.y), new Vector2(player.transform.position.x, player.transform.position.y));
+        Vector3 lookDirection = player.transform.position - transform.position;
+        lookDirection.z = 0f;
+        visuals.rotation = Quaternion.LookRotation(Vector3.forward, lookDirection);
 
-        Vector3 currentPos = transform.position;
-        Vector3 targetPos = player.transform.position;
-
-        targetPos.z = currentPos.z;
-
-        float distance = Vector3.Distance(currentPos, targetPos);
-
-        if (distance > holdRadius) {
-            Vector3 direction = (targetPos - currentPos).normalized;
-            Vector3 desiredPos = targetPos - direction * holdRadius;
-            transform.position = Vector3.SmoothDamp(currentPos, desiredPos, ref velocity, smoothing, movementSpeed);
+        //Follow player if too far
+        if (distance > holdRadius)
+        {
+            Move(direction);
         }
+        //Move away if too close
+        else if (distance < retreatRadius)
+        {
+            Move(-direction);
+            fireTimer -=Time.deltaTime;
+            if (fireTimer <= 0f)
+            {
+                Fire();
+                fireTimer = reload;
+            }
+        }
+        //Stop at a distance
         else
         {
-            Vector3 direction = (currentPos - targetPos).normalized;
-            Vector3 desiredPos = direction - targetPos;
-            transform.position = Vector3.SmoothDamp(currentPos, desiredPos, ref velocity, smoothing, movementSpeed);
+            StopMoving();
+            fireTimer -=Time.deltaTime;
+            if( fireTimer <= 0f)
+            {
+                Fire();
+                fireTimer = reload;
+            }
         }
+    }
+    void Move(Vector3 direction)
+    {
+        Vector3 targetVelocity = direction * movementSpeed;
+        currentVelocity = Vector3.Lerp(currentVelocity, targetVelocity, 10f * Time.fixedDeltaTime);
+        rb.linearVelocity = currentVelocity;
+    }
+    void StopMoving()
+    {
+        currentVelocity = Vector3.Lerp(currentVelocity, Vector3.zero, 10f * Time.fixedDeltaTime);
+        rb.linearVelocity = currentVelocity;
+    }
+    public void Fire()
+    {
+        Vector3 railPos = transform.position + visuals.right * 1.5f;
+        GameObject newBullet = Instantiate(bullet, railPos, Quaternion.identity);
+        newBullet.GetComponent<Rigidbody>().AddForce(transform.right * 100f);
+    }
+    public void Die()
+    {
+        if (isDead)
+            return;
+
+        if (health <= 0)
+        {
+            isDead = true;
+            spawnerScript.score += 500;
+            spawnerScript.waves[spawnerScript.currentWave].enemiesLeft--;
+            explosion = Instantiate(deathParticle);
+            explosion.transform.position = transform.position;
+            if (cameraShakeScript != null && impulseSource != null)
+            {
+                cameraShakeScript.CineCameraShake(impulseSource);
+            }
+            GetComponent<Collider>().enabled = false;
+            foreach (Renderer renderer in GetComponentsInChildren<Renderer>())
+            {
+                renderer.enabled = false;
+            }
+            enemyCanvas.gameObject.SetActive(false);
+            rb.linearVelocity = Vector3.zero;
+            rb.isKinematic = true;
+            Destroy(gameObject, 0.05f);
         }
+    }
+    public void Damage(int damage)
+    {
+        health -= damage;
+        healthbar.value -= damage;
+    }
 }
