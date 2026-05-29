@@ -41,6 +41,7 @@ public class TypewriterText : MonoBehaviour {
 
     private int tutValues;
     [SerializeField] private float textTimer, maxTextTimer;
+    [SerializeField] private GameObject canvas, tutorial;
     public bool canNextText, canStartTextTimer = false;
 
     private void Awake() {
@@ -206,6 +207,11 @@ public class TypewriterText : MonoBehaviour {
                         canStartTextTimer = false;
                         textTimer = 0;
                     }
+                    break;
+                    case 8:
+                    yield return new WaitForSeconds(5);
+                    canvas.GetComponent<Level_Complete>().NextLevel();
+                    tutorial.SetActive(false);
                     break;
                 }
                 yield break;
