@@ -27,6 +27,9 @@ public class EnemySpawnScript : MonoBehaviour
     bool isLerping;
     Image image;
 
+    //tutorial settings
+    public bool isTutorial;
+    private TypewriterText typewriter;
 
     [SerializeField] private GameObject canvas;
 
@@ -44,6 +47,7 @@ public class EnemySpawnScript : MonoBehaviour
         waveCountdown = waves[currentWave].timeToNextWave;
         plane = GameObject.FindGameObjectWithTag("Player");
         image = warningSign.GetComponent<Image>();
+        typewriter = GetComponent<TypewriterText>();
     }
     void Update()
     {
@@ -51,8 +55,13 @@ public class EnemySpawnScript : MonoBehaviour
         {
             Debug.Log("Finish");
             //End Game
-            canvas.GetComponent<Level_Complete>().NextLevel();
-            return;
+            if (isTutorial == false) {
+                canvas.GetComponent<Level_Complete>().NextLevel();
+            }
+            else {
+                typewriter.StartCoroutine("Typing");
+            }
+                return;
         }
         if (readyToCountDown == true)
         {

@@ -10,6 +10,7 @@ public class TypewriterText : MonoBehaviour {
 
     private TMP_Text text;
     private TutorialText tutText;
+    private EnemySpawnScript enemySpawnScript;
 
     //Functionality
     private int textIndex;
@@ -35,6 +36,7 @@ public class TypewriterText : MonoBehaviour {
     [SerializeField]
     [Range(0.1f, 0.5f)] private float doneDelay = 0.25f;
     private WaitForSeconds eventDelay;
+    [SerializeField] private GameObject enemySpawnTimer;
 
     public static event Action AllTextShown;
     public static event Action<char> charactersShown;
@@ -46,6 +48,7 @@ public class TypewriterText : MonoBehaviour {
     private void Awake() {
         text = GetComponent<TMP_Text>();
         tutText = GetComponent<TutorialText>();
+        enemySpawnScript = GetComponent<EnemySpawnScript>();
         shortDelay = new WaitForSeconds(1 / textSpeed);
         longDelay = new WaitForSeconds(longDelayTime);
         skippingDelay = new WaitForSeconds(1 / (textSpeed * skipSpeed));
@@ -115,7 +118,7 @@ public class TypewriterText : MonoBehaviour {
         AllTextShown?.Invoke();
     }
 
-    private IEnumerator Typing() {
+    public IEnumerator Typing() {
         TMP_TextInfo textInfo = text.textInfo;
 
         while (textIndex < textInfo.characterCount + 1) {
@@ -184,11 +187,12 @@ public class TypewriterText : MonoBehaviour {
                         tutValues++;
                         canNextText = false;
                         canStartTextTimer = false;
+                        enemySpawnTimer.SetActive(true);
                         textTimer = 0;
                     }
                     break;
                     case 6:
-                    canStartTextTimer = true;
+                    //canStartTextTimer = true;
                     if (canNextText == true) {
                         text.SetText(tutText.tutorialValues[7]);
                         tutValues++;

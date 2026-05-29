@@ -1120,7 +1120,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1077765138
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2579,7 +2579,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: 70a417d21bba87a4790aeb80e14e4838, type: 3}
+  m_Resource: {fileID: 8300000, guid: 4a89cb9251be9fd4d8999662ccc13ee8, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.2
   m_Pitch: 1
@@ -2852,6 +2852,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7660016040413308792, guid: fa051bc374048594ea68fe841fe67419, type: 3}
+      propertyPath: DefaultVelocity.x
+      value: -1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3098,6 +3102,7 @@ MonoBehaviour:
   fastSkip: 0
   skipSpeed: 5
   doneDelay: 0.25
+  enemySpawnTimer: {fileID: 1077765137}
   textTimer: 0
   maxTextTimer: 5
   canNextText: 0
@@ -3598,6 +3603,10 @@ PrefabInstance:
       propertyPath: canvas
       value: 
       objectReference: {fileID: 1038969627}
+    - target: {fileID: 5033838725408900406, guid: 97191df25a458fa4a9f675910847c4e0, type: 3}
+      propertyPath: isTutorial
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5033838725408900406, guid: 97191df25a458fa4a9f675910847c4e0, type: 3}
       propertyPath: waves.Array.size
       value: 1
