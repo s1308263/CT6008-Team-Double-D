@@ -100,7 +100,7 @@ public class EnemySpawnScript : MonoBehaviour
     {
         return new Vector3(
             Random.Range(bounds.min.x, bounds.max.x),
-            2,
+            0,
             0);
     }
     private IEnumerator SpawnWave()

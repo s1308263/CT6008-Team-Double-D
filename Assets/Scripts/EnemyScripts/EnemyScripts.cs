@@ -13,9 +13,9 @@ public class EnemyScripts : MonoBehaviour
 {
 
     [Header("Enemy Stats: ")]
-    [SerializeField] public float dashPower = 5;
+    [SerializeField] public float dashPower = 10;
     [SerializeField] public float dashCD = 1;
-    [SerializeField] public float maxSpeed = 10;
+    [SerializeField] public float maxSpeed = 20;
     [SerializeField] public float rotationSpeed = 2;
 
     [Header("Scripts & Dependencies: ")]

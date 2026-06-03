@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.ProBuilder;
@@ -21,6 +22,7 @@ public class AdvancedEnemy : MonoBehaviour
     [SerializeField] private Camera mainCam;
     [SerializeField] private Transform visuals;
     GameObject explosion;
+    public AdvancedEnemy[] friendlies;
 
     private CinemachineImpulseSource impulseSource;
 
@@ -30,7 +32,8 @@ public class AdvancedEnemy : MonoBehaviour
     float fireTimer;
     float holdRadius = 15f;
     float retreatRadius = 10f;
-    float movementSpeed = 7f;
+    float movementSpeed = 10f;
+    float friendlyRange = 5f;
     int health;
     bool isDead = false;
 
@@ -48,6 +51,7 @@ public class AdvancedEnemy : MonoBehaviour
         mainCam = Camera.main;
         cameraShakeScript = mainCam.GetComponent<CameraShake>();
         impulseSource = GetComponent<CinemachineImpulseSource>();
+        
     }
     void FixedUpdate()
     {
@@ -62,7 +66,6 @@ public class AdvancedEnemy : MonoBehaviour
         Vector3 lookDirection = player.transform.position - transform.position;
         lookDirection.z = 0f;
         visuals.rotation = Quaternion.LookRotation(Vector3.forward, lookDirection);
-
         //Follow player if too far
         if (distance > holdRadius)
         {
@@ -90,6 +93,14 @@ public class AdvancedEnemy : MonoBehaviour
                 fireTimer = reload;
             }
         }
+        foreach (AdvancedEnemy friendly in friendlies)
+        {
+            float friendlyDistance = Vector2.Distance(new Vector2(transform.position.x, transform.position.y), new Vector2(friendly.transform.position.x, friendly.transform.position.y));
+            if(friendlyDistance <= friendlyRange)
+            {
+                Move(-friendly.transform.position);
+            }
+        }
     }
     void Move(Vector3 direction)
     {
@@ -107,6 +118,9 @@ public class AdvancedEnemy : MonoBehaviour
         Vector3 railPos = transform.position + visuals.right * 1.5f;
         GameObject newBullet = Instantiate(bullet, railPos, Quaternion.identity);
         newBullet.GetComponent<Rigidbody>().AddForce(transform.right * 100f);
+        Vector3 railPos2 = transform.position + visuals.right * -1.5f;
+        GameObject newBullet2 = Instantiate(bullet, railPos2, Quaternion.identity);
+        newBullet2.GetComponent<Rigidbody>().AddForce(transform.right * 100f);
     }
     public void Die()
     {

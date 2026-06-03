@@ -30,12 +30,16 @@ public class BulletScript : MonoBehaviour {
     private void OnCollisionEnter(Collision collision) {
         if (collision.collider.tag == "Player") {
             collision.transform.GetComponent<PlayerHealth>().RemoveHealth();
-            Destroy(gameObject);
+            Impact();
         }
         if (collision.collider.tag == "Missile")
         {
-            Destroy(gameObject);
+            Impact();
             Destroy(collision.gameObject);
+        }
+        if (collision.collider.tag == "Enemy" || collision.collider.tag == "BoatEnemy")
+        {
+            Impact();
         }
     }
     IEnumerator Die()
@@ -44,6 +48,13 @@ public class BulletScript : MonoBehaviour {
         explosion = Instantiate(deathParticle);
         explosion.transform.position = transform.position;
         Destroy(gameObject);
+    }
+    IEnumerator Impact()
+    {
+        explosion = Instantiate(deathParticle);
+        explosion.transform.position = transform.position;
+        Destroy(gameObject);
+        yield return null;
     }
 }
 

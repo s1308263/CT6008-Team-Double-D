@@ -920,9 +920,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bullet: {fileID: 3102534638243489890, guid: c67e963388089754e8f3886feb396f04, type: 3}
   gun: {fileID: 9131090329004543344}
-  bulletSpeed: 100
-  reloadTime: 4
-  turretRange: 20
+  bulletSpeed: 10000
+  reloadTime: 1
+  turretRange: 30
   trackingSpeed: 0.5
 --- !u!1 &7143285647639232284
 GameObject:
@@ -971,9 +971,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bullet: {fileID: 3102534638243489890, guid: c67e963388089754e8f3886feb396f04, type: 3}
   gun: {fileID: 5565707319779913699}
-  bulletSpeed: 100
-  reloadTime: 4
-  turretRange: 20
+  bulletSpeed: 10000
+  reloadTime: 1
+  turretRange: 30
   trackingSpeed: 0.5
 --- !u!1 &8241108446159320595
 GameObject:
@@ -1267,7 +1267,7 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
