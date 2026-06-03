@@ -978,6 +978,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &870398679 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2956629583922097023, guid: b3565592bf2face4783a137dc2332b8f, type: 3}
+  m_PrefabInstance: {fileID: 6745472065413054031}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &871201580 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8984667322970713878, guid: 48510bebd6a1e7349ab7f1957072f418, type: 3}
@@ -2740,7 +2745,19 @@ PrefabInstance:
     - target: {fileID: 5033838725408900406, guid: 97191df25a458fa4a9f675910847c4e0, type: 3}
       propertyPath: canvas
       value: 
+      objectReference: {fileID: 1770370306}
+    - target: {fileID: 5033838725408900406, guid: 97191df25a458fa4a9f675910847c4e0, type: 3}
+      propertyPath: typeText
+      value: 
+      objectReference: {fileID: 1977735285}
+    - target: {fileID: 5033838725408900406, guid: 97191df25a458fa4a9f675910847c4e0, type: 3}
+      propertyPath: isTutorial
+      value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5033838725408900406, guid: 97191df25a458fa4a9f675910847c4e0, type: 3}
+      propertyPath: tutorialCanvas
+      value: 
+      objectReference: {fileID: 1100138970}
     - target: {fileID: 5033838725408900406, guid: 97191df25a458fa4a9f675910847c4e0, type: 3}
       propertyPath: waves.Array.size
       value: 1
@@ -3798,6 +3815,11 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!1 &1962682062 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5341880938503503843, guid: 40138d6aaa6a32b43930c3bce0390ebb, type: 3}
+  m_PrefabInstance: {fileID: 8641919690441250675}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1977735283
 GameObject:
   m_ObjectHideFlags: 0
@@ -3855,10 +3877,13 @@ MonoBehaviour:
   fastSkip: 0
   skipSpeed: 5
   doneDelay: 0.25
+  tutValues: 0
   textTimer: 0
   maxTextTimer: 5
   canvas: {fileID: 1770370306}
   tutorial: {fileID: 1100138970}
+  enemySpawnTimer: {fileID: 1962682062}
+  rescuePlatform: {fileID: 870398679}
   canNextText: 0
   canStartTextTimer: 0
 --- !u!114 &1977735286
@@ -4924,6 +4949,10 @@ PrefabInstance:
       value: CameraBounds
       objectReference: {fileID: 0}
     - target: {fileID: 8823346880983593287, guid: bcf0674fd7fc7de4c85eed51d037c14d, type: 3}
+      propertyPath: m_Layer
+      value: 24
+      objectReference: {fileID: 0}
+    - target: {fileID: 8823346880983593287, guid: bcf0674fd7fc7de4c85eed51d037c14d, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -5021,6 +5050,10 @@ PrefabInstance:
       value: RescuePlatform
       objectReference: {fileID: 0}
     - target: {fileID: 2956629583922097023, guid: b3565592bf2face4783a137dc2332b8f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2956629583922097023, guid: b3565592bf2face4783a137dc2332b8f, type: 3}
       propertyPath: m_TagString
       value: Rescue Platform
       objectReference: {fileID: 0}
@@ -5075,10 +5108,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 476970446951155524, guid: b3565592bf2face4783a137dc2332b8f, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b3565592bf2face4783a137dc2332b8f, type: 3}
 --- !u!1001 &7008585405687064974
 PrefabInstance:
