@@ -61,7 +61,7 @@ public class BoatShoot : MonoBehaviour
     {
         GameObject newBullet = Instantiate(bullet, gun.transform.position, Quaternion.identity);
         newBullet.transform.rotation = LookRotation;
-        newBullet.GetComponent<Rigidbody>().AddForce(transform.forward * bulletSpeed);
+        newBullet.GetComponent<Rigidbody>().AddForce(transform.right * bulletSpeed);
         yield return null;
     }
 }

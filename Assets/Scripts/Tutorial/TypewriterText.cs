@@ -39,9 +39,9 @@ public class TypewriterText : MonoBehaviour {
     public static event Action AllTextShown;
     public static event Action<char> charactersShown;
 
-    private int tutValues;
+    public int tutValues;
     [SerializeField] private float textTimer, maxTextTimer;
-    [SerializeField] private GameObject canvas, tutorial;
+    [SerializeField] private GameObject canvas, tutorial, enemySpawnTimer, rescuePlatform;
     public bool canNextText, canStartTextTimer = false;
 
     private void Awake() {
@@ -51,6 +51,7 @@ public class TypewriterText : MonoBehaviour {
         longDelay = new WaitForSeconds(longDelayTime);
         skippingDelay = new WaitForSeconds(1 / (textSpeed * skipSpeed));
         eventDelay = new WaitForSeconds(doneDelay);
+        tutorial = gameObject.transform.parent.gameObject;
     }
 
     private void Start() {
@@ -189,8 +190,13 @@ public class TypewriterText : MonoBehaviour {
                     }
                     break;
                     case 6:
-                    canStartTextTimer = true;
-                    if (canNextText == true) {
+                        text.SetText(" ");
+                        enemySpawnTimer.SetActive(true);
+                        tutorial.SetActive(false);
+                        break;
+                    case 7:
+                        canStartTextTimer = true;
+                        if (canNextText == true) {
                         text.SetText(tutText.tutorialValues[7]);
                         tutValues++;
                         canNextText = false;
@@ -198,8 +204,14 @@ public class TypewriterText : MonoBehaviour {
                         textTimer = 0;
                     }
                     break;
-                    case 7:
-                    canStartTextTimer = true;
+                    case 8:
+                        text.SetText(" ");
+                        rescuePlatform.SetActive(true);
+                        tutorial.SetActive(false);
+                        break;
+                    case 9:
+                        maxTextTimer = 5;
+                        canStartTextTimer = true;
                     if (canNextText == true) {
                         text.SetText(tutText.tutorialValues[8]);
                         tutValues++;
@@ -208,7 +220,7 @@ public class TypewriterText : MonoBehaviour {
                         textTimer = 0;
                     }
                     break;
-                    case 8:
+                    case 10:
                     yield return new WaitForSeconds(5);
                     canvas.GetComponent<Level_Complete>().NextLevel();
                     tutorial.SetActive(false);

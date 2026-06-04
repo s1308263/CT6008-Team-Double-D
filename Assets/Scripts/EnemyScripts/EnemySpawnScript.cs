@@ -5,6 +5,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System.Threading;
+using Unity.VisualScripting;
 
 public class EnemySpawnScript : MonoBehaviour
 {
@@ -26,9 +27,11 @@ public class EnemySpawnScript : MonoBehaviour
     public int score;
     bool isLerping;
     Image image;
+    public bool isTutorial;
+    public TypewriterText typeText;
 
 
-    [SerializeField] private GameObject canvas;
+    [SerializeField] private GameObject canvas, tutorialCanvas;
 
     private void Start()
     {
@@ -49,10 +52,20 @@ public class EnemySpawnScript : MonoBehaviour
     {
         if (currentWave >= waves.Length)
         {
-            Debug.Log("Finish");
-            //End Game
-            canvas.GetComponent<Level_Complete>().NextLevel();
-            return;
+            if (isTutorial == false)
+            {
+                Debug.Log("Finish");
+                //End Game
+                canvas.GetComponent<Level_Complete>().NextLevel();
+                return;
+            }
+            else
+            {
+                typeText.tutValues = 7;
+                tutorialCanvas.SetActive(true);
+                gameObject.SetActive(false);
+                return;
+            }
         }
         if (readyToCountDown == true)
         {
@@ -100,7 +113,7 @@ public class EnemySpawnScript : MonoBehaviour
     {
         return new Vector3(
             Random.Range(bounds.min.x, bounds.max.x),
-            2,
+            0,
             0);
     }
     private IEnumerator SpawnWave()
