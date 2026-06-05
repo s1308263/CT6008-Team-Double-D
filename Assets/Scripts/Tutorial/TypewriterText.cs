@@ -190,7 +190,8 @@ public class TypewriterText : MonoBehaviour {
                     }
                     break;
                     case 6:
-                        text.SetText(" ");
+                    yield return new WaitForSeconds(5);
+                    text.SetText("(*RING... RING...*)");
                         enemySpawnTimer.SetActive(true);
                         tutorial.SetActive(false);
                         break;
@@ -205,12 +206,12 @@ public class TypewriterText : MonoBehaviour {
                     }
                     break;
                     case 8:
-                        text.SetText(" ");
+                    yield return new WaitForSeconds(5);
+                    text.SetText("(*RING... RING...*)");
                         rescuePlatform.SetActive(true);
                         tutorial.SetActive(false);
                         break;
                     case 9:
-                        maxTextTimer = 5;
                         canStartTextTimer = true;
                     if (canNextText == true) {
                         text.SetText(tutText.tutorialValues[8]);

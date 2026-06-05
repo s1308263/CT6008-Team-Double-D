@@ -392,15 +392,6 @@ public class PlayerMovement : MonoBehaviour {
             Destroy(Trail.gameObject, Trail.time);
 
             //Damage Calc
-            //if (Hit.rigidbody.CompareTag("Enemy")) {
-            //    Hit.transform.gameObject.GetComponent<EnemyScripts>().Damage(2);
-            //}
-            //else if(Hit.rigidbody.CompareTag("BoatEnemy")) {
-            //    Hit.transform.gameObject.GetComponent<BoatEnemyMove>().Damage(2);
-            //}
-            //else if (Hit.rigidbody.CompareTag(null)){
-            //    yield return null;
-            //}
             if (Hit.transform.TryGetComponent<EnemyScripts>(out var enemy))
             {
                 enemy.Damage(2);

@@ -245,7 +245,7 @@ GameObject:
   - component: {fileID: 7361377374296012634}
   m_Layer: 0
   m_Name: RescuePlatform
-  m_TagString: Untagged
+  m_TagString: Rescue Platform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

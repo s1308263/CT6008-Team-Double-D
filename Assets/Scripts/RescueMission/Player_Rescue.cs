@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.ProBuilder.MeshOperations;
 using UnityEngine.UI;
 
 public class Player_Rescue : MonoBehaviour {
@@ -7,7 +8,7 @@ public class Player_Rescue : MonoBehaviour {
     public int totalNeedRescuing;
     [SerializeField] private int shipCapacity, maxShipCapacity;
 
-    [SerializeField] private GameObject everyoneRescuedText, rescueFollow;
+    [SerializeField] private GameObject everyoneRescuedText, rescueFollow, tutorialCanvas;
 
     public Sprite emptySeat;
     public Sprite fullSeat;
@@ -16,8 +17,13 @@ public class Player_Rescue : MonoBehaviour {
     public GameObject[] followArray;
     public GameObject rescuePickupInScene;
 
-    float rescuedTimer;
-    bool canShowRescueText;
+    public bool isTutorial;
+    public TypewriterText typeText;
+
+    private int typeVal;
+
+    float rescuedTimer, tutTimer;
+    bool canShowRescueText, canTut;
 
     private void Awake() {
         //RANDOM SPAWN PLATFORMS HERE
@@ -28,7 +34,7 @@ public class Player_Rescue : MonoBehaviour {
         maxShipCapacity = 1;
         ////////////////////////////
 
-        if(shipCapacity >= maxShipCapacity) {
+        if (shipCapacity >= maxShipCapacity) {
             shipCapacity = maxShipCapacity;
         }
         canFitInShip = new int[shipCapacity];
@@ -36,22 +42,50 @@ public class Player_Rescue : MonoBehaviour {
         canShowRescueText = true;
     }
 
-    private void Update()
-    {
-        if (totalNeedRescuing <= 0 && canShowRescueText == true)
-        {
-            //Show all rescued text here
-            totalNeedRescuing = 0;
-            everyoneRescuedText.SetActive(true);
-            rescuedTimer += 1 * Time.deltaTime;
-            if (rescuedTimer >= 10)
-            {
-                everyoneRescuedText.SetActive(false);
-                canShowRescueText = false;
+    private void Update() {
+        if (typeText != null) {
+            typeVal = typeText.tutValues;
+        }
+        if(typeVal == 8) {
+            tutTimer += 1 * Time.deltaTime;
+            if(tutTimer >= 30) {
+                canTut = true;
+                tutTimer = 0;
             }
-            Debug.Log("Everyone Rescued");
+        }
+
+        if (isTutorial && canTut == true) {
+            if (totalNeedRescuing <= 0 && canShowRescueText == true) {
+                //Show all rescued text here
+                totalNeedRescuing = 0;
+                everyoneRescuedText.SetActive(true);
+                typeText.tutValues = 9;
+                tutorialCanvas.SetActive(true);
+                rescuedTimer += 1 * Time.deltaTime;
+                if (rescuedTimer >= 10) {
+                    everyoneRescuedText.SetActive(false);
+                    canShowRescueText = false;
+                }
+
+                Debug.Log("Everyone Rescued");
+            }
+        }
+        else if(!isTutorial){
+            if (totalNeedRescuing <= 0 && canShowRescueText == true) {
+                //Show all rescued text here
+                totalNeedRescuing = 0;
+                everyoneRescuedText.SetActive(true);
+                rescuedTimer += 1 * Time.deltaTime;
+                if (rescuedTimer >= 10) {
+                    everyoneRescuedText.SetActive(false);
+                    canShowRescueText = false;
+                }
+
+                Debug.Log("Everyone Rescued");
+            }
         }
     }
+    
 
     public void AddCapacity() {
         if (shipCapacity < maxShipCapacity) {

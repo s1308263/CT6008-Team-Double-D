@@ -17,11 +17,11 @@ public class TutorialText : MonoBehaviour {
 
         tutorialValues[4] = new string("Next, hold 'X' on the controller or 'Right Mouse Button' to charge your homing missiles and release to fire.");
 
-        tutorialValues[5] = new string("Ready for the big guns? Press 'B' on the controller or click in the 'Wheel' on the mouse to fire your super weapon.");
+        tutorialValues[5] = new string("Ready for the big guns? Press 'B' on the controller or click in the 'Wheel' on the mouse to fire your super weapon. Don't forget that you only get one of these per mission, so only use it when you have no other option.");
 
         tutorialValues[6] = new string("Now that you know how to defend yourself, I'm going to send a few practice enemies your way. Make sure to keep moving to make it harder for them to hit you.");
 
-        tutorialValues[7] = new string("Well done for taking them down, not many pilots pass this quickly. For this last lesson I need you to find and rescue the civilian in need of help. Once you find him, make sure to bring him back to base to ensure his safety.");
+        tutorialValues[7] = new string("Well done for taking them down, not many pilots pass this quickly. For this last lesson I need you to find and rescue the civilian in need of help. Once you find him, you can pick him up when in *Landing Mode*, make sure to bring him back to base to ensure his safety.");
 
         tutorialValues[8] = new string("And... that's everything. Remember, the more you move the harder it is for the aliens to hit you and to rescue as many civilians as you can. We can't let those aliens win. Good luck pilot, you've got this.");
     }

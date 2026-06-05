@@ -3520,12 +3520,28 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 4241169063317065995, guid: fa051bc374048594ea68fe841fe67419, type: 3}
-      propertyPath: shipCapacity
-      value: 2
+      propertyPath: typeText
+      value: 
+      objectReference: {fileID: 1977735285}
+    - target: {fileID: 4241169063317065995, guid: fa051bc374048594ea68fe841fe67419, type: 3}
+      propertyPath: isTutorial
+      value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4241169063317065995, guid: fa051bc374048594ea68fe841fe67419, type: 3}
+      propertyPath: shipCapacity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4241169063317065995, guid: fa051bc374048594ea68fe841fe67419, type: 3}
+      propertyPath: tutorialCanvas
+      value: 
+      objectReference: {fileID: 1100138970}
     - target: {fileID: 4241169063317065995, guid: fa051bc374048594ea68fe841fe67419, type: 3}
       propertyPath: maxShipCapacity
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4241169063317065995, guid: fa051bc374048594ea68fe841fe67419, type: 3}
+      propertyPath: totalNeedRescuing
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4241169063317065995, guid: fa051bc374048594ea68fe841fe67419, type: 3}
       propertyPath: everyoneRescuedText
@@ -5051,7 +5067,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2956629583922097023, guid: b3565592bf2face4783a137dc2332b8f, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2956629583922097023, guid: b3565592bf2face4783a137dc2332b8f, type: 3}
       propertyPath: m_TagString
@@ -5059,11 +5075,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3092361386525287640, guid: b3565592bf2face4783a137dc2332b8f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 222.9
+      value: -60
       objectReference: {fileID: 0}
     - target: {fileID: 3092361386525287640, guid: b3565592bf2face4783a137dc2332b8f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.35
+      value: 8.64
       objectReference: {fileID: 0}
     - target: {fileID: 3092361386525287640, guid: b3565592bf2face4783a137dc2332b8f, type: 3}
       propertyPath: m_LocalPosition.z
@@ -5105,10 +5121,17 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - target: {fileID: 7361377374296012634, guid: b3565592bf2face4783a137dc2332b8f, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 476970446951155524, guid: b3565592bf2face4783a137dc2332b8f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: b3565592bf2face4783a137dc2332b8f, type: 3}
 --- !u!1001 &7008585405687064974
 PrefabInstance:
