@@ -276,6 +276,7 @@ public class PlayerMovement : MonoBehaviour {
                 newBigChargeshot.transform.SetParent(null);
                 newBigChargeshot.transform.localScale = new Vector3(1, 1, 1);
                 newBigChargeshot.transform.GetComponent<ChargeShotScript>().speed = bigShotSpeed;
+                newBigChargeshot.transform.GetComponent<ChargeShotScript>().shotSize = 3;
                 canShootFullCharge = false;
             }
             //Fire medium charge shot
@@ -286,6 +287,7 @@ public class PlayerMovement : MonoBehaviour {
                 newMidChargeshot.transform.SetParent(null);
                 newMidChargeshot.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
                 newMidChargeshot.transform.GetComponent<ChargeShotScript>().speed = midShotSpeed;
+                newMidChargeshot.transform.GetComponent<ChargeShotScript>().shotSize = 2;
                 canShootMidCharge = false;
             }
             //Fire small charge shot
@@ -296,6 +298,7 @@ public class PlayerMovement : MonoBehaviour {
                 newSmallChargeshot.transform.SetParent(null);
                 newSmallChargeshot.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
                 newSmallChargeshot.transform.GetComponent<ChargeShotScript>().speed = smallShotSpeed;
+                newSmallChargeshot.transform.GetComponent<ChargeShotScript>().shotSize = 1;
                 canShootSmallCharge = false;
             }
             //reset charge shot settings

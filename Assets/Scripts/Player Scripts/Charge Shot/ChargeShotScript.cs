@@ -59,12 +59,22 @@ public class ChargeShotScript : MonoBehaviour {
                     break;
 
                 case 2:
-                if (collision.transform.TryGetComponent<EnemyScripts>(out var midenemy))
-                    midenemy.Damage(25);
-                else if (collision.transform.TryGetComponent<BoatEnemyMove>(out var boat))
-                    boat.Damage(25);
-                else if (collision.transform.TryGetComponent<AdvancedEnemy>(out var advancedEnemy))
-                    advancedEnemy.Damage(25);
+                    if (collision.transform.TryGetComponent<EnemyScripts>(out var midenemy))
+                    {
+                        midenemy.Damage(25);
+                        Debug.Log("Damaged");
+                    }
+
+                    else if (collision.transform.TryGetComponent<BoatEnemyMove>(out var boat))
+                    {
+                        boat.Damage(25);
+                    }
+
+                    else if (collision.transform.TryGetComponent<AdvancedEnemy>(out var advancedEnemy))
+                    {
+                        advancedEnemy.Damage(25);
+                    }
+
                 break;
 
                 case 3:
